@@ -1,79 +1,59 @@
 <?php
-session_start();
 
-$title = "Finalizar Compra";
+declare(strict_types=1);
 
-// Verifica se o carrinho está vazio
-if (empty($_SESSION['carrinho'])) {
-    header("Location: carrinho.php");
+require_once __DIR__ . '/includes/bootstrap.php';
+require_once __DIR__ . '/includes/layout.php';
+
+if (isset($_GET['sucesso'])) {
+    renderHeader('Pedido confirmado', '');
+    ?>
+    <main class="page-content">
+        <h1>Pagamento concluído ✅</h1>
+        <p class="subtitle">Seu pedido foi registrado com sucesso. Obrigado pela compra!</p>
+        <a class="btn" href="embalagens.php">Continuar comprando</a>
+    </main>
+    <?php
+    renderFooter();
     exit;
 }
 
-// Lista de produtos no carrinho
-$carrinho = $_SESSION['carrinho'];
-$total = 0;
-
-foreach ($carrinho as $item) {
-    $total += $item['preco'] * $item['quantidade'];
+$items = getCartItemsDetailed();
+if (empty($items)) {
+    header('Location: carrinho.php');
+    exit;
 }
+
+renderHeader('Checkout', '');
 ?>
+<main class="page-content">
+    <h1>Finalizar compra</h1>
+    <p class="subtitle">Revise os itens e escolha uma forma de pagamento.</p>
 
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo htmlspecialchars($title); ?></title>
-    <link rel="icon" type="image/x-icon" href="faviconum.png" alt="Favicon"> <!-- Ajuste aqui -->
-    <link rel="stylesheet" href="checkout.css">
-</head>
-<body>
-    <header>
-        <h1><?php echo htmlspecialchars($title); ?></h1>
-        <nav>
-            <a href="carrinho.php">Voltar para o Carrinho</a>
-            <a href="index.php">Voltar para a Página Inicial</a>
-        </nav>
-    </header>
+    <?php if (isset($_GET['erro'])): ?><p class="alert error">Selecione um método de pagamento válido.</p><?php endif; ?>
 
-    <main>
-        <h2>Resumo da Compra</h2>
+    <div class="table-wrap">
         <table>
-            <tr>
-                <th>Produto</th>
-                <th>Quantidade</th>
-                <th>Preço</th>
-            </tr>
-            <?php foreach ($carrinho as $idProduto => $item): ?>
-            <tr>
-                <td><?php echo htmlspecialchars($item['nome']); ?></td>
-                <td><?php echo htmlspecialchars($item['quantidade']); ?></td>
-                <td>R$ <?php echo number_format($item['preco'], 2, ',', '.'); ?></td>
-            </tr>
+            <thead><tr><th>Produto</th><th>Qtd.</th><th>Subtotal</th></tr></thead>
+            <tbody>
+            <?php foreach ($items as $item): ?>
+                <tr>
+                    <td><?php echo htmlspecialchars($item['nome']); ?></td>
+                    <td><?php echo (int) $item['quantidade']; ?></td>
+                    <td>R$ <?php echo number_format((float) $item['subtotal'], 2, ',', '.'); ?></td>
+                </tr>
             <?php endforeach; ?>
+            </tbody>
         </table>
-        <p><strong>Total: R$ <?php echo number_format($total, 2, ',', '.'); ?></strong></p>
+    </div>
 
-        <h2>Escolha a Forma de Pagamento</h2>
-        <form method="post" action="processar_pagamento.php">
-            <label>
-                <input type="radio" name="pagamento" value="pix" required>
-                Pagar com Pix
-            </label><br>
-            <label>
-                <input type="radio" name="pagamento" value="cartao" required>
-                Pagar com Cartão de Crédito
-            </label><br>
-            <label>
-                <input type="radio" name="pagamento" value="boleto" required>
-                Pagar com Boleto
-            </label><br>
-            <button type="submit">Finalizar Pagamento</button>
-        </form>
-    </main>
+    <p class="total">Total do pedido: <strong>R$ <?php echo number_format(getCartTotal(), 2, ',', '.'); ?></strong></p>
 
-    <footer>
-        <p>&copy; 2024 Cibele Plastic ©</p>
-    </footer>
-</body>
-</html>
+    <form class="checkout-form" action="processar_pagamento.php" method="post">
+        <label><input type="radio" name="pagamento" value="pix" required> Pix</label>
+        <label><input type="radio" name="pagamento" value="cartao"> Cartão de Crédito</label>
+        <label><input type="radio" name="pagamento" value="boleto"> Boleto</label>
+        <button type="submit">Confirmar pagamento</button>
+    </form>
+</main>
+<?php renderFooter(); ?>
