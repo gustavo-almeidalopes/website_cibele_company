@@ -1,5 +1,5 @@
-// Catálogo da Cibele Plastic — espelha os dados do back-end PHP (src/includes/catalog.php)
-// mantido em um único lugar para alimentar todas as páginas do front-end.
+// Catálogo da Cibele Plastic — fonte única de dados de produtos e categorias,
+// mantido em um só lugar para alimentar todas as páginas do front-end.
 
 export type CategorySlug = 'embalagens' | 'medicos' | 'construcao';
 
