@@ -1,0 +1,306 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const info = [
+  { rotulo: 'E-mail', valor: 'contato@cibeleplastic.com' },
+  { rotulo: 'Atendimento', valor: 'Seg a Sex · 9h às 18h' },
+  { rotulo: 'Resposta', valor: 'Em até 24 horas úteis' },
+];
+---
+
+<BaseLayout
+  active="contato"
+  title="Contato — Cibele Plastic"
+  description="Fale com a Cibele Plastic: dúvidas, sugestões ou orçamento de bioplásticos sustentáveis."
+>
+  <section class="phero" data-hero>
+    <div class="container-wide">
+      <p class="eyebrow" data-hero-item>Fale com a gente</p>
+      <h1 class="display phero__title">
+        <span class="line-mask"><span class="line-inner">Vamos</span></span>
+        <span class="line-mask"><span class="line-inner">conversar.</span></span>
+      </h1>
+      <p class="lead phero__lead" data-hero-item>
+        Dúvidas, sugestões ou um orçamento sob medida? Conte o que você precisa e retornamos rápido.
+      </p>
+    </div>
+  </section>
+
+  <section class="section-sm contact">
+    <div class="container-wide contact__grid">
+      <aside class="contact__aside" data-reveal="up">
+        <dl class="contact__info">
+          {
+            info.map((item) => (
+              <div>
+                <dt>{item.rotulo}</dt>
+                <dd>{item.valor}</dd>
+              </div>
+            ))
+          }
+        </dl>
+        <div class="contact__note">
+          <p class="eyebrow">Atendemos</p>
+          <p>Embalagens · Construção Civil · Produtos Médicos</p>
+        </div>
+      </aside>
+
+      <form class="form" id="contato-form" novalidate data-reveal="up">
+        <div class="field">
+          <label for="nome">Nome</label>
+          <input id="nome" name="nome" type="text" autocomplete="name" required placeholder="Seu nome" />
+          <span class="field__error" data-error-for="nome"></span>
+        </div>
+
+        <div class="field">
+          <label for="email">E-mail</label>
+          <input id="email" name="email" type="email" autocomplete="email" required placeholder="voce@email.com" />
+          <span class="field__error" data-error-for="email"></span>
+        </div>
+
+        <div class="field">
+          <label for="assunto">Assunto</label>
+          <div class="select-wrap">
+            <select id="assunto" name="assunto">
+              <option value="orcamento">Orçamento</option>
+              <option value="embalagens">Embalagens</option>
+              <option value="construcao">Construção Civil</option>
+              <option value="medicos">Produtos Médicos</option>
+              <option value="outro">Outro assunto</option>
+            </select>
+            <span class="select-arrow" aria-hidden="true">▾</span>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="mensagem">Mensagem</label>
+          <textarea id="mensagem" name="mensagem" rows="5" required placeholder="Como podemos ajudar?"></textarea>
+          <span class="field__error" data-error-for="mensagem"></span>
+        </div>
+
+        <button class="btn btn--primary form__submit" type="submit">
+          <span class="btn__label">Enviar mensagem <span class="arrow">↗</span></span>
+          <span class="btn__fill"></span>
+        </button>
+
+        <p class="form__success" id="form-success" hidden>
+          ✓ Mensagem enviada! Em breve entraremos em contato.
+        </p>
+      </form>
+    </div>
+  </section>
+</BaseLayout>
+
+<script>
+  import { animate } from 'animejs';
+
+  const form = document.getElementById('contato-form') as HTMLFormElement | null;
+  const success = document.getElementById('form-success');
+
+  if (form) {
+    const setError = (name: string, message: string) => {
+      const el = form.querySelector(`[data-error-for="${name}"]`);
+      const input = form.querySelector(`[name="${name}"]`);
+      if (el) el.textContent = message;
+      if (input) input.classList.toggle('has-error', Boolean(message));
+    };
+
+    const validate = () => {
+      let ok = true;
+      const nome = form.nome as HTMLInputElement;
+      const email = form.email as HTMLInputElement;
+      const mensagem = form.mensagem as HTMLTextAreaElement;
+
+      if (!nome.value.trim()) {
+        setError('nome', 'Informe seu nome.');
+        ok = false;
+      } else setError('nome', '');
+
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value.trim())) {
+        setError('email', 'Informe um e-mail válido.');
+        ok = false;
+      } else setError('email', '');
+
+      if (mensagem.value.trim().length < 10) {
+        setError('mensagem', 'Escreva ao menos 10 caracteres.');
+        ok = false;
+      } else setError('mensagem', '');
+
+      return ok;
+    };
+
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      if (!validate()) {
+        const firstError = form.querySelector('.has-error');
+        if (firstError) {
+          animate(firstError, { translateX: [-8, 8, -6, 6, 0], duration: 400, ease: 'inOutSine' });
+        }
+        return;
+      }
+
+      if (success) {
+        success.hidden = false;
+        animate(success, { opacity: [0, 1], translateY: [12, 0], duration: 600, ease: 'outExpo' });
+      }
+      form.reset();
+      window.setTimeout(() => {
+        if (success) success.hidden = true;
+      }, 5000);
+    });
+  }
+</script>
+
+<style>
+  .phero {
+    padding-block: clamp(9rem, 16vw, 14rem) clamp(2rem, 5vw, 4rem);
+  }
+
+  .phero .eyebrow {
+    margin-bottom: 1.5rem;
+  }
+
+  .phero__title {
+    margin-bottom: 2rem;
+  }
+
+  .phero__lead {
+    max-width: 50ch;
+    color: var(--muted);
+  }
+
+  .contact__grid {
+    display: grid;
+    gap: 3rem;
+  }
+
+  .contact__info {
+    display: grid;
+    gap: 1.6rem;
+    margin: 0 0 2.5rem;
+  }
+
+  .contact__info dt {
+    font-size: 0.72rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 0.35rem;
+  }
+
+  .contact__info dd {
+    margin: 0;
+    font-size: 1.15rem;
+    font-weight: 600;
+  }
+
+  .contact__note {
+    padding-top: 1.6rem;
+    border-top: 1px solid var(--line);
+    color: var(--muted);
+  }
+
+  .contact__note .eyebrow {
+    margin-bottom: 0.7rem;
+  }
+
+  /* Form */
+  .form {
+    display: grid;
+    gap: 1.3rem;
+  }
+
+  .field {
+    display: grid;
+    gap: 0.5rem;
+  }
+
+  .field label {
+    font-size: 0.78rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .field input,
+  .field textarea,
+  .field select {
+    width: 100%;
+    padding: 1rem 1.1rem;
+    background: var(--ink-2);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    color: var(--bone);
+    font-family: inherit;
+    font-size: 1rem;
+    transition: border-color 0.3s var(--ease), background-color 0.3s var(--ease);
+  }
+
+  .field textarea {
+    resize: vertical;
+    min-height: 120px;
+  }
+
+  .field input::placeholder,
+  .field textarea::placeholder {
+    color: var(--muted-dark);
+  }
+
+  .field input:focus,
+  .field textarea:focus,
+  .field select:focus {
+    outline: none;
+    border-color: var(--lime);
+    background: var(--ink-3);
+  }
+
+  .field input.has-error,
+  .field textarea.has-error {
+    border-color: #ff6b5e;
+  }
+
+  .field__error {
+    font-size: 0.78rem;
+    color: #ff8a80;
+    min-height: 1em;
+  }
+
+  .select-wrap {
+    position: relative;
+  }
+
+  .select-wrap select {
+    appearance: none;
+    cursor: pointer;
+  }
+
+  .select-arrow {
+    position: absolute;
+    right: 1.1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+    color: var(--muted);
+  }
+
+  .form__submit {
+    justify-self: start;
+    margin-top: 0.4rem;
+  }
+
+  .form__success {
+    padding: 1rem 1.2rem;
+    border-radius: 12px;
+    background: rgba(47, 143, 78, 0.16);
+    border: 1px solid var(--moss);
+    color: var(--lime);
+    font-weight: 500;
+  }
+
+  @media (min-width: 860px) {
+    .contact__grid {
+      grid-template-columns: 0.8fr 1.2fr;
+      gap: 4rem;
+    }
+  }
+</style>

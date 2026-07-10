@@ -2,6 +2,10 @@
 
 Este é um projeto acadêmico de **E-commerce** desenvolvido utilizando **PHP**, **MySQL**, **HTML**, **CSS**, **JavaScript** e outras tecnologias web. O objetivo do projeto é criar uma plataforma online onde os usuários podem visualizar produtos, adicioná-los ao carrinho e realizar compras. Além disso, administradores têm a capacidade de gerenciar o catálogo de produtos.
 
+> 🌿 **Novo front-end (Astro + Anime.js):** foi adicionada uma camada de apresentação moderna e
+> animada na pasta [`frontend/`](frontend/README.md), com tipografia Montserrat e design eco-tech.
+> O back-end em PHP (`src/`) permanece intacto. Para rodar: `cd frontend && npm install && npm run dev`.
+
 ## Sumário
 
 - [Descrição do Projeto](#descrição-do-projeto)
