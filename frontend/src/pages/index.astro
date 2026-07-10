@@ -1,0 +1,664 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ProductCard from '../components/ProductCard.astro';
+import { categories, getFeaturedProducts, stats } from '../data/catalog';
+
+const featured = getFeaturedProducts();
+---
+
+<BaseLayout active="home">
+  <!-- HERO -->
+  <section class="hero" data-hero>
+    <div class="hero__bg" aria-hidden="true">
+      <span class="hero__blob"></span>
+      <span class="hero__ring"></span>
+    </div>
+    <div class="hero__inner container-wide">
+      <p class="eyebrow" data-hero-item>Bioplástico sustentável · desde a matéria-prima</p>
+      <h1 class="display hero__title">
+        <span class="line-mask"><span class="line-inner">Plástico que</span></span>
+        <span class="line-mask"><span class="line-inner">não custa o</span></span>
+        <span class="line-mask"><span class="line-inner"><span class="text-lime">planeta.</span></span></span>
+      </h1>
+      <div class="hero__row">
+        <p class="lead hero__lead" data-hero-item>
+          A Cibele Plastic desenvolve soluções em bioplástico para embalagens, construção civil e
+          produtos médicos. O mesmo desempenho do plástico convencional — sem a herança fóssil.
+        </p>
+        <div class="hero__actions" data-hero-item>
+          <a class="btn btn--primary" href="/embalagens" data-magnetic="0.25">
+            <span class="btn__label">Explorar produtos <span class="arrow">↗</span></span>
+            <span class="btn__fill"></span>
+          </a>
+          <a class="btn btn--ghost" href="/sobre" data-magnetic="0.25">
+            <span class="btn__label">Nossa história</span>
+            <span class="btn__fill"></span>
+          </a>
+        </div>
+      </div>
+    </div>
+    <a class="hero__scroll" href="#segmentos" data-hero-item aria-label="Rolar para os segmentos">
+      <span>Role</span>
+      <span class="hero__scroll-line"></span>
+    </a>
+  </section>
+
+  <!-- MARQUEE -->
+  <div class="band">
+    <div class="marquee" aria-hidden="true">
+      <div class="marquee__group">
+        {
+          ['Sustentável', 'Biodegradável', 'Embalagens', 'Construção', 'Médico', 'Renovável'].map(
+            (word) => (
+              <span class="band__item">
+                {word} <span class="band__star">✦</span>
+              </span>
+            ),
+          )
+        }
+      </div>
+      <div class="marquee__group">
+        {
+          ['Sustentável', 'Biodegradável', 'Embalagens', 'Construção', 'Médico', 'Renovável'].map(
+            (word) => (
+              <span class="band__item">
+                {word} <span class="band__star">✦</span>
+              </span>
+            ),
+          )
+        }
+      </div>
+    </div>
+  </div>
+
+  <!-- INTRO -->
+  <section class="section intro">
+    <div class="container">
+      <div class="intro__grid">
+        <p class="eyebrow" data-reveal="fade">(Quem somos)</p>
+        <h2 class="h-lg intro__title" data-lines>
+          <span class="line-mask"><span class="line-inner">Trocamos o plástico fóssil por</span></span>
+          <span class="line-mask"><span class="line-inner">materiais de origem renovável,</span></span>
+          <span class="line-mask"><span class="line-inner">sem abrir mão de resistência.</span></span>
+        </h2>
+        <p class="intro__text text-muted" data-reveal="up">
+          Cada item do nosso catálogo nasce de fontes vegetais e se decompõe muito mais rápido que o
+          plástico tradicional. É tecnologia a serviço de um ciclo mais limpo — do laboratório à obra,
+          da cozinha ao hospital.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- SEGMENTOS -->
+  <section class="section segments" id="segmentos">
+    <div class="container-wide">
+      <header class="segments__header">
+        <p class="eyebrow" data-reveal="fade">Três frentes, um propósito</p>
+        <h2 class="h-xl" data-lines>
+          <span class="line-mask"><span class="line-inner">Segmentos</span></span>
+        </h2>
+      </header>
+
+      <div class="segments__list">
+        {
+          categories.map((cat, i) => (
+            <a class="segment" href={cat.path} data-reveal="up" data-cursor>
+              <span class="segment__index">{cat.indice}</span>
+              <div class="segment__main">
+                <h3 class="segment__title">{cat.titulo}</h3>
+                <p class="segment__desc text-muted">{cat.resumo}</p>
+              </div>
+              <span class="segment__tag">{cat.destaque}</span>
+              <span class="segment__media" aria-hidden="true">
+                <img src={`/img/${cat.imagem}`} alt="" loading="lazy" width="220" height="220" />
+              </span>
+              <span class="segment__arrow" aria-hidden="true">↗</span>
+            </a>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- STATS -->
+  <section class="section-sm stats">
+    <div class="container-wide">
+      <div class="stats__grid">
+        {
+          stats.map((stat) => (
+            <div class="stat" data-reveal="up">
+              <div class="stat__num">
+                {stat.prefixo}
+                <span data-count={stat.valor}>0</span>
+                {stat.sufixo}
+              </div>
+              <p class="stat__label text-muted">{stat.rotulo}</p>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- DESTAQUES -->
+  <section class="section featured">
+    <div class="container-wide">
+      <header class="featured__header">
+        <div>
+          <p class="eyebrow" data-reveal="fade">Selecionados</p>
+          <h2 class="h-lg" data-lines>
+            <span class="line-mask"><span class="line-inner">Destaques da semana</span></span>
+          </h2>
+        </div>
+        <a class="featured__link" href="/embalagens" data-reveal="fade">
+          Ver catálogo completo <span class="arrow">↗</span>
+        </a>
+      </header>
+
+      <div class="featured__grid" data-reveal-group>
+        {featured.map((product, i) => <ProductCard product={product} index={i} />)}
+      </div>
+    </div>
+  </section>
+
+  <!-- MANIFESTO -->
+  <section class="section paper manifesto">
+    <div class="container">
+      <div class="manifesto__grid">
+        <div class="manifesto__intro">
+          <p class="eyebrow" data-reveal="fade">Nosso compromisso</p>
+          <h2 class="h-lg" data-lines>
+            <span class="line-mask"><span class="line-inner">Menos resíduo.</span></span>
+            <span class="line-mask"><span class="line-inner">Mais futuro.</span></span>
+          </h2>
+        </div>
+        <ul class="manifesto__list">
+          {
+            [
+              {
+                t: 'Matéria-prima renovável',
+                d: 'Bioplásticos derivados de fontes vegetais, reduzindo a dependência do petróleo.',
+              },
+              {
+                t: 'Decomposição acelerada',
+                d: 'Produtos que voltam à natureza em uma fração do tempo do plástico comum.',
+              },
+              {
+                t: 'Desempenho de verdade',
+                d: 'Resistência e segurança comprovadas para uso diário, na obra e na saúde.',
+              },
+              {
+                t: 'Cadeia consciente',
+                d: 'Processos pensados para gerar menos emissão de CO₂ em cada etapa.',
+              },
+            ].map((item, i) => (
+              <li class="manifesto__item" data-reveal="up">
+                <span class="manifesto__num">0{i + 1}</span>
+                <div>
+                  <h3 class="manifesto__title">{item.t}</h3>
+                  <p>{item.d}</p>
+                </div>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="section cta">
+    <div class="container cta__inner">
+      <p class="eyebrow" data-reveal="fade">Vamos juntos</p>
+      <h2 class="h-xl cta__title" data-lines>
+        <span class="line-mask"><span class="line-inner">Construa um futuro</span></span>
+        <span class="line-mask"><span class="line-inner">mais <span class="text-lime">limpo</span> com a gente.</span></span>
+      </h2>
+      <div class="cta__actions" data-reveal="up">
+        <a class="btn btn--primary" href="/contato" data-magnetic="0.3">
+          <span class="btn__label">Solicitar orçamento <span class="arrow">↗</span></span>
+          <span class="btn__fill"></span>
+        </a>
+        <a class="btn btn--ghost" href="/sobre" data-magnetic="0.3">
+          <span class="btn__label">Conhecer a equipe</span>
+          <span class="btn__fill"></span>
+        </a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  /* HERO */
+  .hero {
+    position: relative;
+    min-height: 100svh;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding-block: 8rem 3rem;
+    overflow: hidden;
+  }
+
+  .hero__bg {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+  }
+
+  .hero__blob {
+    position: absolute;
+    top: -10%;
+    right: -5%;
+    width: 60vw;
+    height: 60vw;
+    max-width: 720px;
+    max-height: 720px;
+    background: radial-gradient(circle, rgba(200, 255, 45, 0.16), transparent 62%);
+    filter: blur(20px);
+    animation: float 14s ease-in-out infinite;
+  }
+
+  .hero__ring {
+    position: absolute;
+    bottom: -25%;
+    left: -12%;
+    width: 46vw;
+    height: 46vw;
+    max-width: 620px;
+    max-height: 620px;
+    border-radius: 50%;
+    border: 1px solid var(--line);
+    background: radial-gradient(circle at 30% 30%, rgba(47, 143, 78, 0.14), transparent 60%);
+    animation: spin 40s linear infinite;
+  }
+
+  @keyframes float {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(30px);
+    }
+  }
+
+  @keyframes spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  .hero__inner {
+    width: min(1500px, 100% - var(--gutter) * 2);
+  }
+
+  .eyebrow {
+    margin-bottom: 1.5rem;
+  }
+
+  .hero__title {
+    margin-bottom: 2.5rem;
+  }
+
+  .hero__row {
+    display: grid;
+    gap: 2rem;
+    align-items: end;
+  }
+
+  .hero__lead {
+    max-width: 46ch;
+    color: var(--muted);
+  }
+
+  .hero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .hero__scroll {
+    position: absolute;
+    right: var(--gutter);
+    bottom: 3rem;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.8rem;
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+    writing-mode: vertical-rl;
+  }
+
+  .hero__scroll-line {
+    width: 1px;
+    height: 56px;
+    background: linear-gradient(var(--lime), transparent);
+    animation: scrollcue 2s ease-in-out infinite;
+    transform-origin: top;
+  }
+
+  @keyframes scrollcue {
+    0%,
+    100% {
+      transform: scaleY(0.4);
+      opacity: 0.4;
+    }
+    50% {
+      transform: scaleY(1);
+      opacity: 1;
+    }
+  }
+
+  @media (min-width: 900px) {
+    .hero__row {
+      grid-template-columns: 1fr auto;
+    }
+    .hero__scroll {
+      display: flex;
+    }
+  }
+
+  /* BAND / MARQUEE */
+  .band {
+    border-block: 1px solid var(--line);
+    padding-block: 1.4rem;
+    background: var(--ink-2);
+  }
+
+  .band__item {
+    display: inline-flex;
+    align-items: center;
+    gap: 2.4rem;
+    font-size: clamp(1.1rem, 3vw, 1.8rem);
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    padding-right: 2.4rem;
+  }
+
+  .band__star {
+    color: var(--lime);
+    font-size: 0.7em;
+  }
+
+  /* INTRO */
+  .intro__grid {
+    display: grid;
+    gap: 1.5rem;
+  }
+
+  .intro__title {
+    max-width: 18ch;
+  }
+
+  .intro__text {
+    max-width: 52ch;
+    justify-self: end;
+    font-size: var(--step-1);
+  }
+
+  @media (min-width: 900px) {
+    .intro__grid {
+      grid-template-columns: 1fr 1fr;
+      align-items: start;
+      gap: 3rem 4rem;
+    }
+    .intro__grid .eyebrow {
+      grid-column: 1 / -1;
+    }
+  }
+
+  /* SEGMENTS */
+  .segments__header {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem 2rem;
+    justify-content: space-between;
+    align-items: end;
+    margin-bottom: 2.5rem;
+  }
+
+  .segments__list {
+    border-top: 1px solid var(--line);
+  }
+
+  .segment {
+    position: relative;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 1.4rem;
+    padding: clamp(1.5rem, 4vw, 2.6rem) 0;
+    border-bottom: 1px solid var(--line);
+    transition: padding-left 0.5s var(--ease);
+  }
+
+  .segment__index {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--muted);
+  }
+
+  .segment__title {
+    font-size: clamp(1.8rem, 5vw, 3.4rem);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    text-transform: uppercase;
+    line-height: 1;
+    transition: color 0.4s var(--ease), transform 0.5s var(--ease);
+  }
+
+  .segment__desc {
+    max-width: 46ch;
+    margin-top: 0.6rem;
+    font-size: 0.92rem;
+  }
+
+  .segment__tag {
+    display: none;
+    padding: 0.4rem 0.9rem;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .segment__media {
+    position: absolute;
+    top: 50%;
+    right: 12%;
+    width: clamp(90px, 12vw, 150px);
+    aspect-ratio: 1;
+    transform: translateY(-50%) scale(0.6);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.45s var(--ease), transform 0.55s var(--ease);
+    z-index: 3;
+  }
+
+  .segment__media img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.5));
+  }
+
+  .segment__arrow {
+    font-size: 1.6rem;
+    color: var(--muted);
+    transition: transform 0.45s var(--ease), color 0.4s var(--ease);
+  }
+
+  .segment:hover {
+    padding-left: clamp(0.6rem, 2vw, 1.6rem);
+  }
+
+  .segment:hover .segment__title {
+    color: var(--lime);
+  }
+
+  .segment:hover .segment__arrow {
+    color: var(--lime);
+    transform: translate(6px, -6px);
+  }
+
+  .segment:hover .segment__media {
+    opacity: 1;
+    transform: translateY(-50%) scale(1) rotate(-4deg);
+  }
+
+  @media (min-width: 760px) {
+    .segment {
+      grid-template-columns: auto 1fr auto auto;
+    }
+    .segment__tag {
+      display: inline-block;
+    }
+  }
+
+  /* STATS */
+  .stats {
+    border-block: 1px solid var(--line);
+  }
+
+  .stats__grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2.5rem 1rem;
+  }
+
+  .stat__num {
+    font-size: clamp(2.6rem, 7vw, 4.6rem);
+    font-weight: 800;
+    letter-spacing: -0.04em;
+    line-height: 1;
+    color: var(--lime);
+  }
+
+  .stat__label {
+    margin-top: 0.7rem;
+    max-width: 22ch;
+    font-size: 0.86rem;
+  }
+
+  @media (min-width: 820px) {
+    .stats__grid {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+
+  /* FEATURED */
+  .featured__header {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.2rem 2rem;
+    justify-content: space-between;
+    align-items: end;
+    margin-bottom: 2.6rem;
+  }
+
+  .featured__link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--muted);
+    transition: color 0.3s var(--ease);
+  }
+
+  .featured__link:hover {
+    color: var(--lime);
+  }
+
+  .featured__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1.4rem;
+  }
+
+  /* MANIFESTO */
+  .manifesto__grid {
+    display: grid;
+    gap: 3rem;
+  }
+
+  .manifesto__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 0;
+  }
+
+  .manifesto__item {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 1.5rem;
+    padding: 1.6rem 0;
+    border-top: 1px solid var(--line-dark);
+  }
+
+  .manifesto__item:last-child {
+    border-bottom: 1px solid var(--line-dark);
+  }
+
+  .manifesto__num {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--moss);
+  }
+
+  .manifesto__title {
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin-bottom: 0.4rem;
+  }
+
+  .manifesto__item p {
+    color: var(--muted-dark);
+    max-width: 50ch;
+    font-size: 0.95rem;
+  }
+
+  @media (min-width: 900px) {
+    .manifesto__grid {
+      grid-template-columns: 0.8fr 1.2fr;
+      gap: 4rem;
+    }
+  }
+
+  /* CTA */
+  .cta {
+    text-align: center;
+    background: radial-gradient(circle at 50% 120%, rgba(47, 143, 78, 0.22), transparent 60%);
+  }
+
+  .cta__inner {
+    display: grid;
+    justify-items: center;
+    gap: 1.6rem;
+  }
+
+  .cta__title {
+    max-width: 16ch;
+  }
+
+  .cta__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: center;
+    margin-top: 0.6rem;
+  }
+</style>

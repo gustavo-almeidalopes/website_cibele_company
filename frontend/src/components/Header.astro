@@ -1,0 +1,301 @@
+---
+interface Props {
+  active?: string;
+}
+const { active = '' } = Astro.props;
+
+const links = [
+  { label: 'Início', href: '/', key: 'home' },
+  { label: 'Embalagens', href: '/embalagens', key: 'embalagens' },
+  { label: 'Produtos Médicos', href: '/produtos-medicos', key: 'medicos' },
+  { label: 'Construção Civil', href: '/construcao', key: 'construcao' },
+  { label: 'Sobre', href: '/sobre', key: 'sobre' },
+  { label: 'Contato', href: '/contato', key: 'contato' },
+];
+---
+
+<header class="header" data-header>
+  <div class="header__inner container-wide">
+    <a class="brand" href="/" aria-label="Cibele Plastic — página inicial">
+      <span class="brand__mark" aria-hidden="true"></span>
+      <span class="brand__text">Cibele<span class="brand__accent">Plastic</span></span>
+    </a>
+
+    <nav class="nav" aria-label="Navegação principal">
+      {
+        links.map((link) => (
+          <a class:list={['nav__link', { 'is-active': active === link.key }]} href={link.href}>
+            <span>{link.label}</span>
+          </a>
+        ))
+      }
+    </nav>
+
+    <div class="header__actions">
+      <a class="header__cta" href="/contato" data-magnetic="0.35">
+        <span>Orçamento</span>
+        <svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true">
+          <path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+        </svg>
+      </a>
+      <button class="burger" type="button" data-menu-toggle aria-expanded="false" aria-controls="menu-mobile" aria-label="Abrir menu">
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<div class="menu" id="menu-mobile" data-menu hidden>
+  <nav class="menu__nav" aria-label="Navegação mobile">
+    {
+      links.map((link, index) => (
+        <a class:list={['menu__link', { 'is-active': active === link.key }]} href={link.href} data-menu-link>
+          <span class="menu__index">0{index + 1}</span>
+          <span class="menu__label">{link.label}</span>
+        </a>
+      ))
+    }
+  </nav>
+  <div class="menu__foot" data-menu-link>
+    <p class="eyebrow">Cibele Plastic</p>
+    <p>Bioplástico sustentável para embalagens, construção e saúde.</p>
+  </div>
+</div>
+
+<style>
+  .header {
+    position: fixed;
+    inset: 0 0 auto 0;
+    z-index: 100;
+    padding-block: 1.1rem;
+    transition: transform 0.5s var(--ease), background-color 0.4s var(--ease),
+      backdrop-filter 0.4s var(--ease), border-color 0.4s var(--ease), padding 0.4s var(--ease);
+    border-bottom: 1px solid transparent;
+  }
+
+  .header.is-scrolled {
+    padding-block: 0.7rem;
+    background: rgba(11, 13, 11, 0.72);
+    backdrop-filter: blur(14px);
+    border-bottom-color: var(--line);
+  }
+
+  .header.is-hidden {
+    transform: translateY(-100%);
+  }
+
+  .header__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+  }
+
+  .brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-weight: 800;
+    font-size: 1.15rem;
+    letter-spacing: -0.02em;
+    text-transform: uppercase;
+  }
+
+  .brand__mark {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--lime);
+    box-shadow: 0 0 0 4px rgba(200, 255, 45, 0.2);
+    animation: pulse 3.5s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%,
+    100% {
+      box-shadow: 0 0 0 4px rgba(200, 255, 45, 0.18);
+    }
+    50% {
+      box-shadow: 0 0 0 9px rgba(200, 255, 45, 0);
+    }
+  }
+
+  .brand__accent {
+    color: var(--lime);
+  }
+
+  .nav {
+    display: none;
+    gap: 0.35rem;
+  }
+
+  .nav__link {
+    position: relative;
+    padding: 0.5rem 0.85rem;
+    font-size: 0.82rem;
+    font-weight: 500;
+    letter-spacing: 0.01em;
+    color: var(--muted);
+    border-radius: 999px;
+    transition: color 0.3s var(--ease);
+    overflow: hidden;
+  }
+
+  .nav__link span {
+    position: relative;
+    z-index: 1;
+  }
+
+  .nav__link::before {
+    content: '';
+    position: absolute;
+    inset: auto 50% 6px;
+    height: 1px;
+    width: 0;
+    background: var(--lime);
+    transform: translateX(-50%);
+    transition: width 0.4s var(--ease);
+  }
+
+  .nav__link:hover {
+    color: var(--bone);
+  }
+
+  .nav__link:hover::before,
+  .nav__link.is-active::before {
+    width: calc(100% - 1.7rem);
+  }
+
+  .nav__link.is-active {
+    color: var(--bone);
+  }
+
+  .header__actions {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+  }
+
+  .header__cta {
+    display: none;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.7rem 1.25rem;
+    border-radius: 999px;
+    border: 1px solid var(--line);
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--bone);
+    transition: background-color 0.35s var(--ease), color 0.35s var(--ease), border-color 0.35s var(--ease);
+  }
+
+  .header__cta:hover {
+    background: var(--lime);
+    border-color: var(--lime);
+    color: var(--ink);
+  }
+
+  .burger {
+    position: relative;
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    border: 1px solid var(--line);
+    background: transparent;
+    display: grid;
+    place-items: center;
+  }
+
+  .burger span {
+    display: block;
+    width: 18px;
+    height: 1.6px;
+    background: var(--bone);
+    transition: transform 0.35s var(--ease), opacity 0.25s var(--ease);
+  }
+
+  .burger span + span {
+    margin-top: 5px;
+  }
+
+  :global(body.menu-open) .burger span:first-child {
+    transform: translateY(3.3px) rotate(45deg);
+  }
+
+  :global(body.menu-open) .burger span:last-child {
+    transform: translateY(-3.3px) rotate(-45deg);
+  }
+
+  /* Menu overlay */
+  .menu {
+    position: fixed;
+    inset: 0;
+    z-index: 95;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 2.5rem;
+    padding: 6rem var(--gutter) 3rem;
+    background: var(--ink-2);
+    background-image: radial-gradient(circle at 80% 10%, rgba(200, 255, 45, 0.1), transparent 45%);
+  }
+
+  .menu[hidden] {
+    display: none;
+  }
+
+  .menu__nav {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .menu__link {
+    display: flex;
+    align-items: baseline;
+    gap: 1rem;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid var(--line);
+    font-size: clamp(2rem, 11vw, 3.5rem);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    text-transform: uppercase;
+    color: var(--bone);
+    transition: color 0.3s var(--ease), padding-left 0.4s var(--ease);
+  }
+
+  .menu__link:hover,
+  .menu__link.is-active {
+    color: var(--lime);
+    padding-left: 0.8rem;
+  }
+
+  .menu__index {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--muted);
+    letter-spacing: 0;
+  }
+
+  .menu__foot {
+    color: var(--muted);
+    max-width: 30ch;
+  }
+
+  @media (min-width: 940px) {
+    .nav {
+      display: flex;
+    }
+    .header__cta {
+      display: inline-flex;
+    }
+    .burger {
+      display: none;
+    }
+    .menu {
+      display: none !important;
+    }
+  }
+</style>

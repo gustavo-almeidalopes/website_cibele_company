@@ -1,0 +1,191 @@
+---
+const year = new Date().getFullYear();
+const columns = [
+  {
+    title: 'Segmentos',
+    links: [
+      { label: 'Embalagens', href: '/embalagens' },
+      { label: 'Construção Civil', href: '/construcao' },
+      { label: 'Produtos Médicos', href: '/produtos-medicos' },
+    ],
+  },
+  {
+    title: 'Empresa',
+    links: [
+      { label: 'Sobre nós', href: '/sobre' },
+      { label: 'Contato', href: '/contato' },
+      { label: 'Início', href: '/' },
+    ],
+  },
+];
+---
+
+<footer class="footer">
+  <div class="footer__marquee marquee" aria-hidden="true">
+    <div class="marquee__group">
+      {
+        Array.from({ length: 4 }).map(() => (
+          <span class="footer__ticker">
+            Cibele Plastic <span class="footer__dot">●</span>
+          </span>
+        ))
+      }
+    </div>
+    <div class="marquee__group">
+      {
+        Array.from({ length: 4 }).map(() => (
+          <span class="footer__ticker">
+            Cibele Plastic <span class="footer__dot">●</span>
+          </span>
+        ))
+      }
+    </div>
+  </div>
+
+  <div class="footer__top container-wide">
+    <div class="footer__lead">
+      <p class="eyebrow">Vamos conversar</p>
+      <a class="footer__mail" href="/contato" data-cursor>
+        contato@cibeleplastic.com
+      </a>
+      <p class="text-muted">Soluções sustentáveis para cada segmento.</p>
+    </div>
+
+    <div class="footer__cols">
+      {
+        columns.map((col) => (
+          <div class="footer__col">
+            <h4 class="footer__title">{col.title}</h4>
+            <ul>
+              {col.links.map((link) => (
+                <li>
+                  <a href={link.href}>{link.label}</a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+
+  <div class="footer__bottom container-wide">
+    <p>© {year} Cibele Plastic. Todos os direitos reservados.</p>
+    <p class="footer__made">Front-end em Astro + Anime.js</p>
+    <a href="/documents/cookiesphp.pdf" target="_blank" rel="noopener noreferrer">Política de Cookies</a>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    background: var(--ink-2);
+    border-top: 1px solid var(--line);
+    padding-top: clamp(2rem, 5vw, 3.5rem);
+  }
+
+  .footer__marquee {
+    --speed: 40s;
+    padding-block: clamp(1rem, 3vw, 2rem);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .footer__ticker {
+    display: inline-flex;
+    align-items: center;
+    gap: 3rem;
+    font-size: clamp(2.4rem, 8vw, 6rem);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    text-transform: uppercase;
+    color: transparent;
+    -webkit-text-stroke: 1px var(--muted-dark);
+  }
+
+  .footer__dot {
+    color: var(--lime);
+    -webkit-text-stroke: 0;
+    font-size: 0.4em;
+  }
+
+  .footer__top {
+    display: grid;
+    gap: 3rem;
+    padding-block: clamp(3rem, 6vw, 5rem);
+  }
+
+  .footer__lead .eyebrow {
+    margin-bottom: 1.2rem;
+  }
+
+  .footer__mail {
+    display: inline-block;
+    font-size: clamp(1.8rem, 6vw, 3.4rem);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1.05;
+    background: linear-gradient(var(--lime), var(--lime)) no-repeat left bottom / 0 2px;
+    transition: background-size 0.5s var(--ease);
+    padding-bottom: 2px;
+    margin-bottom: 1rem;
+  }
+
+  .footer__mail:hover {
+    background-size: 100% 2px;
+  }
+
+  .footer__cols {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 3rem;
+  }
+
+  .footer__title {
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 1.1rem;
+  }
+
+  .footer__col ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 0.65rem;
+  }
+
+  .footer__col a {
+    color: var(--bone);
+    font-weight: 500;
+    transition: color 0.3s var(--ease);
+  }
+
+  .footer__col a:hover {
+    color: var(--lime);
+  }
+
+  .footer__bottom {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.8rem 2rem;
+    justify-content: space-between;
+    align-items: center;
+    padding-block: 1.8rem;
+    border-top: 1px solid var(--line);
+    font-size: 0.82rem;
+    color: var(--muted);
+  }
+
+  .footer__bottom a:hover {
+    color: var(--lime);
+  }
+
+  @media (min-width: 800px) {
+    .footer__top {
+      grid-template-columns: 1.3fr 1fr;
+      align-items: end;
+    }
+  }
+</style>

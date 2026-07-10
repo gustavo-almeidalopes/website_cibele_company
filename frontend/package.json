@@ -1,0 +1,18 @@
+{
+  "name": "cibele-plastic-frontend",
+  "type": "module",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Front-end moderno e animado da Cibele Plastic (Astro + Anime.js)",
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "animejs": "^4.0.0",
+    "astro": "^5.6.0"
+  }
+}
