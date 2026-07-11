@@ -1,115 +1,99 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import ProductCard from '../components/ProductCard.astro';
-import { categories, getFeaturedProducts, stats } from '../data/catalog';
+import { categories, stats } from '../data/catalog';
 
-const featured = getFeaturedProducts();
+// Produto em destaque do hero — o produto acompanhado de um significado,
+// nunca o item isolado. É o único momento da home que exibe um produto.
+const hero = {
+  image: 'prato.webp',
+  eyebrow: 'Coleção Bioplástico',
+  caption:
+    'Louça que veste a mesa com a leveza de quem devolve à terra tudo o que dela tomou. O requinte do descartável, sem a herança fóssil.',
+  cta: 'Descobrir embalagens',
+  href: '/embalagens',
+};
+
+// Imagens editoriais para os grandes tiles de cada universo.
+const tileImages: Record<string, string> = {
+  embalagens: 'copo.webp',
+  construcao: 'bloco.webp',
+  medicos: 'luva.webp',
+};
 ---
 
 <BaseLayout active="home">
-  <!-- HERO -->
+  <!-- HERO — produto em destaque com significado -->
   <section class="hero" data-hero>
-    <div class="hero__inner container-wide">
-      <p class="eyebrow" data-hero-item>Bioplástico sustentável · desde a matéria-prima</p>
-      <h1 class="display hero__title">
-        <span class="line-mask"><span class="line-inner">Plástico que</span></span>
-        <span class="line-mask"><span class="line-inner">não custa o</span></span>
-        <span class="line-mask"><span class="line-inner"><span class="text-lime text-italic">planeta.</span></span></span>
-      </h1>
-      <div class="hero__row">
-        <p class="lead hero__lead" data-hero-item>
-          A Cibele Plastic desenvolve soluções em bioplástico para embalagens, construção civil e
-          produtos médicos. O mesmo desempenho do plástico convencional — sem a herança fóssil.
-        </p>
-        <div class="hero__actions" data-hero-item>
-          <a class="btn btn--primary" href="/embalagens" data-magnetic="0.25">
-            <span class="btn__label">Explorar produtos <span class="arrow">↗</span></span>
-            <span class="btn__fill"></span>
-          </a>
-          <a class="btn btn--ghost" href="/sobre" data-magnetic="0.25">
-            <span class="btn__label">Nossa história</span>
-            <span class="btn__fill"></span>
+    <div class="hero__panel">
+      <div class="hero__panel-inner">
+        <p class="eyebrow" data-hero-item>{hero.eyebrow} · 2026</p>
+        <h1 class="display hero__title">
+          <span class="line-mask"><span class="line-inner">A elegância</span></span>
+          <span class="line-mask"><span class="line-inner">de um material</span></span>
+          <span class="line-mask"><span class="line-inner">que <span class="text-italic">retorna</span>.</span></span>
+        </h1>
+        <div class="hero__foot" data-hero-item>
+          <p class="hero__caption">{hero.caption}</p>
+          <a class="lux-link lux-link--light" href={hero.href} data-cursor>
+            <span>{hero.cta}</span>
+            <span class="arrow" aria-hidden="true">↗</span>
           </a>
         </div>
       </div>
     </div>
-    <a class="hero__scroll" href="#segmentos" data-hero-item aria-label="Rolar para os segmentos">
-      <span>Role</span>
-      <span class="hero__scroll-line"></span>
-    </a>
+    <div class="hero__media">
+      <img src={`/img/${hero.image}`} alt="Prato de bioplástico da Cibele Plastic" fetchpriority="high" />
+      <span class="hero__caption-media">Louça · Bioplástico</span>
+    </div>
   </section>
 
-  <!-- MARQUEE -->
-  <div class="band">
-    <div class="marquee" aria-hidden="true">
-      <div class="marquee__group">
-        {
-          ['Sustentável', 'Biodegradável', 'Embalagens', 'Construção', 'Médico', 'Renovável'].map(
-            (word) => (
-              <span class="band__item">
-                {word} <span class="band__star">✦</span>
-              </span>
-            ),
-          )
-        }
-      </div>
-      <div class="marquee__group">
-        {
-          ['Sustentável', 'Biodegradável', 'Embalagens', 'Construção', 'Médico', 'Renovável'].map(
-            (word) => (
-              <span class="band__item">
-                {word} <span class="band__star">✦</span>
-              </span>
-            ),
-          )
-        }
-      </div>
-    </div>
-  </div>
-
-  <!-- INTRO -->
-  <section class="section intro">
+  <!-- INTRO / STATEMENT -->
+  <section class="section statement">
     <div class="container">
-      <div class="intro__grid">
-        <p class="eyebrow" data-reveal="fade">(Quem somos)</p>
-        <h2 class="h-lg intro__title" data-lines>
-          <span class="line-mask"><span class="line-inner">Trocamos o plástico fóssil por</span></span>
-          <span class="line-mask"><span class="line-inner">materiais de origem renovável,</span></span>
-          <span class="line-mask"><span class="line-inner">sem abrir mão de resistência.</span></span>
-        </h2>
-        <p class="intro__text text-muted" data-reveal="up">
-          Cada item do nosso catálogo nasce de fontes vegetais e se decompõe muito mais rápido que o
-          plástico tradicional. É tecnologia a serviço de um ciclo mais limpo — do laboratório à obra,
-          da cozinha ao hospital.
-        </p>
-      </div>
+      <p class="eyebrow" data-reveal="fade">(A casa)</p>
+      <h2 class="statement__title" data-lines>
+        <span class="line-mask"><span class="line-inner">Trocamos o plástico fóssil</span></span>
+        <span class="line-mask"><span class="line-inner">por materiais de origem</span></span>
+        <span class="line-mask"><span class="line-inner"><span class="text-italic">renovável</span> — sem abrir</span></span>
+        <span class="line-mask"><span class="line-inner">mão de resistência.</span></span>
+      </h2>
+      <a class="lux-link statement__link" href="/sobre" data-reveal="fade" data-cursor>
+        <span>Conhecer a Cibele Plastic</span>
+        <span class="arrow" aria-hidden="true">↗</span>
+      </a>
     </div>
   </section>
 
-  <!-- SEGMENTOS -->
-  <section class="section segments" id="segmentos">
+  <!-- UNIVERSOS / CATEGORIAS -->
+  <section class="section showcase" id="segmentos">
     <div class="container-wide">
-      <header class="segments__header">
-        <p class="eyebrow" data-reveal="fade">Três frentes, um propósito</p>
+      <header class="showcase__head">
+        <p class="eyebrow" data-reveal="fade">As frentes da casa</p>
         <h2 class="h-xl" data-lines>
-          <span class="line-mask"><span class="line-inner">Segmentos</span></span>
+          <span class="line-mask"><span class="line-inner">Universos</span></span>
         </h2>
       </header>
 
-      <div class="segments__list">
+      <div class="showcase__grid" data-reveal-group>
         {
-          categories.map((cat, i) => (
-            <a class="segment" href={cat.path} data-reveal="up" data-cursor>
-              <span class="segment__index">{cat.indice}</span>
-              <div class="segment__main">
-                <h3 class="segment__title">{cat.titulo}</h3>
-                <p class="segment__desc text-muted">{cat.resumo}</p>
+          categories.map((cat) => (
+            <a class="tile" href={cat.path} data-reveal-item data-cursor>
+              <div class="tile__media">
+                <img
+                  src={`/img/${tileImages[cat.slug] ?? cat.imagem}`}
+                  alt={cat.titulo}
+                  loading="lazy"
+                />
+                <span class="tile__index">{cat.indice}</span>
               </div>
-              <span class="segment__tag">{cat.destaque}</span>
-              <span class="segment__media" aria-hidden="true">
-                <img src={`/img/${cat.imagem}`} alt="" loading="lazy" width="220" height="220" />
-              </span>
-              <span class="segment__arrow" aria-hidden="true">↗</span>
+              <div class="tile__body">
+                <h3 class="tile__title">{cat.titulo}</h3>
+                <p class="tile__desc">{cat.resumo}</p>
+                <span class="lux-link tile__link">
+                  <span>Explorar</span>
+                  <span class="arrow" aria-hidden="true">↗</span>
+                </span>
+              </div>
             </a>
           ))
         }
@@ -117,7 +101,53 @@ const featured = getFeaturedProducts();
     </div>
   </section>
 
-  <!-- STATS -->
+  <!-- EDITORIAL / COMPROMISSO -->
+  <section class="section paper editorial">
+    <div class="container-wide editorial__grid">
+      <div class="editorial__media" data-reveal="fade">
+        <img src="/img/isolante.webp" alt="Material de bioplástico de alto desempenho" loading="lazy" />
+      </div>
+      <div class="editorial__content">
+        <p class="eyebrow" data-reveal="fade">O compromisso</p>
+        <h2 class="h-lg editorial__title" data-lines>
+          <span class="line-mask"><span class="line-inner">Menos resíduo.</span></span>
+          <span class="line-mask"><span class="line-inner">Mais <span class="text-italic">futuro</span>.</span></span>
+        </h2>
+        <ul class="editorial__list">
+          {
+            [
+              {
+                t: 'Matéria-prima renovável',
+                d: 'Bioplásticos derivados de fontes vegetais, reduzindo a dependência do petróleo.',
+              },
+              {
+                t: 'Decomposição acelerada',
+                d: 'Produtos que voltam à natureza em uma fração do tempo do plástico comum.',
+              },
+              {
+                t: 'Desempenho de verdade',
+                d: 'Resistência e segurança comprovadas para o uso diário, na obra e na saúde.',
+              },
+              {
+                t: 'Cadeia consciente',
+                d: 'Processos pensados para gerar menos emissão de CO₂ em cada etapa.',
+              },
+            ].map((item, i) => (
+              <li class="editorial__item" data-reveal="up">
+                <span class="editorial__num">0{i + 1}</span>
+                <div>
+                  <h3 class="editorial__item-title">{item.t}</h3>
+                  <p>{item.d}</p>
+                </div>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- NÚMEROS -->
   <section class="section-sm stats">
     <div class="container-wide">
       <div class="stats__grid">
@@ -137,88 +167,22 @@ const featured = getFeaturedProducts();
     </div>
   </section>
 
-  <!-- DESTAQUES -->
-  <section class="section featured">
-    <div class="container-wide">
-      <header class="featured__header">
-        <div>
-          <p class="eyebrow" data-reveal="fade">Selecionados</p>
-          <h2 class="h-lg" data-lines>
-            <span class="line-mask"><span class="line-inner">Destaques da semana</span></span>
-          </h2>
-        </div>
-        <a class="featured__link" href="/embalagens" data-reveal="fade">
-          Ver catálogo completo <span class="arrow">↗</span>
-        </a>
-      </header>
-
-      <div class="featured__grid" data-reveal-group>
-        {featured.map((product, i) => <ProductCard product={product} index={i} />)}
-      </div>
-    </div>
-  </section>
-
-  <!-- MANIFESTO -->
-  <section class="section paper manifesto">
-    <div class="container">
-      <div class="manifesto__grid">
-        <div class="manifesto__intro">
-          <p class="eyebrow" data-reveal="fade">Nosso compromisso</p>
-          <h2 class="h-lg" data-lines>
-            <span class="line-mask"><span class="line-inner">Menos resíduo.</span></span>
-            <span class="line-mask"><span class="line-inner">Mais futuro.</span></span>
-          </h2>
-        </div>
-        <ul class="manifesto__list">
-          {
-            [
-              {
-                t: 'Matéria-prima renovável',
-                d: 'Bioplásticos derivados de fontes vegetais, reduzindo a dependência do petróleo.',
-              },
-              {
-                t: 'Decomposição acelerada',
-                d: 'Produtos que voltam à natureza em uma fração do tempo do plástico comum.',
-              },
-              {
-                t: 'Desempenho de verdade',
-                d: 'Resistência e segurança comprovadas para uso diário, na obra e na saúde.',
-              },
-              {
-                t: 'Cadeia consciente',
-                d: 'Processos pensados para gerar menos emissão de CO₂ em cada etapa.',
-              },
-            ].map((item, i) => (
-              <li class="manifesto__item" data-reveal="up">
-                <span class="manifesto__num">0{i + 1}</span>
-                <div>
-                  <h3 class="manifesto__title">{item.t}</h3>
-                  <p>{item.d}</p>
-                </div>
-              </li>
-            ))
-          }
-        </ul>
-      </div>
-    </div>
-  </section>
-
   <!-- CTA -->
   <section class="section cta">
     <div class="container cta__inner">
       <p class="eyebrow" data-reveal="fade">Vamos juntos</p>
-      <h2 class="h-xl cta__title" data-lines>
+      <h2 class="display cta__title" data-lines>
         <span class="line-mask"><span class="line-inner">Construa um futuro</span></span>
-        <span class="line-mask"><span class="line-inner">mais <span class="text-lime text-italic">limpo</span> com a gente.</span></span>
+        <span class="line-mask"><span class="line-inner">mais <span class="text-italic">limpo</span>.</span></span>
       </h2>
       <div class="cta__actions" data-reveal="up">
-        <a class="btn btn--primary" href="/contato" data-magnetic="0.3">
-          <span class="btn__label">Solicitar orçamento <span class="arrow">↗</span></span>
-          <span class="btn__fill"></span>
+        <a class="lux-link cta__link" href="/contato" data-cursor>
+          <span>Solicitar orçamento</span>
+          <span class="arrow" aria-hidden="true">↗</span>
         </a>
-        <a class="btn btn--ghost" href="/sobre" data-magnetic="0.3">
-          <span class="btn__label">Conhecer a equipe</span>
-          <span class="btn__fill"></span>
+        <a class="lux-link cta__link cta__link--muted" href="/sobre" data-cursor>
+          <span>Conhecer a equipe</span>
+          <span class="arrow" aria-hidden="true">↗</span>
         </a>
       </div>
     </div>
@@ -226,252 +190,361 @@ const featured = getFeaturedProducts();
 </BaseLayout>
 
 <style>
-  /* HERO */
+  /* ============================================================
+     Link editorial — texto com fio fino e seta (padrão da casa)
+     ============================================================ */
+  .lux-link {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6em;
+    padding-bottom: 0.45em;
+    font-size: 0.78rem;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--bone);
+  }
+
+  .lux-link::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 1px;
+    background: currentColor;
+    opacity: 0.28;
+  }
+
+  .lux-link::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    height: 1px;
+    width: 100%;
+    background: currentColor;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.5s var(--ease);
+  }
+
+  .lux-link:hover::before {
+    transform: scaleX(1);
+  }
+
+  .lux-link .arrow {
+    transition: transform 0.45s var(--ease);
+  }
+
+  .lux-link:hover .arrow {
+    transform: translate(0.3em, -0.3em);
+  }
+
+  .lux-link--light {
+    color: var(--cream);
+  }
+
+  /* ============================================================
+     HERO — painel editorial + produto em destaque
+     ============================================================ */
   .hero {
     position: relative;
     min-height: 100svh;
+    display: grid;
+    grid-template-rows: auto auto;
+  }
+
+  .hero__panel {
+    background: var(--forest);
+    color: var(--cream);
+    display: flex;
+  }
+
+  .hero__panel-inner {
+    width: 100%;
+    padding: 8.5rem var(--gutter) 3.5rem;
     display: flex;
     flex-direction: column;
-    justify-content: flex-end;
-    padding-block: 9rem 6.5rem;
+    justify-content: center;
+    gap: 2.2rem;
   }
 
-  .hero__inner {
-    width: min(1500px, 100% - var(--gutter) * 2);
-  }
-
-  .eyebrow {
-    margin-bottom: 1.5rem;
+  .hero .eyebrow {
+    color: var(--muted-light);
   }
 
   .hero__title {
-    margin-bottom: 2.5rem;
+    font-size: clamp(2.8rem, 12vw, 6rem);
+    line-height: 0.98;
+    letter-spacing: -0.03em;
   }
 
-  .hero__row {
-    display: grid;
-    gap: 2rem;
-    align-items: end;
-  }
-
-  .hero__lead {
-    max-width: 46ch;
-    color: var(--muted);
-  }
-
-  .hero__actions {
+  .hero__foot {
     display: flex;
-    flex-wrap: wrap;
-    gap: 1rem;
-  }
-
-  .hero__scroll {
-    position: absolute;
-    right: var(--gutter);
-    bottom: 1.5rem;
-    display: none;
     flex-direction: column;
-    align-items: center;
-    gap: 0.8rem;
-    font-size: 0.7rem;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: var(--muted);
-    writing-mode: vertical-rl;
+    gap: 1.6rem;
+    max-width: 42ch;
   }
 
-  .hero__scroll-line {
-    width: 1px;
-    height: 56px;
-    background: linear-gradient(var(--accent), transparent);
-    animation: scrollcue 2s ease-in-out infinite;
-    transform-origin: top;
+  .hero__caption {
+    color: var(--muted-light);
+    font-size: 1.02rem;
+    line-height: 1.6;
   }
 
-  @keyframes scrollcue {
-    0%,
-    100% {
-      transform: scaleY(0.4);
-      opacity: 0.4;
-    }
-    50% {
-      transform: scaleY(1);
-      opacity: 1;
-    }
-  }
-
-  @media (min-width: 900px) {
-    .hero__row {
-      grid-template-columns: 1fr auto;
-    }
-    .hero__scroll {
-      display: flex;
-    }
-  }
-
-  /* BAND / MARQUEE */
-  .band {
-    border-block: 1px solid var(--line);
-    padding-block: 1.4rem;
+  .hero__media {
+    position: relative;
+    min-height: 48svh;
     background: var(--ink-2);
+    overflow: hidden;
   }
 
-  .band__item {
-    display: inline-flex;
-    align-items: center;
-    gap: 2.4rem;
-    font-family: var(--font-display);
-    font-size: clamp(1.1rem, 3vw, 1.8rem);
-    font-weight: 700;
-    letter-spacing: 0.02em;
+  .hero__media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    animation: hero-zoom 14s var(--ease) forwards;
+  }
+
+  @keyframes hero-zoom {
+    from {
+      transform: scale(1.08);
+    }
+    to {
+      transform: scale(1);
+    }
+  }
+
+  .hero__caption-media {
+    position: absolute;
+    left: var(--gutter);
+    bottom: 1.6rem;
+    padding: 0.5rem 0.9rem;
+    background: rgba(20, 38, 26, 0.72);
+    backdrop-filter: blur(6px);
+    color: var(--cream);
+    font-size: 0.68rem;
+    font-weight: 500;
+    letter-spacing: 0.16em;
     text-transform: uppercase;
-    padding-right: 2.4rem;
-  }
-
-  .band__star {
-    color: var(--accent);
-    font-size: 0.7em;
-  }
-
-  /* INTRO */
-  .intro__grid {
-    display: grid;
-    gap: 1.5rem;
-  }
-
-  .intro__title {
-    max-width: 18ch;
-  }
-
-  .intro__text {
-    max-width: 52ch;
-    justify-self: end;
-    font-size: var(--step-1);
   }
 
   @media (min-width: 900px) {
-    .intro__grid {
-      grid-template-columns: 1fr 1fr;
-      align-items: start;
-      gap: 3rem 4rem;
+    .hero {
+      grid-template-rows: none;
+      grid-template-columns: 0.92fr 1.08fr;
     }
-    .intro__grid .eyebrow {
-      grid-column: 1 / -1;
+    .hero__media {
+      min-height: 100svh;
+    }
+    .hero__panel-inner {
+      padding-block: 3.5rem;
+      max-width: 42rem;
+      margin-left: auto;
     }
   }
 
-  /* SEGMENTS */
-  .segments__header {
+  /* ============================================================
+     STATEMENT — declaração editorial
+     ============================================================ */
+  .statement {
+    text-align: left;
+  }
+
+  .statement__title {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(1.9rem, 5.2vw, 4rem);
+    line-height: 1.08;
+    letter-spacing: -0.025em;
+    max-width: 20ch;
+    margin: 1.8rem 0 2.4rem;
+  }
+
+  /* ============================================================
+     SHOWCASE — grandes tiles de categoria (estilo boutique)
+     ============================================================ */
+  .showcase__head {
     display: flex;
     flex-wrap: wrap;
     gap: 1rem 2rem;
     justify-content: space-between;
     align-items: end;
-    margin-bottom: 2.5rem;
+    margin-bottom: 3rem;
   }
 
-  .segments__list {
-    border-top: 1px solid var(--line);
-  }
-
-  .segment {
-    position: relative;
+  .showcase__grid {
     display: grid;
-    grid-template-columns: auto 1fr auto;
-    align-items: center;
     gap: 1.4rem;
-    padding: clamp(1.5rem, 4vw, 2.6rem) 0;
-    border-bottom: 1px solid var(--line);
-    transition: padding-left 0.5s var(--ease);
+    grid-template-columns: 1fr;
   }
 
-  .segment__index {
-    font-size: 0.8rem;
+  .tile {
+    position: relative;
+    display: block;
+    isolation: isolate;
+  }
+
+  .tile__media {
+    position: relative;
+    aspect-ratio: 4 / 5;
+    overflow: hidden;
+    background: var(--ink-2);
+  }
+
+  .tile__media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.9s var(--ease);
+  }
+
+  .tile:hover .tile__media img {
+    transform: scale(1.05);
+  }
+
+  .tile__media::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(20, 38, 26, 0.28), transparent 42%);
+    opacity: 0;
+    transition: opacity 0.5s var(--ease);
+  }
+
+  .tile:hover .tile__media::after {
+    opacity: 1;
+  }
+
+  .tile__index {
+    position: absolute;
+    top: 1.1rem;
+    left: 1.2rem;
+    z-index: 2;
+    font-size: 0.72rem;
     font-weight: 600;
-    color: var(--muted);
+    letter-spacing: 0.1em;
+    color: var(--cream);
+    mix-blend-mode: difference;
   }
 
-  .segment__title {
+  .tile__body {
+    padding: 1.4rem 0.2rem 0;
+    display: grid;
+    gap: 0.5rem;
+  }
+
+  .tile__title {
     font-family: var(--font-display);
-    font-size: clamp(1.8rem, 5vw, 3.4rem);
+    font-size: clamp(1.5rem, 3vw, 2rem);
     font-weight: 700;
     letter-spacing: -0.02em;
     line-height: 1.05;
-    transition: color 0.4s var(--ease), transform 0.5s var(--ease);
   }
 
-  .segment__desc {
-    max-width: 46ch;
-    margin-top: 0.6rem;
-    font-size: 0.92rem;
-  }
-
-  .segment__tag {
-    display: none;
-    padding: 0.4rem 0.9rem;
-    border: 1px solid var(--line);
-    border-radius: 2px;
-    font-size: 0.7rem;
-    font-weight: 500;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
+  .tile__desc {
     color: var(--muted);
+    font-size: 0.92rem;
+    line-height: 1.55;
+    max-width: 40ch;
   }
 
-  .segment__media {
-    position: absolute;
-    top: 50%;
-    right: 12%;
-    width: clamp(90px, 12vw, 150px);
-    aspect-ratio: 1;
-    transform: translateY(-50%) scale(0.6);
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.45s var(--ease), transform 0.55s var(--ease);
-    z-index: 3;
+  .tile__link {
+    margin-top: 0.6rem;
+    font-size: 0.72rem;
   }
 
-  .segment__media img {
+  @media (min-width: 720px) {
+    .showcase__grid {
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.6rem;
+    }
+    .tile__media {
+      aspect-ratio: 3 / 4;
+    }
+  }
+
+  /* ============================================================
+     EDITORIAL / COMPROMISSO — imagem grande + valores
+     ============================================================ */
+  .editorial__grid {
+    display: grid;
+    gap: 2.6rem;
+  }
+
+  .editorial__media {
+    position: relative;
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+    border-radius: 2px;
+  }
+
+  .editorial__media img {
     width: 100%;
     height: 100%;
-    object-fit: contain;
-    filter: drop-shadow(0 20px 40px rgba(23, 51, 23, 0.28));
+    object-fit: cover;
   }
 
-  .segment__arrow {
-    font-size: 1.6rem;
-    color: var(--muted);
-    transition: transform 0.45s var(--ease), color 0.4s var(--ease);
+  .editorial__title {
+    margin: 1.4rem 0 2rem;
   }
 
-  .segment:hover {
-    padding-left: clamp(0.6rem, 2vw, 1.6rem);
+  .editorial__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 0;
   }
 
-  .segment:hover .segment__title {
-    color: var(--accent);
+  .editorial__item {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 1.4rem;
+    padding: 1.5rem 0;
+    border-top: 1px solid var(--line-dark);
   }
 
-  .segment:hover .segment__arrow {
-    color: var(--accent);
-    transform: translate(6px, -6px);
+  .editorial__item:last-child {
+    border-bottom: 1px solid var(--line-dark);
   }
 
-  .segment:hover .segment__media {
-    opacity: 1;
-    transform: translateY(-50%) scale(1) rotate(-4deg);
+  .editorial__num {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--cream);
+    opacity: 0.55;
   }
 
-  @media (min-width: 760px) {
-    .segment {
-      grid-template-columns: auto 1fr auto auto;
+  .editorial__item-title {
+    font-size: 1.12rem;
+    font-weight: 700;
+    margin-bottom: 0.35rem;
+  }
+
+  .editorial__item p {
+    color: var(--muted-light);
+    max-width: 46ch;
+    font-size: 0.92rem;
+    line-height: 1.55;
+  }
+
+  @media (min-width: 900px) {
+    .editorial__grid {
+      grid-template-columns: 1fr 1fr;
+      align-items: center;
+      gap: 4.5rem;
     }
-    .segment__tag {
-      display: inline-block;
+    .editorial__media {
+      aspect-ratio: 3 / 4;
     }
   }
 
-  /* STATS */
+  /* ============================================================
+     NÚMEROS
+     ============================================================ */
   .stats {
     border-block: 1px solid var(--line);
   }
@@ -484,17 +557,17 @@ const featured = getFeaturedProducts();
 
   .stat__num {
     font-family: var(--font-display);
-    font-size: clamp(2.6rem, 7vw, 4.6rem);
+    font-size: clamp(2.4rem, 6vw, 4rem);
     font-weight: 700;
     letter-spacing: -0.04em;
     line-height: 1;
-    color: var(--accent);
+    color: var(--bone);
   }
 
   .stat__label {
     margin-top: 0.7rem;
     max-width: 22ch;
-    font-size: 0.86rem;
+    font-size: 0.84rem;
   }
 
   @media (min-width: 820px) {
@@ -503,90 +576,9 @@ const featured = getFeaturedProducts();
     }
   }
 
-  /* FEATURED */
-  .featured__header {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1.2rem 2rem;
-    justify-content: space-between;
-    align-items: end;
-    margin-bottom: 2.6rem;
-  }
-
-  .featured__link {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    font-size: 0.8rem;
-    font-weight: 600;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    color: var(--muted);
-    transition: color 0.3s var(--ease);
-  }
-
-  .featured__link:hover {
-    color: var(--accent);
-  }
-
-  .featured__grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 1.4rem;
-  }
-
-  /* MANIFESTO */
-  .manifesto__grid {
-    display: grid;
-    gap: 3rem;
-  }
-
-  .manifesto__list {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    display: grid;
-    gap: 0;
-  }
-
-  .manifesto__item {
-    display: grid;
-    grid-template-columns: auto 1fr;
-    gap: 1.5rem;
-    padding: 1.6rem 0;
-    border-top: 1px solid var(--line-dark);
-  }
-
-  .manifesto__item:last-child {
-    border-bottom: 1px solid var(--line-dark);
-  }
-
-  .manifesto__num {
-    font-size: 0.85rem;
-    font-weight: 700;
-    color: var(--cream);
-  }
-
-  .manifesto__title {
-    font-size: 1.2rem;
-    font-weight: 700;
-    margin-bottom: 0.4rem;
-  }
-
-  .manifesto__item p {
-    color: var(--muted-light);
-    max-width: 50ch;
-    font-size: 0.95rem;
-  }
-
-  @media (min-width: 900px) {
-    .manifesto__grid {
-      grid-template-columns: 0.8fr 1.2fr;
-      gap: 4rem;
-    }
-  }
-
-  /* CTA */
+  /* ============================================================
+     CTA
+     ============================================================ */
   .cta {
     text-align: center;
   }
@@ -594,18 +586,23 @@ const featured = getFeaturedProducts();
   .cta__inner {
     display: grid;
     justify-items: center;
-    gap: 1.6rem;
+    gap: 1.8rem;
   }
 
   .cta__title {
-    max-width: 16ch;
+    font-size: clamp(2.6rem, 9vw, 6rem);
+    max-width: 14ch;
   }
 
   .cta__actions {
     display: flex;
     flex-wrap: wrap;
-    gap: 1rem;
+    gap: 1.6rem 3rem;
     justify-content: center;
-    margin-top: 0.6rem;
+    margin-top: 0.8rem;
+  }
+
+  .cta__link--muted {
+    color: var(--muted);
   }
 </style>
