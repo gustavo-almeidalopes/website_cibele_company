@@ -2,267 +2,391 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 
 const info = [
-  { rotulo: 'E-mail', valor: 'contato@cibeleplastic.com' },
-  { rotulo: 'Atendimento', valor: 'Seg a Sex · 9h às 18h' },
+  { rotulo: 'E-mail', valor: 'contato@cibeleplastic.com', href: 'mailto:contato@cibeleplastic.com' },
+  { rotulo: 'Atendimento', valor: 'Segunda a sexta, 9h — 18h' },
   { rotulo: 'Resposta', valor: 'Em até 24 horas úteis' },
+];
+
+const subjects = [
+  { value: 'orcamento', label: 'Orçamento geral' },
+  { value: 'embalagens', label: 'Embalagens' },
+  { value: 'construcao', label: 'Construção Civil' },
+  { value: 'medicos', label: 'Produtos Médicos' },
+  { value: 'outro', label: 'Outro assunto' },
 ];
 ---
 
 <BaseLayout
   active="contato"
-  title="Contato — Cibele Plastic"
-  description="Fale com a Cibele Plastic: dúvidas, sugestões ou orçamento de bioplásticos sustentáveis."
+  title="Contato — Cibele"
+  description="Fale com a Cibele: dúvidas, parcerias ou um orçamento sob medida em bioplásticos de origem vegetal."
 >
-  <section class="phero" data-hero>
-    <div class="container-wide">
-      <p class="eyebrow" data-hero-item>Fale com a gente</p>
-      <h1 class="display phero__title">
-        <span class="line-mask"><span class="line-inner">Vamos</span></span>
-        <span class="line-mask"><span class="line-inner">conversar.</span></span>
+  <section class="phero">
+    <div class="container">
+      <p class="eyebrow phero__eyebrow" data-reveal="fade">Contato</p>
+      <h1 class="display phero__title" data-reveal>
+        Toda parceria começa<br />
+        <em class="serif-italic">com uma conversa.</em>
       </h1>
-      <p class="lead phero__lead" data-hero-item>
-        Dúvidas, sugestões ou um orçamento sob medida? Conte o que você precisa e retornamos rápido.
+      <p class="lead phero__lead text-muted" data-reveal>
+        Conte o que você precisa — um orçamento sob medida, uma dúvida técnica ou uma ideia de
+        projeto. Retornamos em até um dia útil.
       </p>
     </div>
   </section>
 
   <section class="section-sm contact">
-    <div class="container-wide contact__grid">
-      <aside class="contact__aside" data-reveal="up">
+    <div class="container contact__grid">
+      <aside class="contact__aside" data-reveal>
         <dl class="contact__info">
           {
             info.map((item) => (
-              <div>
-                <dt>{item.rotulo}</dt>
-                <dd>{item.valor}</dd>
+              <div class="contact__row">
+                <dt class="meta">{item.rotulo}</dt>
+                <dd>
+                  {item.href ? (
+                    <a class="contact__value contact__value--link" href={item.href}>
+                      {item.valor}
+                    </a>
+                  ) : (
+                    <span class="contact__value">{item.valor}</span>
+                  )}
+                </dd>
               </div>
             ))
           }
         </dl>
+
         <div class="contact__note">
-          <p class="eyebrow">Atendemos</p>
-          <p>Embalagens · Construção Civil · Produtos Médicos</p>
+          <p class="meta">Atendemos</p>
+          <ul class="contact__areas">
+            <li><a href="/embalagens">Embalagens</a></li>
+            <li><a href="/construcao">Construção Civil</a></li>
+            <li><a href="/produtos-medicos">Produtos Médicos</a></li>
+          </ul>
         </div>
       </aside>
 
-      <form class="form" id="contato-form" novalidate data-reveal="up">
-        <div class="field">
-          <label for="nome">Nome</label>
-          <input id="nome" name="nome" type="text" autocomplete="name" required placeholder="Seu nome" />
-          <span class="field__error" data-error-for="nome"></span>
-        </div>
+      <div class="contact__main" data-reveal>
+        <form class="form" id="contato-form" novalidate>
+          <div class="form__row form__row--split">
+            <div class="field">
+              <label class="field__label" for="nome">Nome</label>
+              <input
+                id="nome"
+                name="nome"
+                type="text"
+                autocomplete="name"
+                required
+                aria-describedby="erro-nome"
+              />
+              <p class="field__error" id="erro-nome" data-error-for="nome"></p>
+            </div>
 
-        <div class="field">
-          <label for="email">E-mail</label>
-          <input id="email" name="email" type="email" autocomplete="email" required placeholder="voce@email.com" />
-          <span class="field__error" data-error-for="email"></span>
-        </div>
-
-        <div class="field">
-          <label for="assunto">Assunto</label>
-          <div class="select-wrap">
-            <select id="assunto" name="assunto">
-              <option value="orcamento">Orçamento</option>
-              <option value="embalagens">Embalagens</option>
-              <option value="construcao">Construção Civil</option>
-              <option value="medicos">Produtos Médicos</option>
-              <option value="outro">Outro assunto</option>
-            </select>
-            <span class="select-arrow" aria-hidden="true">▾</span>
+            <div class="field">
+              <label class="field__label" for="email">E-mail</label>
+              <input
+                id="email"
+                name="email"
+                type="email"
+                autocomplete="email"
+                required
+                aria-describedby="erro-email"
+              />
+              <p class="field__error" id="erro-email" data-error-for="email"></p>
+            </div>
           </div>
+
+          <div class="field">
+            <label class="field__label" for="assunto">Assunto</label>
+            <div class="select-wrap">
+              <select id="assunto" name="assunto">
+                {subjects.map((s) => <option value={s.value}>{s.label}</option>)}
+              </select>
+              <svg class="select-arrow" viewBox="0 0 12 8" width="12" height="8" aria-hidden="true">
+                <path d="M1 1.5 6 6.5 11 1.5" fill="none" stroke="currentColor" stroke-width="1.2"></path>
+              </svg>
+            </div>
+          </div>
+
+          <div class="field">
+            <label class="field__label" for="mensagem">Mensagem</label>
+            <textarea
+              id="mensagem"
+              name="mensagem"
+              rows="5"
+              required
+              aria-describedby="erro-mensagem dica-mensagem"
+            ></textarea>
+            <p class="field__hint" id="dica-mensagem">
+              Quanto mais contexto, mais precisa será a nossa resposta.
+            </p>
+            <p class="field__error" id="erro-mensagem" data-error-for="mensagem"></p>
+          </div>
+
+          <div class="form__foot">
+            <button class="btn btn--solid form__submit" type="submit">
+              <span data-submit-label>Enviar mensagem</span>
+            </button>
+            <p class="form__privacy text-muted">
+              Usamos seus dados apenas para responder a esta mensagem.
+            </p>
+          </div>
+        </form>
+
+        <div class="form-success" id="form-success" hidden tabindex="-1">
+          <h2 class="h-md form-success__title">
+            Mensagem recebida.<br />
+            <em class="serif-italic">Obrigado.</em>
+          </h2>
+          <p class="text-muted">
+            Retornaremos em até 24 horas úteis no e-mail informado.
+          </p>
+          <button class="link-line form-success__again" type="button" id="form-again">
+            Enviar outra mensagem
+          </button>
         </div>
 
-        <div class="field">
-          <label for="mensagem">Mensagem</label>
-          <textarea id="mensagem" name="mensagem" rows="5" required placeholder="Como podemos ajudar?"></textarea>
-          <span class="field__error" data-error-for="mensagem"></span>
-        </div>
-
-        <button class="btn btn--primary form__submit" type="submit">
-          <span class="btn__label">Enviar mensagem <span class="arrow">↗</span></span>
-          <span class="btn__fill"></span>
-        </button>
-
-        <p class="form__success" id="form-success" hidden>
-          ✓ Mensagem enviada! Em breve entraremos em contato.
-        </p>
-      </form>
+        <p class="visually-hidden" role="status" aria-live="polite" id="form-status"></p>
+      </div>
     </div>
   </section>
 </BaseLayout>
 
 <script>
-  import { animate } from 'animejs';
-
   const form = document.getElementById('contato-form') as HTMLFormElement | null;
   const success = document.getElementById('form-success');
+  const again = document.getElementById('form-again');
+  const status = document.getElementById('form-status');
 
-  if (form) {
+  // Pré-seleciona o assunto quando o visitante chega pelo catálogo.
+  const preset = new URLSearchParams(window.location.search).get('assunto');
+  const select = document.getElementById('assunto') as HTMLSelectElement | null;
+  if (preset && select && [...select.options].some((o) => o.value === preset)) {
+    select.value = preset;
+  }
+
+  if (form && success) {
     const setError = (name: string, message: string) => {
-      const el = form.querySelector(`[data-error-for="${name}"]`);
-      const input = form.querySelector(`[name="${name}"]`);
+      const el = form.querySelector<HTMLElement>(`[data-error-for="${name}"]`);
+      const input = form.querySelector<HTMLElement>(`[name="${name}"]`);
       if (el) el.textContent = message;
-      if (input) input.classList.toggle('has-error', Boolean(message));
+      if (input) {
+        input.classList.toggle('has-error', Boolean(message));
+        input.setAttribute('aria-invalid', message ? 'true' : 'false');
+      }
     };
 
     const validate = () => {
-      let ok = true;
-      const nome = form.nome as HTMLInputElement;
-      const email = form.email as HTMLInputElement;
-      const mensagem = form.mensagem as HTMLTextAreaElement;
+      const nome = form.elements.namedItem('nome') as HTMLInputElement;
+      const email = form.elements.namedItem('email') as HTMLInputElement;
+      const mensagem = form.elements.namedItem('mensagem') as HTMLTextAreaElement;
+      let firstInvalid: HTMLElement | null = null;
 
       if (!nome.value.trim()) {
         setError('nome', 'Informe seu nome.');
-        ok = false;
+        firstInvalid = firstInvalid ?? nome;
       } else setError('nome', '');
 
       if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value.trim())) {
         setError('email', 'Informe um e-mail válido.');
-        ok = false;
+        firstInvalid = firstInvalid ?? email;
       } else setError('email', '');
 
       if (mensagem.value.trim().length < 10) {
         setError('mensagem', 'Escreva ao menos 10 caracteres.');
-        ok = false;
+        firstInvalid = firstInvalid ?? mensagem;
       } else setError('mensagem', '');
 
-      return ok;
+      return firstInvalid;
     };
+
+    // Limpa o erro assim que o campo é corrigido.
+    ['nome', 'email', 'mensagem'].forEach((name) => {
+      const input = form.elements.namedItem(name) as HTMLElement | null;
+      input?.addEventListener('input', () => setError(name, ''));
+    });
 
     form.addEventListener('submit', (event) => {
       event.preventDefault();
-      if (!validate()) {
-        const firstError = form.querySelector('.has-error');
-        if (firstError) {
-          animate(firstError, { translateX: [-8, 8, -6, 6, 0], duration: 400, ease: 'inOutSine' });
-        }
+      const firstInvalid = validate();
+      if (firstInvalid) {
+        firstInvalid.focus();
+        if (status) status.textContent = 'O formulário contém erros. Revise os campos destacados.';
         return;
       }
 
-      if (success) {
-        success.hidden = false;
-        animate(success, { opacity: [0, 1], translateY: [12, 0], duration: 600, ease: 'outExpo' });
-      }
+      form.hidden = true;
+      success.hidden = false;
+      success.focus();
+      if (status) status.textContent = 'Mensagem enviada com sucesso.';
+    });
+
+    again?.addEventListener('click', () => {
       form.reset();
-      window.setTimeout(() => {
-        if (success) success.hidden = true;
-      }, 5000);
+      success.hidden = true;
+      form.hidden = false;
+      (form.elements.namedItem('nome') as HTMLInputElement | null)?.focus();
+      if (status) status.textContent = '';
     });
   }
 </script>
 
 <style>
   .phero {
-    padding-block: clamp(9rem, 16vw, 14rem) clamp(2rem, 5vw, 4rem);
+    padding-block: clamp(9.5rem, 16vw, 14rem) clamp(2.5rem, 5vw, 4.5rem);
   }
 
-  .phero .eyebrow {
-    margin-bottom: 1.5rem;
-  }
-
-  .phero__title {
+  .phero__eyebrow {
     margin-bottom: 2rem;
   }
 
+  .phero__title {
+    margin-bottom: 2.2rem;
+  }
+
   .phero__lead {
-    max-width: 50ch;
-    color: var(--muted);
+    max-width: 52ch;
+  }
+
+  .contact {
+    border-top: 1px solid var(--line);
   }
 
   .contact__grid {
     display: grid;
-    gap: 3rem;
+    gap: clamp(3rem, 6vw, 5rem);
   }
 
+  /* Coluna de informações */
   .contact__info {
     display: grid;
-    gap: 1.6rem;
-    margin: 0 0 2.5rem;
   }
 
-  .contact__info dt {
-    font-size: 0.72rem;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--muted);
-    margin-bottom: 0.35rem;
+  .contact__row {
+    display: grid;
+    gap: 0.5rem;
+    padding-block: 1.4rem;
+    border-bottom: 1px solid var(--line);
   }
 
-  .contact__info dd {
-    margin: 0;
-    font-size: 1.15rem;
-    font-weight: 600;
+  .contact__row:first-child {
+    padding-top: 0;
+  }
+
+  .contact__value {
+    font-family: var(--font-serif);
+    font-size: 1.25rem;
+    font-weight: 400;
+    line-height: 1.3;
+  }
+
+  .contact__value--link {
+    background: linear-gradient(currentColor, currentColor) no-repeat left bottom / 0 1px;
+    padding-bottom: 3px;
+    transition: background-size 0.55s var(--ease);
+  }
+
+  .contact__value--link:hover {
+    background-size: 100% 1px;
   }
 
   .contact__note {
-    padding-top: 1.6rem;
-    border-top: 1px solid var(--line);
-    color: var(--muted);
+    margin-top: 2.4rem;
   }
 
-  .contact__note .eyebrow {
-    margin-bottom: 0.7rem;
+  .contact__note .meta {
+    margin-bottom: 1.1rem;
   }
 
-  /* Form */
+  .contact__areas {
+    list-style: none;
+    display: grid;
+    gap: 0.55rem;
+    font-size: 0.94rem;
+  }
+
+  .contact__areas a {
+    color: var(--ink-2);
+    transition: color 0.35s var(--ease);
+  }
+
+  .contact__areas a:hover {
+    color: var(--ink);
+  }
+
+  /* Formulário */
   .form {
     display: grid;
-    gap: 1.3rem;
+    gap: 2.4rem;
+  }
+
+  .form__row--split {
+    display: grid;
+    gap: 2.4rem;
   }
 
   .field {
     display: grid;
-    gap: 0.5rem;
+    gap: 0.55rem;
   }
 
-  .field label {
-    font-size: 0.78rem;
-    letter-spacing: 0.1em;
+  .field__label {
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.18em;
     text-transform: uppercase;
-    color: var(--muted);
+    color: var(--ink-2);
   }
 
   .field input,
   .field textarea,
   .field select {
     width: 100%;
-    padding: 1rem 1.1rem;
-    background: var(--ink-2);
-    border: 1px solid var(--line);
-    border-radius: 12px;
-    color: var(--bone);
-    font-family: inherit;
-    font-size: 1rem;
-    transition: border-color 0.3s var(--ease), background-color 0.3s var(--ease);
+    padding: 0.85rem 0;
+    background: transparent;
+    border: 0;
+    border-bottom: 1px solid var(--line-strong);
+    border-radius: 0;
+    color: var(--ink);
+    font-family: var(--font-serif);
+    font-size: 1.15rem;
+    line-height: 1.4;
+    transition: border-color 0.4s var(--ease);
   }
 
   .field textarea {
     resize: vertical;
-    min-height: 120px;
-  }
-
-  .field input::placeholder,
-  .field textarea::placeholder {
-    color: var(--muted-dark);
+    min-height: 130px;
   }
 
   .field input:focus,
   .field textarea:focus,
   .field select:focus {
     outline: none;
-    border-color: var(--accent);
-    background: var(--ink-3);
+    border-bottom-color: var(--ink);
+  }
+
+  .field input:focus-visible,
+  .field textarea:focus-visible,
+  .field select:focus-visible {
+    outline: none;
   }
 
   .field input.has-error,
   .field textarea.has-error {
-    border-color: #c0392b;
+    border-bottom-color: var(--error);
+  }
+
+  .field__hint {
+    font-size: 0.8rem;
+    color: var(--ink-3);
   }
 
   .field__error {
-    font-size: 0.78rem;
-    color: #c0392b;
-    min-height: 1em;
+    font-size: 0.8rem;
+    color: var(--error);
+    min-height: 1.2em;
   }
 
   .select-wrap {
@@ -272,35 +396,62 @@ const info = [
   .select-wrap select {
     appearance: none;
     cursor: pointer;
+    padding-right: 2rem;
   }
 
   .select-arrow {
     position: absolute;
-    right: 1.1rem;
+    right: 0.2rem;
     top: 50%;
     transform: translateY(-50%);
     pointer-events: none;
-    color: var(--muted);
+    color: var(--ink-2);
   }
 
-  .form__submit {
-    justify-self: start;
-    margin-top: 0.4rem;
+  .form__foot {
+    display: grid;
+    gap: 1.2rem;
+    justify-items: start;
   }
 
-  .form__success {
-    padding: 1.1rem 1.3rem;
-    border-radius: 12px;
-    background: rgba(23, 51, 23, 0.08);
-    border: 1px solid var(--forest);
-    color: var(--accent);
-    font-weight: 500;
+  .form__privacy {
+    font-size: 0.8rem;
   }
 
-  @media (min-width: 860px) {
+  /* Confirmação */
+  .form-success {
+    display: grid;
+    justify-items: start;
+    gap: 1.4rem;
+    padding: clamp(2rem, 5vw, 3.5rem);
+    background: var(--stone);
+  }
+
+  .form-success:focus {
+    outline: none;
+  }
+
+  .form-success__again {
+    border: 0;
+    background: transparent;
+    padding-inline: 0;
+    cursor: pointer;
+  }
+
+  @media (min-width: 640px) {
+    .form__row--split {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  @media (min-width: 900px) {
     .contact__grid {
-      grid-template-columns: 0.8fr 1.2fr;
-      gap: 4rem;
+      grid-template-columns: 1fr 1.6fr;
+      align-items: start;
+    }
+    .contact__aside {
+      position: sticky;
+      top: 8rem;
     }
   }
 </style>

@@ -1,9 +1,9 @@
 {
   "name": "cibele-plastic-frontend",
   "type": "module",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "private": true,
-  "description": "Front-end moderno e animado da Cibele Plastic (Astro + Anime.js)",
+  "description": "Front-end da Cibele — bioplásticos de origem vegetal (Astro, sem dependências de animação)",
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
@@ -12,7 +12,6 @@
     "astro": "astro"
   },
   "dependencies": {
-    "animejs": "^4.0.0",
     "astro": "^5.6.0"
   }
 }
