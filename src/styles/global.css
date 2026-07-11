@@ -5,31 +5,31 @@
    ============================================================ */
 
 :root {
-  /* Duas cores — a totalidade da paleta tipográfica */
-  --cream: #ffffe3; /* bege — fundo claro e texto sobre fundo escuro */
-  --forest: #173317; /* verde-escuro — fundo de contraste e texto sobre fundo claro */
+  /* Duas cores — a totalidade da paleta tipográfica (tons mais contidos, luxo discreto) */
+  --cream: #f8f3e6; /* marfim — fundo claro e texto sobre fundo escuro */
+  --forest: #14261a; /* verde quase preto — fundo de contraste e texto sobre fundo claro */
 
   /* Fundos (sempre lisos — nunca gradiente) */
   --ink: var(--cream); /* fundo padrão da página */
-  --ink-2: #f7f2d6; /* superfície sólida (cartões) sobre fundo claro */
-  --ink-3: #efe9c1; /* superfície sólida em hover sobre fundo claro */
+  --ink-2: #f1ead9; /* superfície sólida (cartões) sobre fundo claro */
+  --ink-3: #e8dfc9; /* superfície sólida em hover sobre fundo claro */
   --paper: var(--forest); /* seção de contraste (fundo escuro) */
-  --paper-2: #102310; /* superfície sólida sobre fundo escuro */
+  --paper-2: #0d1a12; /* superfície sólida sobre fundo escuro */
 
   /* Tipografia — hierarquia por opacidade da mesma cor, nunca por novo matiz */
   --bone: var(--forest); /* texto padrão sobre fundo claro */
-  --muted: rgba(23, 51, 23, 0.62); /* texto secundário sobre fundo claro */
-  --muted-dark: rgba(23, 51, 23, 0.4); /* texto terciário / contorno sobre fundo claro */
-  --muted-light: rgba(255, 255, 227, 0.68); /* texto secundário sobre fundo escuro */
-  --line: rgba(23, 51, 23, 0.14); /* fios sobre fundo claro */
-  --line-dark: rgba(255, 255, 227, 0.2); /* fios sobre fundo escuro */
+  --muted: rgba(20, 38, 26, 0.6); /* texto secundário sobre fundo claro */
+  --muted-dark: rgba(20, 38, 26, 0.38); /* texto terciário / contorno sobre fundo claro */
+  --muted-light: rgba(248, 243, 230, 0.66); /* texto secundário sobre fundo escuro */
+  --line: rgba(20, 38, 26, 0.14); /* fios sobre fundo claro */
+  --line-dark: rgba(248, 243, 230, 0.18); /* fios sobre fundo escuro */
 
   --accent: var(--forest); /* acento tipográfico sobre fundo claro */
   --accent-inverse: var(--cream); /* acento tipográfico sobre fundo escuro */
 
   /* Tipografia */
   --font: 'Ubuntu', system-ui, -apple-system, 'Segoe UI', sans-serif;
-  --font-display: 'MuseoModerno', 'Ubuntu', system-ui, sans-serif;
+  --font-display: 'Fraunces', 'Times New Roman', serif;
 
   /* Escala fluida */
   --step--1: clamp(0.78rem, 0.75rem + 0.15vw, 0.88rem);
@@ -104,9 +104,9 @@ h3,
 h4 {
   margin: 0;
   font-family: var(--font-display);
-  font-weight: 800;
-  line-height: 0.98;
-  letter-spacing: -0.02em;
+  font-weight: 600;
+  line-height: 1.02;
+  letter-spacing: -0.01em;
 }
 
 p {
@@ -122,27 +122,32 @@ p {
 .display {
   font-family: var(--font-display);
   font-size: var(--step-5);
-  font-weight: 800;
-  line-height: 0.9;
-  letter-spacing: -0.035em;
-  text-transform: uppercase;
+  font-weight: 500;
+  line-height: 0.98;
+  letter-spacing: -0.01em;
 }
 
 .h-xl {
   font-family: var(--font-display);
   font-size: var(--step-4);
-  text-transform: uppercase;
-  letter-spacing: -0.03em;
+  font-weight: 500;
+  letter-spacing: -0.01em;
 }
 
 .h-lg {
   font-family: var(--font-display);
   font-size: var(--step-3);
+  font-weight: 500;
 }
 
 .h-md {
   font-family: var(--font-display);
   font-size: var(--step-2);
+  font-weight: 500;
+}
+
+.text-italic {
+  font-style: italic;
 }
 
 .eyebrow {
@@ -150,8 +155,8 @@ p {
   align-items: center;
   gap: 0.6em;
   font-size: var(--step--1);
-  font-weight: 600;
-  letter-spacing: 0.28em;
+  font-weight: 500;
+  letter-spacing: 0.22em;
   text-transform: uppercase;
   color: var(--muted);
 }
@@ -224,22 +229,21 @@ p {
   background: var(--line-dark);
 }
 
-/* Botões --------------------------------------------------- */
+/* Botões — links discretos com sublinhado, sem preenchimento cheio -------- */
 .btn {
   position: relative;
   display: inline-flex;
   align-items: center;
   gap: 0.7em;
-  padding: 1.1em 2.1em;
-  border: 1px solid transparent;
-  border-radius: 999px;
-  font-weight: 600;
+  padding-bottom: 0.5em;
+  border: 0;
+  background: none;
+  font-weight: 500;
   font-size: var(--step--1);
-  letter-spacing: 0.05em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  overflow: hidden;
-  isolation: isolate;
-  transition: color 0.4s var(--ease), border-color 0.4s var(--ease);
+  color: var(--bone);
+  transition: color 0.35s var(--ease);
 }
 
 .btn__label {
@@ -250,39 +254,51 @@ p {
   gap: 0.6em;
 }
 
+/* Fio estático (sempre visível) */
+.btn::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1px;
+  background: var(--line);
+}
+
+/* Sublinhado de destaque, cresce da esquerda no hover */
 .btn__fill {
   position: absolute;
-  inset: 0;
+  left: 0;
+  bottom: 0;
   z-index: 1;
-  border-radius: inherit;
-  transform: translateY(101%);
-  transition: transform 0.5s var(--ease);
+  height: 1px;
+  width: 100%;
+  background: var(--accent);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.45s var(--ease);
 }
 
 .btn:hover .btn__fill,
 .btn:focus-visible .btn__fill {
-  transform: translateY(0);
+  transform: scaleX(1);
 }
 
-/* Primário: preenchido em verde-escuro, inverte para bege no hover */
 .btn--primary {
-  background: var(--forest);
-  color: var(--cream);
-}
-
-.btn--primary .btn__fill {
-  background: var(--cream);
+  color: var(--bone);
 }
 
 .btn--primary:hover,
 .btn--primary:focus-visible {
-  color: var(--forest);
+  color: var(--accent);
 }
 
-/* Contorno: usa a mesma cor de texto do fundo em que está */
 .btn--ghost {
-  border-color: var(--line);
-  color: var(--bone);
+  color: var(--muted);
+}
+
+.btn--ghost::before {
+  background: var(--line);
 }
 
 .btn--ghost .btn__fill {
@@ -291,37 +307,31 @@ p {
 
 .btn--ghost:hover,
 .btn--ghost:focus-visible {
-  color: var(--cream);
-  border-color: var(--forest);
+  color: var(--bone);
 }
 
-.paper .btn--primary {
+.paper .btn--primary,
+.paper .btn--ghost {
+  color: var(--cream);
+}
+
+.paper .btn::before {
+  background: var(--line-dark);
+}
+
+.paper .btn__fill {
   background: var(--cream);
-  color: var(--forest);
-}
-
-.paper .btn--primary .btn__fill {
-  background: var(--forest);
-}
-
-.paper .btn--primary:hover,
-.paper .btn--primary:focus-visible {
-  color: var(--cream);
 }
 
 .paper .btn--ghost {
-  border-color: var(--line-dark);
-  color: var(--cream);
+  color: var(--muted-light);
 }
 
-.paper .btn--ghost .btn__fill {
-  background: var(--cream);
-}
-
+.paper .btn--primary:hover,
 .paper .btn--ghost:hover,
+.paper .btn--primary:focus-visible,
 .paper .btn--ghost:focus-visible {
-  color: var(--forest);
-  border-color: var(--cream);
+  color: var(--accent-inverse);
 }
 
 .btn .arrow {
