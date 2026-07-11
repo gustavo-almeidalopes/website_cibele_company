@@ -49,6 +49,34 @@
   /* Movimento */
   --ease: cubic-bezier(0.22, 1, 0.36, 1);
   --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+
+  color-scheme: light;
+}
+
+/* ============================================================
+   Tema escuro — acionado pelo botão da casa (data-theme).
+   Só troca as superfícies e o texto; as cores da marca
+   (verde/creme) seguem constantes. Extensões de modo escuro
+   são bloqueadas via <meta name="darkreader-lock"> no <head>.
+   ============================================================ */
+:root[data-theme='dark'] {
+  color-scheme: dark;
+
+  --ink: #0e1410; /* fundo padrão da página (verde quase preto) */
+  --ink-2: #161d16; /* superfície sólida (cartões) */
+  --ink-3: #1f271f; /* superfície em hover */
+  --paper: #060d09; /* seção de contraste — recua em relação à página */
+  --paper-2: #0c150f;
+
+  --bone: #eef1e6; /* texto padrão */
+  --muted: rgba(238, 241, 230, 0.62);
+  --muted-dark: rgba(238, 241, 230, 0.4);
+  --muted-light: rgba(238, 241, 230, 0.66);
+  --line: rgba(238, 241, 230, 0.14);
+  --line-dark: rgba(238, 241, 230, 0.16);
+
+  --accent: #c7d8b8; /* realce em verde-sálvia claro */
+  --accent-inverse: #c7d8b8;
 }
 
 /* Reset ---------------------------------------------------- */
@@ -79,6 +107,15 @@ body {
   color: var(--bone);
   background: var(--ink);
   overflow-x: hidden;
+  transition: background-color 0.5s var(--ease), color 0.5s var(--ease);
+}
+
+/* Suaviza a troca de tema nas superfícies mais comuns */
+.paper,
+.footer,
+.stats {
+  transition: background-color 0.5s var(--ease), color 0.5s var(--ease),
+    border-color 0.5s var(--ease);
 }
 
 img,
@@ -550,5 +587,186 @@ p {
   body textarea,
   body [data-cursor] {
     cursor: none;
+  }
+}
+
+/* ============================================================
+   Placeholder de imagem — enquanto as fotos definitivas não
+   são inseridas, ocupa o espaço com um bloco elegante da casa.
+   ============================================================ */
+.media-ph {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: var(--ink-2);
+  background-image: repeating-linear-gradient(
+    -45deg,
+    transparent,
+    transparent 22px,
+    rgba(20, 38, 26, 0.03) 22px,
+    rgba(20, 38, 26, 0.03) 44px
+  );
+  color: var(--muted-dark);
+  overflow: hidden;
+}
+
+:root[data-theme='dark'] .media-ph {
+  background-image: repeating-linear-gradient(
+    -45deg,
+    transparent,
+    transparent 22px,
+    rgba(238, 241, 230, 0.03) 22px,
+    rgba(238, 241, 230, 0.03) 44px
+  );
+}
+
+.media-ph__label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55em;
+  font-size: 0.66rem;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.media-ph__label::before {
+  content: '';
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  border: 1px solid currentColor;
+}
+
+/* ============================================================
+   Botão de alternância de tema (claro / escuro)
+   ============================================================ */
+.theme-toggle {
+  position: relative;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  border: 1px solid var(--line-dark);
+  background: transparent;
+  color: var(--cream);
+  display: grid;
+  place-items: center;
+  transition: border-color 0.35s var(--ease), background-color 0.35s var(--ease);
+}
+
+.theme-toggle:hover {
+  border-color: var(--cream);
+}
+
+.theme-toggle svg {
+  width: 18px;
+  height: 18px;
+}
+
+.theme-toggle .icon-moon {
+  display: none;
+}
+
+.theme-toggle .icon-sun {
+  display: block;
+}
+
+:root[data-theme='dark'] .theme-toggle .icon-moon {
+  display: block;
+}
+
+:root[data-theme='dark'] .theme-toggle .icon-sun {
+  display: none;
+}
+
+/* ============================================================
+   Consentimento de cookies (LGPD)
+   ============================================================ */
+.consent {
+  position: fixed;
+  left: 50%;
+  bottom: clamp(1rem, 3vw, 2rem);
+  z-index: 240;
+  width: min(100% - 2rem, 640px);
+  transform: translate(-50%, calc(100% + 3rem));
+  opacity: 0;
+  pointer-events: none;
+  background: var(--forest);
+  color: var(--cream);
+  border: 1px solid var(--line-dark);
+  border-radius: 4px;
+  padding: clamp(1.4rem, 3vw, 1.9rem);
+  box-shadow: 0 30px 60px -25px rgba(0, 0, 0, 0.55);
+  transition: transform 0.6s var(--ease), opacity 0.5s var(--ease);
+}
+
+.consent.is-visible {
+  transform: translate(-50%, 0);
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.consent__title {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  margin-bottom: 0.6rem;
+}
+
+.consent__text {
+  font-size: 0.86rem;
+  line-height: 1.6;
+  color: var(--muted-light);
+  margin-bottom: 1.2rem;
+}
+
+.consent__text a {
+  color: var(--cream);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.consent__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem;
+}
+
+.consent__btn {
+  flex: 1 1 auto;
+  padding: 0.75rem 1.3rem;
+  border-radius: 3px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  border: 1px solid var(--line-dark);
+  background: transparent;
+  color: var(--cream);
+  transition: background-color 0.3s var(--ease), color 0.3s var(--ease),
+    border-color 0.3s var(--ease);
+}
+
+.consent__btn:hover {
+  border-color: var(--cream);
+}
+
+.consent__btn--primary {
+  background: var(--cream);
+  color: var(--forest);
+  border-color: var(--cream);
+}
+
+.consent__btn--primary:hover {
+  background: transparent;
+  color: var(--cream);
+}
+
+@media (min-width: 560px) {
+  .consent__btn {
+    flex: 0 0 auto;
   }
 }

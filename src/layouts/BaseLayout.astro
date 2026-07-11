@@ -2,6 +2,7 @@
 import '../styles/global.css';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import CookieConsent from '../components/CookieConsent.astro';
 
 interface Props {
   title?: string;
@@ -22,9 +23,31 @@ const {
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content={description} />
-    <meta name="theme-color" content="#ffffe3" />
+    <meta name="theme-color" content="#f8f3e6" />
+    <meta name="color-scheme" content="light dark" />
+    <!-- Bloqueia extensões de modo escuro (Dark Reader e derivadas):
+         o site tem tema escuro próprio, então dispensa a injeção externa. -->
+    <meta name="darkreader-lock" />
     <link rel="icon" type="image/png" href="/img/faviconum.png" />
     <title>{title}</title>
+
+    <!-- Aplica o tema salvo ANTES da pintura, evitando flash de cor. -->
+    <script is:inline>
+      (function () {
+        try {
+          var stored = localStorage.getItem('cibele-theme');
+          var theme =
+            stored === 'dark' || stored === 'light'
+              ? stored
+              : window.matchMedia('(prefers-color-scheme: dark)').matches
+                ? 'dark'
+                : 'light';
+          document.documentElement.setAttribute('data-theme', theme);
+          var meta = document.querySelector('meta[name="theme-color"]');
+          if (meta) meta.setAttribute('content', theme === 'dark' ? '#0e1410' : '#f8f3e6');
+        } catch (e) {}
+      })();
+    </script>
 
     <!-- Ubuntu — fonte única do site (texto e títulos) via Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -52,6 +75,7 @@ const {
       <slot />
     </main>
     <Footer />
+    <CookieConsent />
 
     <script>
       import '../scripts/animations.ts';

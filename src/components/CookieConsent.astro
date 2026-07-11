@@ -1,0 +1,27 @@
+---
+// Banner de consentimento de cookies — exigência da LGPD (Lei 13.709/2018).
+// Fica oculto por padrão; o script o revela apenas se não houver escolha salva.
+---
+
+<aside
+  class="consent"
+  id="cookie-consent"
+  role="dialog"
+  aria-live="polite"
+  aria-label="Aviso de cookies"
+  hidden
+>
+  <p class="consent__title">Sua privacidade é prioridade</p>
+  <p class="consent__text">
+    Usamos cookies essenciais para o funcionamento do site e, com o seu consentimento, cookies de
+    análise para melhorar sua experiência. Você pode aceitar, recusar ou saber mais na nossa
+    <a href="/privacidade">Política de Privacidade</a>. Em conformidade com a LGPD.
+  </p>
+  <div class="consent__actions">
+    <button class="consent__btn consent__btn--primary" type="button" data-consent="accept">
+      Aceitar todos
+    </button>
+    <button class="consent__btn" type="button" data-consent="reject">Apenas essenciais</button>
+    <a class="consent__btn" href="/privacidade" data-consent="manage">Gerenciar</a>
+  </div>
+</aside>

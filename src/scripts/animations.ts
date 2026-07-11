@@ -390,9 +390,90 @@ function initAddButtons() {
 }
 
 /* --------------------------------------------------------
+   Alternância de tema (claro / escuro).
+   O tema inicial já é aplicado por um script inline no <head>
+   (antes da pintura); aqui só tratamos o clique e a persistência.
+-------------------------------------------------------- */
+function initThemeToggle() {
+  const root = document.documentElement;
+  const meta = document.querySelector<HTMLMetaElement>('meta[name="theme-color"]');
+  const toggles = document.querySelectorAll<HTMLElement>('[data-theme-toggle]');
+
+  const apply = (theme: 'light' | 'dark') => {
+    root.setAttribute('data-theme', theme);
+    if (meta) meta.content = theme === 'dark' ? '#0e1410' : '#f8f3e6';
+    toggles.forEach((btn) =>
+      btn.setAttribute('aria-label', theme === 'dark' ? 'Ativar modo claro' : 'Ativar modo escuro'),
+    );
+    try {
+      localStorage.setItem('cibele-theme', theme);
+    } catch (e) {
+      /* localStorage indisponível — segue sem persistir */
+    }
+  };
+
+  toggles.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const current = root.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+      apply(current === 'dark' ? 'light' : 'dark');
+    });
+  });
+}
+
+/* --------------------------------------------------------
+   Consentimento de cookies (LGPD).
+-------------------------------------------------------- */
+function initCookieConsent() {
+  const banner = document.getElementById('cookie-consent');
+  if (!banner) return;
+
+  const KEY = 'cibele-consent';
+  let choice: string | null = null;
+  try {
+    choice = localStorage.getItem(KEY);
+  } catch (e) {
+    choice = null;
+  }
+
+  const persist = (value: string) => {
+    try {
+      localStorage.setItem(KEY, value);
+      localStorage.setItem(KEY + '-at', new Date().toISOString());
+    } catch (e) {
+      /* sem persistência */
+    }
+  };
+
+  const hide = () => {
+    banner.classList.remove('is-visible');
+    window.setTimeout(() => (banner.hidden = true), 600);
+  };
+
+  // "manage" (link) não fecha nem grava — leva à página de privacidade.
+  banner.querySelectorAll<HTMLElement>('[data-consent="accept"], [data-consent="reject"]').forEach(
+    (btn) => {
+      btn.addEventListener('click', () => {
+        persist(btn.dataset.consent === 'accept' ? 'all' : 'essential');
+        hide();
+      });
+    },
+  );
+
+  if (!choice) {
+    banner.hidden = false;
+    // força reflow para a transição de entrada rodar
+    requestAnimationFrame(() =>
+      requestAnimationFrame(() => banner.classList.add('is-visible')),
+    );
+  }
+}
+
+/* --------------------------------------------------------
    Boot.
 -------------------------------------------------------- */
 function boot() {
+  initThemeToggle();
+  initCookieConsent();
   initHeader();
   initMegaMenu();
   initMobileMenu();
