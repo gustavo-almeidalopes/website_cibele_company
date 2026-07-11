@@ -90,7 +90,7 @@ const related = getRelatedProducts(product);
       related.length > 0 && (
         <section class="pdp__related">
           <h2 class="h-sm">Você também pode gostar</h2>
-          <div class="card-grid related__grid">
+          <div class="card-grid related__grid" data-reveal-group>
             {related.map((item) => (
               <ProductCard product={item} />
             ))}

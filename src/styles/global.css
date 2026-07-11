@@ -1031,6 +1031,9 @@ p {
   }
 }
 
+/* !important: sobrepõe o display:flex do próprio componente
+   ProductCard — escopos de estilo diferentes empatam em
+   especificidade, então a ordem de cascata não é garantida. */
 .card[hidden] {
-  display: none;
+  display: none !important;
 }

@@ -556,7 +556,7 @@ function initWishlistPage() {
     cards.forEach((card) => {
       const id = card.dataset.id ?? '';
       const favorited = isWishlisted(id);
-      card.classList.toggle('is-favorited', favorited);
+      card.hidden = !favorited;
       if (favorited) count += 1;
     });
     if (empty) empty.hidden = count > 0;

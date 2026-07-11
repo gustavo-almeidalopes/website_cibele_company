@@ -18,7 +18,7 @@ import { products } from '../data/catalog';
 
     <h1 class="fav__title">Favoritos</h1>
 
-    <div class="card-grid fav__grid" data-wishlist-grid>
+    <div class="card-grid fav__grid" data-wishlist-grid data-reveal-group>
       {products.map((product) => <ProductCard product={product} />)}
     </div>
 
@@ -38,14 +38,6 @@ import { products } from '../data/catalog';
 
   .fav__title {
     font-size: var(--step-4);
-  }
-
-  .fav__grid [data-product-card] {
-    display: none;
-  }
-
-  .fav__grid [data-product-card].is-favorited {
-    display: flex;
   }
 
   .fav__empty {
