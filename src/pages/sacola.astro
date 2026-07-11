@@ -1,0 +1,210 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { products, formatPrice } from '../data/catalog';
+---
+
+<BaseLayout
+  active="sacola"
+  title="Sacola — Cibele Plastic"
+  description="Revise os itens da sua sacola antes de enviar o pedido para a Cibele Plastic."
+>
+  <div class="container bag">
+    <nav class="breadcrumb" aria-label="Trilha">
+      <a href="/">Início</a>
+      <span class="breadcrumb__sep" aria-hidden="true">/</span>
+      <span class="breadcrumb__current">Sacola</span>
+    </nav>
+
+    <h1 class="bag__title">Sua sacola</h1>
+
+    <div class="bag__layout" data-cart-root>
+      <div class="bag__list" data-cart-list>
+        {
+          products.map((product) => (
+            <div class="cart-row" data-cart-row data-id={product.id} data-price={product.preco} hidden>
+              <a class="cart-row__media" href={`/produto/${product.slug}`}>
+                <div class="media-ph"><span class="media-ph__label">Imagem</span></div>
+              </a>
+              <div class="cart-row__info">
+                <a class="cart-row__name" href={`/produto/${product.slug}`}>{product.nome}</a>
+                <p class="cart-row__unit text-muted">{formatPrice(product.preco)} / unidade</p>
+                <button class="cart-row__remove" type="button" data-cart-remove>
+                  Remover
+                </button>
+              </div>
+              <div class="qty-stepper" data-qty-stepper>
+                <button type="button" data-qty-minus aria-label={`Diminuir quantidade de ${product.nome}`}>
+                  −
+                </button>
+                <input type="number" min="1" value="1" inputmode="numeric" data-qty-input aria-label={`Quantidade de ${product.nome}`} />
+                <button type="button" data-qty-plus aria-label={`Aumentar quantidade de ${product.nome}`}>
+                  +
+                </button>
+              </div>
+              <p class="cart-row__total" data-cart-row-total>{formatPrice(product.preco)}</p>
+            </div>
+          ))
+        }
+      </div>
+
+      <aside class="cart-summary" data-cart-summary>
+        <h2 class="h-sm">Resumo do pedido</h2>
+        <div class="cart-summary__row">
+          <span>Subtotal</span>
+          <span data-cart-subtotal>{formatPrice(0)}</span>
+        </div>
+        <p class="text-muted cart-summary__note">
+          Frete e prazos de entrega são combinados com nossa equipe após o envio do pedido.
+        </p>
+        <button class="btn btn--primary cart-summary__submit" type="button" data-checkout-submit>
+          Finalizar pedido
+        </button>
+      </aside>
+    </div>
+
+    <div class="bag__empty" data-cart-empty hidden>
+      <p class="lead">Sua sacola está vazia.</p>
+      <a class="btn btn--primary" href="/embalagens">Ver catálogo</a>
+    </div>
+
+    <div class="bag__success" data-cart-success hidden>
+      <p class="h-sm">Pedido registrado.</p>
+      <p class="text-muted">
+        Nossa equipe vai analisar os itens da sua sacola e entrar em contato para confirmar
+        pagamento e entrega.
+      </p>
+      <a class="btn btn--secondary" href="/embalagens">Continuar comprando</a>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .bag {
+    padding-block: clamp(2rem, 5vw, 3rem) var(--space-128);
+    display: grid;
+    gap: 1.6rem;
+  }
+
+  .bag__title {
+    font-size: var(--step-4);
+  }
+
+  .bag__layout {
+    display: grid;
+    gap: 2.5rem;
+  }
+
+  .bag__layout[hidden] {
+    display: none;
+  }
+
+  .bag__list {
+    display: grid;
+    gap: 0;
+    border-top: 1px solid var(--line);
+  }
+
+  .cart-row {
+    display: grid;
+    grid-template-columns: 84px 1fr auto auto;
+    align-items: center;
+    gap: 1rem;
+    padding-block: 1.2rem;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .cart-row[hidden] {
+    display: none;
+  }
+
+  .cart-row__media {
+    display: block;
+    position: relative;
+    aspect-ratio: 1 / 1;
+    width: 84px;
+  }
+
+  .cart-row__info {
+    display: grid;
+    gap: 0.3rem;
+    min-width: 0;
+  }
+
+  .cart-row__name {
+    font-weight: 600;
+    color: var(--bone);
+  }
+
+  .cart-row__unit {
+    font-size: 0.82rem;
+  }
+
+  .cart-row__remove {
+    justify-self: start;
+    margin-top: 0.2rem;
+    font-size: 0.76rem;
+    font-weight: 600;
+    color: var(--accent-ink);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    background: none;
+    border: 0;
+    padding: 0.2rem 0;
+  }
+
+  .cart-row__total {
+    font-weight: 700;
+    white-space: nowrap;
+  }
+
+  .cart-summary {
+    display: grid;
+    align-content: start;
+    gap: 1rem;
+    padding: 1.5rem;
+    background: var(--ink-2);
+    border: 1px solid var(--line);
+  }
+
+  .cart-summary__row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 1.05rem;
+    font-weight: 700;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .cart-summary__note {
+    font-size: 0.82rem;
+    line-height: 1.55;
+  }
+
+  .cart-summary__submit {
+    width: 100%;
+  }
+
+  .bag__empty,
+  .bag__success {
+    display: grid;
+    gap: 1.2rem;
+    justify-items: start;
+    padding-block: 2rem;
+  }
+
+  .bag__empty[hidden],
+  .bag__success[hidden] {
+    display: none;
+  }
+
+  @media (min-width: 780px) {
+    .bag__layout {
+      grid-template-columns: 1fr 300px;
+      align-items: start;
+    }
+    .cart-summary {
+      position: sticky;
+      top: calc(var(--header-height) + 1.5rem);
+    }
+  }
+</style>

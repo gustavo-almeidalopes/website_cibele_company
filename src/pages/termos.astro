@@ -73,7 +73,7 @@ const sections = [
 
 <style>
   .legal {
-    padding-block: clamp(7.5rem, 12vw, 10rem) clamp(4rem, 8vw, 7rem);
+    padding-block: clamp(2rem, 5vw, 3rem) clamp(4rem, 8vw, 7rem);
   }
 
   .legal__inner {
@@ -102,7 +102,7 @@ const sections = [
   }
 
   .legal__section {
-    scroll-margin-top: 7rem;
+    scroll-margin-top: calc(var(--header-height) + 1.5rem);
     border-top: 1px solid var(--line);
     padding-top: 2rem;
   }
@@ -126,7 +126,7 @@ const sections = [
     }
     .legal__head {
       position: sticky;
-      top: 7rem;
+      top: calc(var(--header-height) + 1.5rem);
     }
   }
 </style>
