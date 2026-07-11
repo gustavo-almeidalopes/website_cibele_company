@@ -4,7 +4,8 @@ Front-end moderno e animado da **Cibele Plastic**, empresa de bioplásticos sust
 para três segmentos: **Embalagens**, **Construção Civil** e **Produtos Médicos**.
 
 Construído com [Astro](https://astro.build/) e animações com
-[Anime.js v4](https://animejs.com/). Tipografia **Montserrat** via Google Fonts.
+[Anime.js v4](https://animejs.com/). Tipografia **MuseoModerno** (títulos) e
+**Ubuntu** (texto) via Google Fonts.
 
 > Este repositório contém **apenas o front-end**. O back-end (PHP) é mantido
 > separadamente, desacoplado da camada de apresentação.

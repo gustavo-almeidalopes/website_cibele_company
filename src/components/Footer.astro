@@ -93,6 +93,7 @@ const columns = [
     display: inline-flex;
     align-items: center;
     gap: 3rem;
+    font-family: var(--font-display);
     font-size: clamp(2.4rem, 8vw, 6rem);
     font-weight: 800;
     letter-spacing: -0.03em;
@@ -102,7 +103,7 @@ const columns = [
   }
 
   .footer__dot {
-    color: var(--lime);
+    color: var(--accent);
     -webkit-text-stroke: 0;
     font-size: 0.4em;
   }
@@ -119,11 +120,12 @@ const columns = [
 
   .footer__mail {
     display: inline-block;
+    font-family: var(--font-display);
     font-size: clamp(1.8rem, 6vw, 3.4rem);
     font-weight: 800;
     letter-spacing: -0.03em;
     line-height: 1.05;
-    background: linear-gradient(var(--lime), var(--lime)) no-repeat left bottom / 0 2px;
+    background: linear-gradient(var(--accent), var(--accent)) no-repeat left bottom / 0 2px;
     transition: background-size 0.5s var(--ease);
     padding-bottom: 2px;
     margin-bottom: 1rem;
@@ -163,7 +165,7 @@ const columns = [
   }
 
   .footer__col a:hover {
-    color: var(--lime);
+    color: var(--accent);
   }
 
   .footer__bottom {
@@ -179,7 +181,7 @@ const columns = [
   }
 
   .footer__bottom a:hover {
-    color: var(--lime);
+    color: var(--accent);
   }
 
   @media (min-width: 800px) {

@@ -1,28 +1,38 @@
 /* ============================================================
    Cibele Plastic — Design System
-   Estética eco-tech: escuro editorial + acento lima ácido.
+   Estética eco natural: creme editorial + escala de verdes.
    ============================================================ */
 
 :root {
-  /* Paleta */
-  --ink: #0b0d0b;
-  --ink-2: #101410;
-  --ink-3: #171c16;
-  --paper: #f2efe6;
-  --paper-2: #e7e3d6;
-  --bone: #eef1e8;
-  --muted: #8b9184;
-  --muted-dark: #5c6356;
-  --line: rgba(238, 241, 232, 0.12);
-  --line-dark: rgba(11, 13, 11, 0.12);
+  /* Paleta base */
+  --cream: #ffffe3; /* fundo da página */
+  --brown: #4d301b; /* cor do texto */
+  --mint: #80ef80; /* verde vibrante — acento e preenchimentos */
+  --sage: #8cbd8c; /* verde secundário */
+  --sage-muted: #768a76; /* verde acinzentado — texto suave */
+  --forest: #173317; /* verde escuro — seções escuras e acento de texto */
 
-  --lime: #c8ff2d;
-  --lime-deep: #a7e600;
-  --moss: #2f8f4e;
-  --forest: #16351f;
+  /* Aliases semânticos (usados pelos componentes) */
+  --ink: var(--cream); /* fundo padrão (claro) */
+  --ink-2: #f6f2c9; /* painéis / cartões */
+  --ink-3: #eee9ba; /* painel em hover */
+  --paper: var(--forest); /* seção de contraste (escura) */
+  --paper-2: #0e220e;
+  --bone: var(--brown); /* texto principal */
+  --muted: var(--sage-muted); /* texto suave sobre creme */
+  --muted-dark: #9a8b6f; /* texto suave (placeholder / contorno) sobre creme */
+  --muted-light: #a9c1a2; /* texto suave sobre seções escuras */
+  --line: rgba(77, 48, 27, 0.16); /* fios sobre creme */
+  --line-dark: rgba(255, 255, 227, 0.18); /* fios sobre verde escuro */
+
+  --lime: var(--mint); /* acento vibrante (preenchimentos, realces) */
+  --accent: var(--forest); /* acento de texto sobre creme */
+  --lime-deep: #5fd35f;
+  --moss: #3f7d4f; /* verde de sucesso */
 
   /* Tipografia */
-  --font: 'Montserrat', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font: 'Ubuntu', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-display: 'MuseoModerno', 'Ubuntu', system-ui, sans-serif;
 
   /* Escala fluida */
   --step--1: clamp(0.78rem, 0.75rem + 0.15vw, 0.88rem);
@@ -96,6 +106,7 @@ h2,
 h3,
 h4 {
   margin: 0;
+  font-family: var(--font-display);
   font-weight: 800;
   line-height: 0.98;
   letter-spacing: -0.02em;
@@ -107,11 +118,12 @@ p {
 
 ::selection {
   background: var(--lime);
-  color: var(--ink);
+  color: var(--accent);
 }
 
 /* Tipografia utilitária ----------------------------------- */
 .display {
+  font-family: var(--font-display);
   font-size: var(--step-5);
   font-weight: 800;
   line-height: 0.9;
@@ -120,16 +132,19 @@ p {
 }
 
 .h-xl {
+  font-family: var(--font-display);
   font-size: var(--step-4);
   text-transform: uppercase;
   letter-spacing: -0.03em;
 }
 
 .h-lg {
+  font-family: var(--font-display);
   font-size: var(--step-3);
 }
 
 .h-md {
+  font-family: var(--font-display);
   font-size: var(--step-2);
 }
 
@@ -159,7 +174,7 @@ p {
 }
 
 .text-lime {
-  color: var(--lime);
+  color: var(--accent);
 }
 
 .text-muted {
@@ -188,19 +203,19 @@ p {
 
 .paper {
   background: var(--paper);
-  color: var(--ink);
+  color: var(--cream);
 }
 
 .paper .text-muted {
-  color: var(--muted-dark);
+  color: var(--muted-light);
 }
 
 .paper .eyebrow {
-  color: var(--muted-dark);
+  color: var(--muted-light);
 }
 
 .paper .lead {
-  color: var(--ink);
+  color: var(--cream);
 }
 
 /* Botões --------------------------------------------------- */
@@ -245,11 +260,11 @@ p {
 
 .btn--primary {
   background: var(--lime);
-  color: var(--ink);
+  color: var(--accent);
 }
 
 .btn--primary .btn__fill {
-  background: var(--ink);
+  background: var(--forest);
 }
 
 .btn--primary:hover,
@@ -268,13 +283,13 @@ p {
 
 .btn--ghost:hover,
 .btn--ghost:focus-visible {
-  color: var(--ink);
+  color: var(--accent);
   border-color: var(--lime);
 }
 
 .paper .btn--ghost {
   border-color: var(--line-dark);
-  color: var(--ink);
+  color: var(--cream);
 }
 
 .btn .arrow {
@@ -392,7 +407,7 @@ p {
   z-index: 200;
   padding: 0.7rem 1.1rem;
   background: var(--lime);
-  color: var(--ink);
+  color: var(--accent);
   border-radius: 8px;
   font-weight: 600;
   transition: top 0.3s var(--ease);
@@ -403,7 +418,7 @@ p {
 }
 
 :focus-visible {
-  outline: 2px solid var(--lime);
+  outline: 2px solid var(--accent);
   outline-offset: 3px;
 }
 
@@ -417,10 +432,10 @@ p {
   padding: 0.85rem 1.4rem;
   border-radius: 999px;
   background: var(--lime);
-  color: var(--ink);
+  color: var(--accent);
   font-size: 0.85rem;
   font-weight: 500;
-  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 18px 40px rgba(23, 51, 23, 0.25);
   opacity: 0;
   transition: transform 0.55s var(--ease), opacity 0.4s var(--ease);
   pointer-events: none;
@@ -453,21 +468,20 @@ p {
     margin-left: -0.5px;
     transition: opacity 0.3s ease, width 0.35s var(--ease), height 0.35s var(--ease),
       background-color 0.35s var(--ease), border-color 0.35s var(--ease);
-    mix-blend-mode: difference;
   }
 
   .cursor-dot {
     width: 7px;
     height: 7px;
     margin: -3.5px 0 0 -3.5px;
-    background: var(--lime);
+    background: var(--accent);
   }
 
   .cursor-ring {
     width: 40px;
     height: 40px;
     margin: -20px 0 0 -20px;
-    border: 1px solid var(--lime);
+    border: 1px solid var(--accent);
   }
 
   body.has-cursor .cursor-ring,
@@ -479,7 +493,7 @@ p {
     width: 70px;
     height: 70px;
     margin: -35px 0 0 -35px;
-    background: rgba(200, 255, 45, 0.12);
+    background: rgba(128, 239, 128, 0.2);
   }
 
   body.cursor-active .cursor-dot {
