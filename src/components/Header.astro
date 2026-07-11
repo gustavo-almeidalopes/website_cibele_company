@@ -76,7 +76,7 @@ const links = [
 
   .header.is-scrolled {
     padding-block: 0.7rem;
-    background: rgba(11, 13, 11, 0.72);
+    background: rgba(255, 255, 227, 0.82);
     backdrop-filter: blur(14px);
     border-bottom-color: var(--line);
   }
@@ -107,23 +107,23 @@ const links = [
     width: 14px;
     height: 14px;
     border-radius: 50%;
-    background: var(--lime);
-    box-shadow: 0 0 0 4px rgba(200, 255, 45, 0.2);
+    background: var(--accent);
+    box-shadow: 0 0 0 4px rgba(128, 239, 128, 0.5);
     animation: pulse 3.5s ease-in-out infinite;
   }
 
   @keyframes pulse {
     0%,
     100% {
-      box-shadow: 0 0 0 4px rgba(200, 255, 45, 0.18);
+      box-shadow: 0 0 0 4px rgba(128, 239, 128, 0.5);
     }
     50% {
-      box-shadow: 0 0 0 9px rgba(200, 255, 45, 0);
+      box-shadow: 0 0 0 9px rgba(128, 239, 128, 0);
     }
   }
 
   .brand__accent {
-    color: var(--lime);
+    color: var(--accent);
   }
 
   .nav {
@@ -154,7 +154,7 @@ const links = [
     inset: auto 50% 6px;
     height: 1px;
     width: 0;
-    background: var(--lime);
+    background: var(--accent);
     transform: translateX(-50%);
     transition: width 0.4s var(--ease);
   }
@@ -196,7 +196,7 @@ const links = [
   .header__cta:hover {
     background: var(--lime);
     border-color: var(--lime);
-    color: var(--ink);
+    color: var(--accent);
   }
 
   .burger {
@@ -241,7 +241,7 @@ const links = [
     gap: 2.5rem;
     padding: 6rem var(--gutter) 3rem;
     background: var(--ink-2);
-    background-image: radial-gradient(circle at 80% 10%, rgba(200, 255, 45, 0.1), transparent 45%);
+    background-image: radial-gradient(circle at 80% 10%, rgba(128, 239, 128, 0.22), transparent 45%);
   }
 
   .menu[hidden] {
@@ -270,7 +270,7 @@ const links = [
 
   .menu__link:hover,
   .menu__link.is-active {
-    color: var(--lime);
+    color: var(--accent);
     padding-left: 0.8rem;
   }
 

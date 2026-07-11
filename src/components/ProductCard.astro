@@ -62,14 +62,14 @@ const categoryLabels: Record<string, string> = {
 
   .card:hover {
     transform: translateY(-6px);
-    border-color: rgba(200, 255, 45, 0.4);
+    border-color: rgba(23, 51, 23, 0.4);
     background: var(--ink-3);
   }
 
   .card__media {
     position: relative;
     aspect-ratio: 4 / 3;
-    background: radial-gradient(circle at 50% 30%, #20271f, #0e120d);
+    background: radial-gradient(circle at 50% 30%, #f1f4dc, #e3e6bf);
     overflow: hidden;
   }
 
@@ -103,13 +103,13 @@ const categoryLabels: Record<string, string> = {
     z-index: 2;
     padding: 0.3rem 0.7rem;
     border-radius: 999px;
-    background: rgba(11, 13, 11, 0.55);
-    border: 1px solid var(--line);
+    background: var(--forest);
+    border: 1px solid var(--forest);
     font-size: 0.66rem;
     font-weight: 600;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    color: var(--lime);
+    color: var(--mint);
     backdrop-filter: blur(6px);
   }
 
@@ -139,7 +139,7 @@ const categoryLabels: Record<string, string> = {
     flex-shrink: 0;
     font-size: 0.95rem;
     font-weight: 700;
-    color: var(--lime);
+    color: var(--accent);
   }
 
   .card__desc {
@@ -175,19 +175,19 @@ const categoryLabels: Record<string, string> = {
     height: 26px;
     border-radius: 50%;
     background: var(--lime);
-    color: var(--ink);
+    color: var(--accent);
     transition: transform 0.4s var(--ease);
   }
 
   .card__add:hover {
     background: var(--lime);
     border-color: var(--lime);
-    color: var(--ink);
+    color: var(--accent);
   }
 
   .card__add:hover .card__add-icon {
     transform: rotate(90deg);
-    background: var(--ink);
+    background: var(--accent);
     color: var(--lime);
   }
 
