@@ -4,96 +4,112 @@ import ProductCard from '../components/ProductCard.astro';
 import { categories, getFeaturedProducts, stats } from '../data/catalog';
 
 const featured = getFeaturedProducts();
-
-const principles = [
-  {
-    t: 'Matéria-prima renovável',
-    d: 'Bioplásticos derivados de fontes vegetais, reduzindo a dependência do petróleo em cada peça produzida.',
-  },
-  {
-    t: 'Decomposição acelerada',
-    d: 'Produtos que retornam à natureza em uma fração do tempo do plástico convencional.',
-  },
-  {
-    t: 'Desempenho comprovado',
-    d: 'Resistência e segurança verificadas para o uso diário — na mesa, na obra e no hospital.',
-  },
-  {
-    t: 'Cadeia consciente',
-    d: 'Processos desenhados para gerar menos emissão de CO₂ em cada etapa, da origem à entrega.',
-  },
-];
 ---
 
 <BaseLayout active="home">
   <!-- HERO -->
-  <section class="hero">
-    <div class="container hero__inner">
-      <p class="eyebrow hero__eyebrow" data-reveal="fade">Bioplásticos de origem vegetal</p>
-      <h1 class="display hero__title" data-reveal>
-        O desempenho do plástico.<br />
-        <em class="serif-italic">Sem a herança fóssil.</em>
+  <section class="hero" data-hero>
+    <div class="hero__inner container-wide">
+      <p class="eyebrow" data-hero-item>Bioplástico sustentável · desde a matéria-prima</p>
+      <h1 class="display hero__title">
+        <span class="line-mask"><span class="line-inner">Plástico que</span></span>
+        <span class="line-mask"><span class="line-inner">não custa o</span></span>
+        <span class="line-mask"><span class="line-inner"><span class="text-lime">planeta.</span></span></span>
       </h1>
-      <div class="hero__row" data-reveal>
-        <p class="lead hero__lead text-muted">
-          A Cibele desenvolve materiais para embalagens, construção civil e produtos médicos —
-          concebidos a partir de fontes vegetais e desenhados para durar apenas o necessário.
+      <div class="hero__row">
+        <p class="lead hero__lead" data-hero-item>
+          A Cibele Plastic desenvolve soluções em bioplástico para embalagens, construção civil e
+          produtos médicos. O mesmo desempenho do plástico convencional — sem a herança fóssil.
         </p>
-        <div class="hero__actions">
-          <a class="btn btn--solid" href="/contato">Iniciar uma conversa</a>
-          <a class="link-line" href="#segmentos">Conhecer os segmentos</a>
+        <div class="hero__actions" data-hero-item>
+          <a class="btn btn--primary" href="/embalagens" data-magnetic="0.25">
+            <span class="btn__label">Explorar produtos <span class="arrow">↗</span></span>
+            <span class="btn__fill"></span>
+          </a>
+          <a class="btn btn--ghost" href="/sobre" data-magnetic="0.25">
+            <span class="btn__label">Nossa história</span>
+            <span class="btn__fill"></span>
+          </a>
         </div>
       </div>
     </div>
-    <div class="container hero__foot" data-reveal="fade">
-      <hr class="hr" />
-      <div class="hero__meta">
-        <span class="meta">Cibele — Bioplásticos</span>
-        <span class="meta">Embalagens · Construção · Saúde</span>
-        <span class="meta">Brasil</span>
-      </div>
-    </div>
+    <a class="hero__scroll" href="#segmentos" data-hero-item aria-label="Rolar para os segmentos">
+      <span>Role</span>
+      <span class="hero__scroll-line"></span>
+    </a>
   </section>
 
-  <!-- CAPÍTULO 01 — A MATÉRIA -->
+  <!-- MARQUEE -->
+  <div class="band">
+    <div class="marquee" aria-hidden="true">
+      <div class="marquee__group">
+        {
+          ['Sustentável', 'Biodegradável', 'Embalagens', 'Construção', 'Médico', 'Renovável'].map(
+            (word) => (
+              <span class="band__item">
+                {word} <span class="band__star">✦</span>
+              </span>
+            ),
+          )
+        }
+      </div>
+      <div class="marquee__group">
+        {
+          ['Sustentável', 'Biodegradável', 'Embalagens', 'Construção', 'Médico', 'Renovável'].map(
+            (word) => (
+              <span class="band__item">
+                {word} <span class="band__star">✦</span>
+              </span>
+            ),
+          )
+        }
+      </div>
+    </div>
+  </div>
+
+  <!-- INTRO -->
   <section class="section intro">
-    <div class="container intro__grid">
-      <p class="meta intro__marker" data-reveal="fade">01 — A matéria</p>
-      <div class="intro__body">
-        <h2 class="h-lg intro__title" data-reveal>
-          Trocamos o plástico fóssil por materiais de origem renovável,
-          <em class="serif-italic">sem abrir mão de resistência.</em>
+    <div class="container">
+      <div class="intro__grid">
+        <p class="eyebrow" data-reveal="fade">(Quem somos)</p>
+        <h2 class="h-lg intro__title" data-lines>
+          <span class="line-mask"><span class="line-inner">Trocamos o plástico fóssil por</span></span>
+          <span class="line-mask"><span class="line-inner">materiais de origem renovável,</span></span>
+          <span class="line-mask"><span class="line-inner">sem abrir mão de resistência.</span></span>
         </h2>
-        <p class="intro__text text-muted" data-reveal>
-          Cada item do nosso catálogo nasce de fontes vegetais e se decompõe muito mais rápido que
-          o plástico tradicional. É tecnologia a serviço de um ciclo mais limpo — do laboratório à
-          obra, da cozinha ao hospital.
+        <p class="intro__text text-muted" data-reveal="up">
+          Cada item do nosso catálogo nasce de fontes vegetais e se decompõe muito mais rápido que o
+          plástico tradicional. É tecnologia a serviço de um ciclo mais limpo — do laboratório à obra,
+          da cozinha ao hospital.
         </p>
       </div>
     </div>
   </section>
 
-  <!-- CAPÍTULO 02 — SEGMENTOS -->
+  <!-- SEGMENTOS -->
   <section class="section segments" id="segmentos">
-    <div class="container">
+    <div class="container-wide">
       <header class="segments__header">
-        <p class="meta" data-reveal="fade">02 — Segmentos</p>
-        <h2 class="h-xl" data-reveal>Três frentes, um propósito</h2>
+        <p class="eyebrow" data-reveal="fade">Três frentes, um propósito</p>
+        <h2 class="h-xl" data-lines>
+          <span class="line-mask"><span class="line-inner">Segmentos</span></span>
+        </h2>
       </header>
 
       <div class="segments__list">
         {
-          categories.map((cat) => (
-            <a class="segment" href={cat.path} data-reveal>
-              <span class="segment__index" aria-hidden="true">{cat.indice}</span>
+          categories.map((cat, i) => (
+            <a class="segment" href={cat.path} data-reveal="up" data-cursor>
+              <span class="segment__index">{cat.indice}</span>
               <div class="segment__main">
                 <h3 class="segment__title">{cat.titulo}</h3>
                 <p class="segment__desc text-muted">{cat.resumo}</p>
               </div>
-              <figure class="segment__media" aria-hidden="true">
+              <span class="segment__tag">{cat.destaque}</span>
+              <span class="segment__media" aria-hidden="true">
                 <img src={`/img/${cat.imagem}`} alt="" loading="lazy" width="220" height="220" />
-              </figure>
-              <span class="segment__cue" aria-hidden="true">Ver segmento</span>
+              </span>
+              <span class="segment__arrow" aria-hidden="true">↗</span>
             </a>
           ))
         }
@@ -101,59 +117,39 @@ const principles = [
     </div>
   </section>
 
-  <!-- FATOS — em silêncio, sem contadores -->
-  <section class="section-sm facts">
-    <div class="container">
-      <dl class="facts__grid">
+  <!-- STATS -->
+  <section class="section-sm stats">
+    <div class="container-wide">
+      <div class="stats__grid">
         {
           stats.map((stat) => (
-            <div class="fact" data-reveal>
-              <dd class="fact__num">
-                {stat.prefixo}{stat.valor}{stat.sufixo}
-              </dd>
-              <dt class="fact__label text-muted">{stat.rotulo}</dt>
+            <div class="stat" data-reveal="up">
+              <div class="stat__num">
+                {stat.prefixo}
+                <span data-count={stat.valor}>0</span>
+                {stat.sufixo}
+              </div>
+              <p class="stat__label text-muted">{stat.rotulo}</p>
             </div>
           ))
         }
-      </dl>
-    </div>
-  </section>
-
-  <!-- CAPÍTULO 03 — O COMPROMISSO -->
-  <section class="section night manifesto">
-    <div class="container manifesto__grid">
-      <div class="manifesto__intro">
-        <p class="meta" data-reveal="fade">03 — O compromisso</p>
-        <h2 class="h-lg" data-reveal>
-          Menos resíduo.<br />
-          <em class="serif-italic">Mais futuro.</em>
-        </h2>
       </div>
-      <ol class="manifesto__list">
-        {
-          principles.map((item, i) => (
-            <li class="manifesto__item" data-reveal>
-              <span class="manifesto__num" aria-hidden="true">0{i + 1}</span>
-              <div>
-                <h3 class="manifesto__title">{item.t}</h3>
-                <p class="manifesto__text">{item.d}</p>
-              </div>
-            </li>
-          ))
-        }
-      </ol>
     </div>
   </section>
 
-  <!-- CAPÍTULO 04 — SELEÇÃO -->
+  <!-- DESTAQUES -->
   <section class="section featured">
-    <div class="container">
+    <div class="container-wide">
       <header class="featured__header">
         <div>
-          <p class="meta" data-reveal="fade">04 — Seleção</p>
-          <h2 class="h-lg" data-reveal>Peças em destaque</h2>
+          <p class="eyebrow" data-reveal="fade">Selecionados</p>
+          <h2 class="h-lg" data-lines>
+            <span class="line-mask"><span class="line-inner">Destaques da semana</span></span>
+          </h2>
         </div>
-        <a class="link-line" href="/embalagens" data-reveal="fade">Ver catálogo</a>
+        <a class="featured__link" href="/embalagens" data-reveal="fade">
+          Ver catálogo completo <span class="arrow">↗</span>
+        </a>
       </header>
 
       <div class="featured__grid" data-reveal-group>
@@ -162,15 +158,68 @@ const principles = [
     </div>
   </section>
 
-  <!-- CONVITE -->
-  <section class="section invite">
-    <div class="container invite__inner">
+  <!-- MANIFESTO -->
+  <section class="section paper manifesto">
+    <div class="container">
+      <div class="manifesto__grid">
+        <div class="manifesto__intro">
+          <p class="eyebrow" data-reveal="fade">Nosso compromisso</p>
+          <h2 class="h-lg" data-lines>
+            <span class="line-mask"><span class="line-inner">Menos resíduo.</span></span>
+            <span class="line-mask"><span class="line-inner">Mais futuro.</span></span>
+          </h2>
+        </div>
+        <ul class="manifesto__list">
+          {
+            [
+              {
+                t: 'Matéria-prima renovável',
+                d: 'Bioplásticos derivados de fontes vegetais, reduzindo a dependência do petróleo.',
+              },
+              {
+                t: 'Decomposição acelerada',
+                d: 'Produtos que voltam à natureza em uma fração do tempo do plástico comum.',
+              },
+              {
+                t: 'Desempenho de verdade',
+                d: 'Resistência e segurança comprovadas para uso diário, na obra e na saúde.',
+              },
+              {
+                t: 'Cadeia consciente',
+                d: 'Processos pensados para gerar menos emissão de CO₂ em cada etapa.',
+              },
+            ].map((item, i) => (
+              <li class="manifesto__item" data-reveal="up">
+                <span class="manifesto__num">0{i + 1}</span>
+                <div>
+                  <h3 class="manifesto__title">{item.t}</h3>
+                  <p>{item.d}</p>
+                </div>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="section cta">
+    <div class="container cta__inner">
       <p class="eyebrow" data-reveal="fade">Vamos juntos</p>
-      <h2 class="h-xl invite__title" data-reveal>
-        Construa um futuro mais limpo <em class="serif-italic">com a gente.</em>
+      <h2 class="h-xl cta__title" data-lines>
+        <span class="line-mask"><span class="line-inner">Construa um futuro</span></span>
+        <span class="line-mask"><span class="line-inner">mais <span class="text-lime">limpo</span> com a gente.</span></span>
       </h2>
-      <div data-reveal>
-        <a class="btn btn--solid" href="/contato">Solicitar orçamento</a>
+      <div class="cta__actions" data-reveal="up">
+        <a class="btn btn--primary" href="/contato" data-magnetic="0.3">
+          <span class="btn__label">Solicitar orçamento <span class="arrow">↗</span></span>
+          <span class="btn__fill"></span>
+        </a>
+        <a class="btn btn--ghost" href="/sobre" data-magnetic="0.3">
+          <span class="btn__label">Conhecer a equipe</span>
+          <span class="btn__fill"></span>
+        </a>
       </div>
     </div>
   </section>
@@ -179,96 +228,146 @@ const principles = [
 <style>
   /* HERO */
   .hero {
+    position: relative;
+    min-height: 100svh;
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
-    min-height: 92svh;
-    padding-top: 9rem;
+    padding-block: 9rem 3.5rem;
   }
 
-  .hero__eyebrow {
-    margin-bottom: 2rem;
+  .hero__inner {
+    width: min(1500px, 100% - var(--gutter) * 2);
+  }
+
+  .eyebrow {
+    margin-bottom: 1.5rem;
   }
 
   .hero__title {
-    max-width: 14em;
-    margin-bottom: clamp(2.5rem, 5vw, 4rem);
+    margin-bottom: 2.5rem;
   }
 
   .hero__row {
     display: grid;
-    gap: 2.5rem;
+    gap: 2rem;
     align-items: end;
-    padding-bottom: clamp(3rem, 7vw, 6rem);
   }
 
   .hero__lead {
     max-width: 46ch;
+    color: var(--muted);
   }
 
   .hero__actions {
     display: flex;
     flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .hero__scroll {
+    position: absolute;
+    right: var(--gutter);
+    bottom: 3rem;
+    display: none;
+    flex-direction: column;
     align-items: center;
-    gap: 2rem;
+    gap: 0.8rem;
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+    writing-mode: vertical-rl;
   }
 
-  .hero__foot {
-    padding-bottom: 2rem;
+  .hero__scroll-line {
+    width: 1px;
+    height: 56px;
+    background: linear-gradient(var(--accent), transparent);
+    animation: scrollcue 2s ease-in-out infinite;
+    transform-origin: top;
   }
 
-  .hero__meta {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem 2.5rem;
-    justify-content: space-between;
-    padding-top: 1.3rem;
+  @keyframes scrollcue {
+    0%,
+    100% {
+      transform: scaleY(0.4);
+      opacity: 0.4;
+    }
+    50% {
+      transform: scaleY(1);
+      opacity: 1;
+    }
   }
 
   @media (min-width: 900px) {
     .hero__row {
       grid-template-columns: 1fr auto;
-      gap: 4rem;
+    }
+    .hero__scroll {
+      display: flex;
     }
   }
 
-  /* CAPÍTULO 01 */
+  /* BAND / MARQUEE */
+  .band {
+    border-block: 1px solid var(--line);
+    padding-block: 1.4rem;
+    background: var(--ink-2);
+  }
+
+  .band__item {
+    display: inline-flex;
+    align-items: center;
+    gap: 2.4rem;
+    font-family: var(--font-display);
+    font-size: clamp(1.1rem, 3vw, 1.8rem);
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    padding-right: 2.4rem;
+  }
+
+  .band__star {
+    color: var(--accent);
+    font-size: 0.7em;
+  }
+
+  /* INTRO */
   .intro__grid {
     display: grid;
-    gap: 2.5rem;
+    gap: 1.5rem;
   }
 
   .intro__title {
-    max-width: 24ch;
-    margin-bottom: 2rem;
+    max-width: 18ch;
   }
 
   .intro__text {
     max-width: 52ch;
+    justify-self: end;
     font-size: var(--step-1);
-    line-height: 1.6;
   }
 
   @media (min-width: 900px) {
     .intro__grid {
-      grid-template-columns: 1fr 3fr;
-      gap: 2rem;
+      grid-template-columns: 1fr 1fr;
+      align-items: start;
+      gap: 3rem 4rem;
     }
-    .intro__text {
-      margin-left: auto;
-      margin-right: clamp(0rem, 8vw, 6rem);
+    .intro__grid .eyebrow {
+      grid-column: 1 / -1;
     }
   }
 
-  /* SEGMENTOS */
-  .segments {
-    padding-top: 0;
-  }
-
+  /* SEGMENTS */
   .segments__header {
-    display: grid;
-    gap: 1.2rem;
-    margin-bottom: clamp(2.5rem, 5vw, 4rem);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem 2rem;
+    justify-content: space-between;
+    align-items: end;
+    margin-bottom: 2.5rem;
   }
 
   .segments__list {
@@ -278,222 +377,235 @@ const principles = [
   .segment {
     position: relative;
     display: grid;
-    grid-template-columns: auto 1fr;
+    grid-template-columns: auto 1fr auto;
     align-items: center;
-    gap: 1.6rem 2.2rem;
-    padding: clamp(1.8rem, 4vw, 3rem) 0;
+    gap: 1.4rem;
+    padding: clamp(1.5rem, 4vw, 2.6rem) 0;
     border-bottom: 1px solid var(--line);
+    transition: padding-left 0.5s var(--ease);
   }
 
   .segment__index {
-    font-size: 0.72rem;
-    font-weight: 500;
-    letter-spacing: 0.14em;
-    color: var(--ink-3);
-    align-self: start;
-    padding-top: 0.7em;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--muted);
   }
 
   .segment__title {
-    font-size: clamp(1.9rem, 4.5vw, 3.2rem);
-    font-weight: 360;
-    line-height: 1.05;
-    transition: transform 0.6s var(--ease);
+    font-size: clamp(1.8rem, 5vw, 3.4rem);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    text-transform: uppercase;
+    line-height: 1;
+    transition: color 0.4s var(--ease), transform 0.5s var(--ease);
   }
 
   .segment__desc {
-    max-width: 44ch;
-    margin-top: 0.8rem;
+    max-width: 46ch;
+    margin-top: 0.6rem;
     font-size: 0.92rem;
-    line-height: 1.6;
+  }
+
+  .segment__tag {
+    display: none;
+    padding: 0.4rem 0.9rem;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
   }
 
   .segment__media {
-    display: none;
-    width: clamp(120px, 13vw, 170px);
+    position: absolute;
+    top: 50%;
+    right: 12%;
+    width: clamp(90px, 12vw, 150px);
     aspect-ratio: 1;
-    background: var(--stone);
-    padding: 1.2rem;
-    opacity: 0.55;
-    filter: saturate(0.85);
-    transition:
-      opacity 0.6s var(--ease),
-      filter 0.6s var(--ease),
-      transform 0.7s var(--ease);
+    transform: translateY(-50%) scale(0.6);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.45s var(--ease), transform 0.55s var(--ease);
+    z-index: 3;
   }
 
   .segment__media img {
     width: 100%;
     height: 100%;
     object-fit: contain;
+    filter: drop-shadow(0 20px 40px rgba(23, 51, 23, 0.28));
   }
 
-  .segment__cue {
-    display: none;
-    font-size: 0.68rem;
-    font-weight: 500;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: var(--ink-3);
-    transition: color 0.4s var(--ease);
+  .segment__arrow {
+    font-size: 1.6rem;
+    color: var(--muted);
+    transition: transform 0.45s var(--ease), color 0.4s var(--ease);
+  }
+
+  .segment:hover {
+    padding-left: clamp(0.6rem, 2vw, 1.6rem);
   }
 
   .segment:hover .segment__title {
-    transform: translateX(0.35em);
-    font-style: italic;
+    color: var(--accent);
+  }
+
+  .segment:hover .segment__arrow {
+    color: var(--accent);
+    transform: translate(6px, -6px);
   }
 
   .segment:hover .segment__media {
     opacity: 1;
-    filter: none;
-    transform: translateY(-4px);
+    transform: translateY(-50%) scale(1) rotate(-4deg);
   }
 
-  .segment:hover .segment__cue {
-    color: var(--ink);
-  }
-
-  @media (min-width: 800px) {
+  @media (min-width: 760px) {
     .segment {
       grid-template-columns: auto 1fr auto auto;
     }
-    .segment__media {
-      display: block;
-    }
-    .segment__cue {
+    .segment__tag {
       display: inline-block;
     }
   }
 
-  /* FATOS */
-  .facts {
+  /* STATS */
+  .stats {
     border-block: 1px solid var(--line);
   }
 
-  .facts__grid {
+  .stats__grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 3rem 2rem;
+    gap: 2.5rem 1rem;
   }
 
-  .fact__num {
-    font-family: var(--font-serif);
-    font-size: clamp(2.4rem, 5.5vw, 4rem);
-    font-weight: 340;
+  .stat__num {
+    font-family: var(--font-display);
+    font-size: clamp(2.6rem, 7vw, 4.6rem);
+    font-weight: 800;
+    letter-spacing: -0.04em;
     line-height: 1;
-    letter-spacing: -0.02em;
-    font-variant-numeric: tabular-nums;
+    color: var(--accent);
   }
 
-  .fact__label {
-    margin-top: 0.9rem;
+  .stat__label {
+    margin-top: 0.7rem;
     max-width: 22ch;
-    font-size: 0.85rem;
-    line-height: 1.55;
+    font-size: 0.86rem;
   }
 
   @media (min-width: 820px) {
-    .facts__grid {
+    .stats__grid {
       grid-template-columns: repeat(4, 1fr);
     }
   }
 
-  /* O COMPROMISSO */
-  .manifesto__grid {
-    display: grid;
-    gap: 3.5rem;
+  /* FEATURED */
+  .featured__header {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.2rem 2rem;
+    justify-content: space-between;
+    align-items: end;
+    margin-bottom: 2.6rem;
   }
 
-  .manifesto__intro .meta {
-    margin-bottom: 1.4rem;
+  .featured__link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--muted);
+    transition: color 0.3s var(--ease);
+  }
+
+  .featured__link:hover {
+    color: var(--accent);
+  }
+
+  .featured__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1.4rem;
+  }
+
+  /* MANIFESTO */
+  .manifesto__grid {
+    display: grid;
+    gap: 3rem;
   }
 
   .manifesto__list {
     list-style: none;
+    margin: 0;
+    padding: 0;
     display: grid;
+    gap: 0;
   }
 
   .manifesto__item {
     display: grid;
     grid-template-columns: auto 1fr;
-    gap: 2rem;
-    padding: 2rem 0;
-    border-top: 1px solid var(--line-inv);
+    gap: 1.5rem;
+    padding: 1.6rem 0;
+    border-top: 1px solid var(--line-dark);
   }
 
   .manifesto__item:last-child {
-    border-bottom: 1px solid var(--line-inv);
+    border-bottom: 1px solid var(--line-dark);
   }
 
   .manifesto__num {
-    font-size: 0.72rem;
-    font-weight: 500;
-    letter-spacing: 0.14em;
-    color: var(--ivory-3);
-    padding-top: 0.5em;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--cream);
   }
 
   .manifesto__title {
-    font-family: var(--font-serif);
-    font-size: 1.35rem;
-    font-weight: 400;
-    margin-bottom: 0.6rem;
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin-bottom: 0.4rem;
   }
 
-  .manifesto__text {
-    color: var(--ivory-2);
-    max-width: 52ch;
-    font-size: 0.94rem;
-    line-height: 1.65;
+  .manifesto__item p {
+    color: var(--muted-light);
+    max-width: 50ch;
+    font-size: 0.95rem;
   }
 
   @media (min-width: 900px) {
     .manifesto__grid {
-      grid-template-columns: 1fr 1.4fr;
+      grid-template-columns: 0.8fr 1.2fr;
       gap: 4rem;
     }
   }
 
-  /* SELEÇÃO */
-  .featured__header {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1.5rem 2rem;
-    justify-content: space-between;
-    align-items: flex-end;
-    margin-bottom: clamp(2.5rem, 5vw, 4rem);
-  }
-
-  .featured__header .meta {
-    display: block;
-    margin-bottom: 1.2rem;
-  }
-
-  .featured__grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: clamp(1.5rem, 3vw, 2.5rem);
-  }
-
-  @media (min-width: 900px) {
-    .featured__grid {
-      grid-template-columns: repeat(4, 1fr);
-    }
-  }
-
-  /* CONVITE */
-  .invite {
-    border-top: 1px solid var(--line);
+  /* CTA */
+  .cta {
     text-align: center;
   }
 
-  .invite__inner {
+  .cta__inner {
     display: grid;
     justify-items: center;
-    gap: 2rem;
+    gap: 1.6rem;
   }
 
-  .invite__title {
-    max-width: 18ch;
+  .cta__title {
+    max-width: 16ch;
+  }
+
+  .cta__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: center;
+    margin-top: 0.6rem;
   }
 </style>

@@ -18,28 +18,32 @@ const { slug, active } = Astro.props;
 const category = getCategory(slug);
 const items = getProductsByCategory(slug);
 const prices = items.map((p) => p.preco);
-const priceRange = `${formatPrice(Math.min(...prices))} — ${formatPrice(Math.max(...prices))}`;
+const priceRange = `${formatPrice(Math.min(...prices))} – ${formatPrice(Math.max(...prices))}`;
 const others = categories.filter((c) => c.slug !== slug);
 ---
 
 <BaseLayout
   active={active}
-  title={`${category.headline} — Cibele`}
+  title={`${category.headline} — Cibele Plastic`}
   description={category.descricao}
 >
-  <section class="phero">
-    <div class="container">
-      <p class="meta phero__index" data-reveal="fade">{category.indice} — Segmento</p>
-      <h1 class="display phero__title" data-reveal>{category.headline}</h1>
-      <div class="phero__meta" data-reveal>
-        <p class="lead phero__desc text-muted">{category.descricao}</p>
-        <dl class="phero__facts">
+  <section class="phero" data-hero>
+    <div class="container-wide">
+      <p class="phero__index" data-hero-item>
+        <span>{category.indice}</span> / Segmento
+      </p>
+      <h1 class="display phero__title">
+        <span class="line-mask"><span class="line-inner">{category.headline}</span></span>
+      </h1>
+      <div class="phero__meta">
+        <p class="lead phero__desc" data-hero-item>{category.descricao}</p>
+        <dl class="phero__facts" data-hero-item>
           <div>
-            <dt class="meta">Peças</dt>
+            <dt>Itens</dt>
             <dd>{String(items.length).padStart(2, '0')}</dd>
           </div>
           <div>
-            <dt class="meta">Faixa de preço</dt>
+            <dt>Faixa de preço</dt>
             <dd>{priceRange}</dd>
           </div>
         </dl>
@@ -48,23 +52,23 @@ const others = categories.filter((c) => c.slug !== slug);
   </section>
 
   <section class="section-sm catalog">
-    <div class="container">
+    <div class="container-wide">
       <div class="catalog__grid" data-reveal-group>
-        {items.map((product, i) => <ProductCard product={product} index={i} eager={i < 3} />)}
+        {items.map((product, i) => <ProductCard product={product} index={i} />)}
       </div>
     </div>
   </section>
 
   <section class="section-sm cross">
-    <div class="container">
-      <p class="meta cross__marker" data-reveal="fade">Explore também</p>
+    <div class="container-wide">
+      <p class="eyebrow" data-reveal="fade">Explore também</p>
       <div class="cross__list">
         {
           others.map((cat) => (
-            <a class="cross__item" href={cat.path} data-reveal>
-              <span class="cross__idx" aria-hidden="true">{cat.indice}</span>
+            <a class="cross__item" href={cat.path} data-reveal="up" data-cursor>
+              <span class="cross__idx">{cat.indice}</span>
               <span class="cross__name">{cat.titulo}</span>
-              <span class="cross__cue" aria-hidden="true">Ver segmento</span>
+              <span class="cross__arrow" aria-hidden="true">↗</span>
             </a>
           ))
         }
@@ -75,86 +79,100 @@ const others = categories.filter((c) => c.slug !== slug);
 
 <style>
   .phero {
+    position: relative;
     padding-block: clamp(9.5rem, 16vw, 15rem) clamp(3.5rem, 6vw, 5.5rem);
   }
 
   .phero__index {
-    display: block;
-    margin-bottom: 1.8rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 1.6rem;
+  }
+
+  .phero__index span {
+    color: var(--accent);
+    font-size: 1rem;
   }
 
   .phero__title {
-    margin-bottom: clamp(2.2rem, 4vw, 3.2rem);
+    margin-bottom: 2.5rem;
   }
 
   .phero__meta {
     display: grid;
-    gap: 2.5rem;
+    gap: 2rem;
     align-items: end;
   }
 
   .phero__desc {
-    max-width: 50ch;
+    max-width: 52ch;
+    color: var(--muted);
   }
 
   .phero__facts {
     display: flex;
-    gap: 3rem;
+    gap: 2.5rem;
+    margin: 0;
   }
 
   .phero__facts dt {
-    margin-bottom: 0.6rem;
+    font-size: 0.72rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 0.4rem;
   }
 
   .phero__facts dd {
-    font-family: var(--font-serif);
-    font-size: 1.3rem;
-    font-weight: 400;
-    font-variant-numeric: tabular-nums;
+    margin: 0;
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--bone);
   }
 
   @media (min-width: 900px) {
     .phero__meta {
       grid-template-columns: 1fr auto;
-      gap: 4rem;
     }
-  }
-
-  .catalog {
-    border-top: 1px solid var(--line);
   }
 
   .catalog__grid {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: clamp(1.5rem, 3vw, 2.5rem) clamp(1.2rem, 2.5vw, 2rem);
-  }
-
-  @media (min-width: 900px) {
-    .catalog__grid {
-      grid-template-columns: repeat(3, 1fr);
-    }
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1.4rem;
   }
 
   .cross {
     border-top: 1px solid var(--line);
   }
 
-  .cross__marker {
-    display: block;
-    margin-bottom: 1.8rem;
+  .cross .eyebrow {
+    margin-bottom: 1.5rem;
+  }
+
+  .cross__list {
+    display: grid;
+    gap: 0;
   }
 
   .cross__item {
     display: flex;
-    align-items: baseline;
-    gap: 1.5rem;
-    padding: 1.6rem 0;
+    align-items: center;
+    gap: 1.2rem;
+    padding: 1.4rem 0;
     border-top: 1px solid var(--line);
-    font-family: var(--font-serif);
-    font-size: clamp(1.5rem, 4vw, 2.4rem);
-    font-weight: 360;
-    line-height: 1.05;
+    font-family: var(--font-display);
+    font-size: clamp(1.4rem, 4vw, 2.4rem);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    text-transform: uppercase;
+    transition: padding-left 0.45s var(--ease), color 0.35s var(--ease);
   }
 
   .cross__item:last-child {
@@ -162,34 +180,27 @@ const others = categories.filter((c) => c.slug !== slug);
   }
 
   .cross__idx {
-    font-family: var(--font-sans);
-    font-size: 0.72rem;
-    font-weight: 500;
-    letter-spacing: 0.14em;
-    color: var(--ink-3);
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--muted);
   }
 
   .cross__name {
     flex: 1;
-    transition: transform 0.6s var(--ease);
   }
 
-  .cross__cue {
-    font-family: var(--font-sans);
-    font-size: 0.68rem;
-    font-weight: 500;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: var(--ink-3);
-    transition: color 0.4s var(--ease);
+  .cross__arrow {
+    color: var(--muted);
+    transition: transform 0.45s var(--ease), color 0.35s var(--ease);
   }
 
-  .cross__item:hover .cross__name {
-    transform: translateX(0.35em);
-    font-style: italic;
+  .cross__item:hover {
+    padding-left: 1rem;
+    color: var(--accent);
   }
 
-  .cross__item:hover .cross__cue {
-    color: var(--ink);
+  .cross__item:hover .cross__arrow {
+    color: var(--accent);
+    transform: translate(6px, -6px);
   }
 </style>
