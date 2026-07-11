@@ -1,6 +1,9 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { collections, stats } from '../data/catalog';
+import ProductCard from '../components/ProductCard.astro';
+import { collections, products, stats } from '../data/catalog';
+
+const featured = products.slice(0, 8);
 
 // Produto em destaque do hero — o produto acompanhado de um significado,
 // nunca o item isolado. É o único momento da home que exibe um produto.
@@ -107,6 +110,27 @@ const hero = {
             </a>
           ))
         }
+      </div>
+    </div>
+  </section>
+
+  <!-- SELECIONADOS — grade de produtos reais -->
+  <section class="section featured">
+    <div class="container">
+      <header class="featured__head">
+        <p class="eyebrow" data-reveal="fade">A vitrine</p>
+        <h2 class="h-xl" data-lines>
+          <span class="line-mask"><span class="line-inner">Selecionados</span></span>
+          <span class="line-mask"><span class="line-inner">para você</span></span>
+        </h2>
+        <a class="link-arrow featured__link" href="/embalagens" data-reveal="fade">
+          <span>Ver catálogo completo</span>
+          <span class="arrow" aria-hidden="true">↗</span>
+        </a>
+      </header>
+
+      <div class="card-grid" data-reveal-group>
+        {featured.map((product) => <ProductCard product={product} />)}
       </div>
     </div>
   </section>
@@ -229,7 +253,7 @@ const hero = {
 
   .hero__panel-inner {
     width: 100%;
-    padding: 7.5rem var(--gutter) 3.5rem;
+    padding: 3.5rem var(--gutter);
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -408,6 +432,22 @@ const hero = {
   }
 
   /* ============================================================
+     SELECIONADOS — vitrine de produtos reais
+     ============================================================ */
+  .featured__head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: end;
+    justify-content: space-between;
+    gap: 1rem 2rem;
+    margin-bottom: 2.4rem;
+  }
+
+  .featured__head h2 {
+    margin-top: 0.6rem;
+  }
+
+  /* ============================================================
      APLICAÇÕES — onde as embalagens entram
      ============================================================ */
   .apps__head {
@@ -513,7 +553,7 @@ const hero = {
   .editorial__num {
     font-size: 0.8rem;
     font-weight: 700;
-    color: var(--accent-premium);
+    color: var(--accent-inverse);
   }
 
   .editorial__item-title {

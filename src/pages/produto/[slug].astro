@@ -1,0 +1,236 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ProductCard from '../../components/ProductCard.astro';
+import {
+  products,
+  getCollection,
+  getProductSpecs,
+  getRelatedProducts,
+  formatPrice,
+} from '../../data/catalog';
+
+export function getStaticPaths() {
+  return products.map((product) => ({
+    params: { slug: product.slug },
+    props: { product },
+  }));
+}
+
+const { product } = Astro.props;
+const collection = getCollection(product.colecao);
+const specs = getProductSpecs(product);
+const related = getRelatedProducts(product);
+---
+
+<BaseLayout
+  active="embalagens"
+  title={`${product.nome} — Cibele Plastic`}
+  description={product.descricao}
+>
+  <div class="container pdp">
+    <nav class="breadcrumb" aria-label="Trilha">
+      <a href="/">Início</a>
+      <span class="breadcrumb__sep" aria-hidden="true">/</span>
+      <a href="/embalagens">Embalagens</a>
+      <span class="breadcrumb__sep" aria-hidden="true">/</span>
+      <a href={collection.path}>{collection.titulo}</a>
+      <span class="breadcrumb__sep" aria-hidden="true">/</span>
+      <span class="breadcrumb__current">{product.nome}</span>
+    </nav>
+
+    <div class="pdp__grid">
+      <div class="pdp__media">
+        <div class="media-ph"><span class="media-ph__label">Imagem do produto</span></div>
+      </div>
+
+      <div class="pdp__info">
+        <a class="pdp__collection" href={collection.path}>{collection.titulo}</a>
+        <h1 class="pdp__title">{product.nome}</h1>
+        <p class="pdp__price">{formatPrice(product.preco)}</p>
+        <p class="pdp__desc">{product.descricao}</p>
+
+        <form class="pdp__actions" data-pdp-form data-id={product.id} data-name={product.nome}>
+          <div class="qty-stepper" data-qty-stepper>
+            <button type="button" data-qty-minus aria-label="Diminuir quantidade">−</button>
+            <input type="number" min="1" value="1" inputmode="numeric" data-qty-input aria-label="Quantidade" />
+            <button type="button" data-qty-plus aria-label="Aumentar quantidade">+</button>
+          </div>
+          <button class="btn btn--primary pdp__add" type="submit" data-pdp-add>
+            <span>Adicionar à sacola</span>
+          </button>
+          <button class="wishlist-btn pdp__wishlist" type="button" data-wishlist-toggle data-id={product.id} aria-pressed="false" aria-label={`Favoritar ${product.nome}`}>
+            <svg class="icon-heart-line" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M12 20.5s-7.5-4.6-10-9.3C.5 8 1.8 4.5 5.2 3.6c2.1-.6 4.2.3 5.4 2 .4.5.5.7 1.4 2 .9-1.3 1-1.5 1.4-2 1.2-1.7 3.3-2.6 5.4-2 3.4.9 4.7 4.4 3.2 7.6-2.5 4.7-10 9.3-10 9.3z"></path>
+            </svg>
+            <svg class="icon-heart-fill" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path d="M12 20.5s-7.5-4.6-10-9.3C.5 8 1.8 4.5 5.2 3.6c2.1-.6 4.2.3 5.4 2 .4.5.5.7 1.4 2 .9-1.3 1-1.5 1.4-2 1.2-1.7 3.3-2.6 5.4-2 3.4.9 4.7 4.4 3.2 7.6-2.5 4.7-10 9.3-10 9.3z"></path>
+            </svg>
+          </button>
+        </form>
+
+        <dl class="pdp__specs">
+          {
+            specs.map((spec) => (
+              <div class="pdp__spec-row">
+                <dt aria-hidden="true">—</dt>
+                <dd>{spec}</dd>
+              </div>
+            ))
+          }
+        </dl>
+
+        <p class="pdp__note text-muted">
+          Pedidos em quantidade e prazos de entrega são combinados diretamente com nossa equipe.
+          <a href="/contato">Fale conosco</a> para um orçamento sob medida.
+        </p>
+      </div>
+    </div>
+
+    {
+      related.length > 0 && (
+        <section class="pdp__related">
+          <h2 class="h-sm">Você também pode gostar</h2>
+          <div class="card-grid related__grid">
+            {related.map((item) => (
+              <ProductCard product={item} />
+            ))}
+          </div>
+        </section>
+      )
+    }
+  </div>
+</BaseLayout>
+
+<style>
+  .pdp {
+    padding-block: clamp(2rem, 5vw, 3rem) var(--space-128);
+    display: grid;
+    gap: 2.5rem;
+  }
+
+  .pdp__grid {
+    display: grid;
+    gap: 2.5rem;
+  }
+
+  .pdp__media {
+    position: relative;
+    aspect-ratio: 1 / 1;
+  }
+
+  .pdp__info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+
+  .pdp__collection {
+    display: inline-block;
+    font-size: 0.76rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent-ink);
+  }
+
+  .pdp__title {
+    font-size: var(--step-3);
+    line-height: 1.08;
+    margin-top: 0.4rem;
+  }
+
+  .pdp__price {
+    font-size: var(--step-2);
+    font-weight: 700;
+    margin-top: 0.6rem;
+  }
+
+  .pdp__desc {
+    color: var(--muted);
+    font-size: 1rem;
+    line-height: 1.6;
+    margin-top: 0.8rem;
+    max-width: 52ch;
+  }
+
+  .pdp__actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.8rem;
+    margin-top: 1.4rem;
+  }
+
+  .pdp__add {
+    flex: 1 1 auto;
+  }
+
+  .pdp__wishlist {
+    position: static;
+    flex-shrink: 0;
+    width: 44px;
+    height: 44px;
+    border: 1px solid var(--line-strong);
+    background: transparent;
+    backdrop-filter: none;
+  }
+
+  .pdp__wishlist:hover {
+    border-color: var(--forest);
+    background: var(--ink-2);
+  }
+
+  .pdp__specs {
+    display: grid;
+    gap: 0.5rem;
+    margin: 1.6rem 0 0;
+    padding-top: 1.4rem;
+    border-top: 1px solid var(--line);
+  }
+
+  .pdp__spec-row {
+    display: grid;
+    grid-template-columns: 1rem 1fr;
+    gap: 0.6rem;
+    margin: 0;
+    font-size: 0.88rem;
+    color: var(--muted);
+  }
+
+  .pdp__spec-row dt {
+    color: var(--accent-ink);
+    font-weight: 700;
+  }
+
+  .pdp__spec-row dd {
+    margin: 0;
+  }
+
+  .pdp__note {
+    margin-top: 1.4rem;
+    font-size: 0.85rem;
+    line-height: 1.6;
+    max-width: 50ch;
+  }
+
+  .pdp__note a {
+    color: var(--bone);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  .pdp__related {
+    padding-top: 2.5rem;
+    border-top: 1px solid var(--line);
+    display: grid;
+    gap: 1.4rem;
+  }
+
+  @media (min-width: 860px) {
+    .pdp__grid {
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: start;
+    }
+  }
+</style>
