@@ -221,6 +221,84 @@ function initHeader() {
 }
 
 /* --------------------------------------------------------
+   Mega menu de categorias (desktop) — abre no hover para
+   ponteiros finos e por clique/teclado em qualquer caso.
+-------------------------------------------------------- */
+function initMegaMenu() {
+  const wrap = document.querySelector<HTMLElement>('[data-mega-wrap]');
+  const toggle = document.querySelector<HTMLButtonElement>('[data-mega-toggle]');
+  const panel = document.querySelector<HTMLElement>('[data-mega-panel]');
+  if (!wrap || !toggle || !panel) return;
+
+  let open = false;
+  let openedByHover = false;
+  let hoverTimer = 0;
+
+  const setOpen = (state: boolean, viaHover = false) => {
+    if (state === open) return;
+    open = state;
+    if (state) openedByHover = viaHover;
+    toggle.setAttribute('aria-expanded', String(state));
+    toggle.classList.toggle('is-open', state);
+
+    if (state) {
+      panel.hidden = false;
+      if (!reduceMotion) {
+        animate(panel, { opacity: [0, 1], translateY: [-8, 0], duration: 400, ease: 'outQuad' });
+      }
+    } else if (!reduceMotion) {
+      animate(panel, {
+        opacity: [1, 0],
+        translateY: [0, -8],
+        duration: 250,
+        ease: 'outQuad',
+        onComplete: () => {
+          panel.hidden = true;
+        },
+      });
+    } else {
+      panel.hidden = true;
+    }
+  };
+
+  // Em ponteiros finos, o hover já abre o menu antes do clique chegar;
+  // ignoramos esse clique "de passagem" para não fechar o painel na hora.
+  toggle.addEventListener('click', () => {
+    if (open && openedByHover) return;
+    setOpen(!open);
+  });
+
+  if (fine) {
+    wrap.addEventListener('mouseenter', () => {
+      window.clearTimeout(hoverTimer);
+      if (window.innerWidth >= 940) setOpen(true, true);
+    });
+    wrap.addEventListener('mouseleave', () => {
+      hoverTimer = window.setTimeout(() => setOpen(false), 150);
+    });
+  }
+
+  panel.querySelectorAll('[data-mega-link]').forEach((link) => {
+    link.addEventListener('click', () => setOpen(false));
+  });
+
+  document.addEventListener('click', (event) => {
+    if (open && !wrap.contains(event.target as Node)) setOpen(false);
+  });
+
+  window.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && open) {
+      setOpen(false);
+      toggle.focus();
+    }
+  });
+
+  window.addEventListener('resize', () => {
+    if (open && window.innerWidth < 940) setOpen(false);
+  });
+}
+
+/* --------------------------------------------------------
    Menu mobile.
 -------------------------------------------------------- */
 function initMobileMenu() {
@@ -315,6 +393,7 @@ function initAddButtons() {
 -------------------------------------------------------- */
 function boot() {
   initHeader();
+  initMegaMenu();
   initMobileMenu();
   initAddButtons();
 
