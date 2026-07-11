@@ -28,7 +28,6 @@ const others = categories.filter((c) => c.slug !== slug);
   description={category.descricao}
 >
   <section class="phero" data-hero>
-    <div class="phero__bg" aria-hidden="true"></div>
     <div class="container-wide">
       <p class="phero__index" data-hero-item>
         <span>{category.indice}</span> / Segmento
@@ -81,16 +80,7 @@ const others = categories.filter((c) => c.slug !== slug);
 <style>
   .phero {
     position: relative;
-    padding-block: clamp(9rem, 16vw, 14rem) clamp(3rem, 6vw, 5rem);
-    overflow: hidden;
-  }
-
-  .phero__bg {
-    position: absolute;
-    inset: 0;
-    z-index: -1;
-    background: radial-gradient(circle at 78% 12%, rgba(128, 239, 128, 0.38), transparent 48%),
-      radial-gradient(circle at 8% 90%, rgba(140, 189, 140, 0.32), transparent 42%);
+    padding-block: clamp(9.5rem, 16vw, 15rem) clamp(3.5rem, 6vw, 5.5rem);
   }
 
   .phero__index {
