@@ -313,6 +313,7 @@ function initMobileMenu() {
     open = state;
     toggle.setAttribute('aria-expanded', String(state));
     document.body.classList.toggle('menu-open', state);
+    document.documentElement.classList.toggle('menu-open', state);
     if (state) {
       menu.hidden = false;
       animate(menu, { opacity: [0, 1], duration: 400, ease: 'outQuad' });
