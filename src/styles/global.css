@@ -1,34 +1,31 @@
 /* ============================================================
    Cibele Plastic — Design System
-   Estética eco natural: creme editorial + escala de verdes.
+   Quiet luxury: fundos lisos, tipografia em duas cores apenas
+   (verde-escuro sobre fundo claro · bege sobre fundo escuro).
    ============================================================ */
 
 :root {
-  /* Paleta base */
-  --cream: #ffffe3; /* fundo da página */
-  --brown: #4d301b; /* cor do texto */
-  --mint: #80ef80; /* verde vibrante — acento e preenchimentos */
-  --sage: #8cbd8c; /* verde secundário */
-  --sage-muted: #768a76; /* verde acinzentado — texto suave */
-  --forest: #173317; /* verde escuro — seções escuras e acento de texto */
+  /* Duas cores — a totalidade da paleta tipográfica */
+  --cream: #ffffe3; /* bege — fundo claro e texto sobre fundo escuro */
+  --forest: #173317; /* verde-escuro — fundo de contraste e texto sobre fundo claro */
 
-  /* Aliases semânticos (usados pelos componentes) */
-  --ink: var(--cream); /* fundo padrão (claro) */
-  --ink-2: #f6f2c9; /* painéis / cartões */
-  --ink-3: #eee9ba; /* painel em hover */
-  --paper: var(--forest); /* seção de contraste (escura) */
-  --paper-2: #0e220e;
-  --bone: var(--brown); /* texto principal */
-  --muted: var(--sage-muted); /* texto suave sobre creme */
-  --muted-dark: #9a8b6f; /* texto suave (placeholder / contorno) sobre creme */
-  --muted-light: #a9c1a2; /* texto suave sobre seções escuras */
-  --line: rgba(77, 48, 27, 0.16); /* fios sobre creme */
-  --line-dark: rgba(255, 255, 227, 0.18); /* fios sobre verde escuro */
+  /* Fundos (sempre lisos — nunca gradiente) */
+  --ink: var(--cream); /* fundo padrão da página */
+  --ink-2: #f7f2d6; /* superfície sólida (cartões) sobre fundo claro */
+  --ink-3: #efe9c1; /* superfície sólida em hover sobre fundo claro */
+  --paper: var(--forest); /* seção de contraste (fundo escuro) */
+  --paper-2: #102310; /* superfície sólida sobre fundo escuro */
 
-  --lime: var(--mint); /* acento vibrante (preenchimentos, realces) */
-  --accent: var(--forest); /* acento de texto sobre creme */
-  --lime-deep: #5fd35f;
-  --moss: #3f7d4f; /* verde de sucesso */
+  /* Tipografia — hierarquia por opacidade da mesma cor, nunca por novo matiz */
+  --bone: var(--forest); /* texto padrão sobre fundo claro */
+  --muted: rgba(23, 51, 23, 0.62); /* texto secundário sobre fundo claro */
+  --muted-dark: rgba(23, 51, 23, 0.4); /* texto terciário / contorno sobre fundo claro */
+  --muted-light: rgba(255, 255, 227, 0.68); /* texto secundário sobre fundo escuro */
+  --line: rgba(23, 51, 23, 0.14); /* fios sobre fundo claro */
+  --line-dark: rgba(255, 255, 227, 0.2); /* fios sobre fundo escuro */
+
+  --accent: var(--forest); /* acento tipográfico sobre fundo claro */
+  --accent-inverse: var(--cream); /* acento tipográfico sobre fundo escuro */
 
   /* Tipografia */
   --font: 'Ubuntu', system-ui, -apple-system, 'Segoe UI', sans-serif;
@@ -43,11 +40,11 @@
   --step-4: clamp(3rem, 2rem + 5vw, 6rem);
   --step-5: clamp(3.6rem, 1.8rem + 9vw, 9rem);
 
-  /* Layout */
+  /* Layout — espaçamento generoso, cantos discretos */
   --container: 1280px;
-  --gutter: clamp(1.2rem, 5vw, 4rem);
-  --radius: 18px;
-  --radius-lg: 30px;
+  --gutter: clamp(1.4rem, 6vw, 5rem);
+  --radius: 14px;
+  --radius-lg: 22px;
 
   /* Movimento */
   --ease: cubic-bezier(0.22, 1, 0.36, 1);
@@ -117,8 +114,8 @@ p {
 }
 
 ::selection {
-  background: var(--lime);
-  color: var(--accent);
+  background: var(--forest);
+  color: var(--cream);
 }
 
 /* Tipografia utilitária ----------------------------------- */
@@ -163,18 +160,23 @@ p {
   content: '';
   width: 1.8em;
   height: 1px;
-  background: var(--lime);
+  background: currentColor;
+  opacity: 0.7;
 }
 
 .lead {
   font-size: var(--step-1);
-  line-height: 1.4;
+  line-height: 1.5;
   font-weight: 400;
   color: var(--bone);
 }
 
 .text-lime {
   color: var(--accent);
+}
+
+.paper .text-lime {
+  color: var(--accent-inverse);
 }
 
 .text-muted {
@@ -193,12 +195,12 @@ p {
 }
 
 .section {
-  padding-block: clamp(4.5rem, 9vw, 9rem);
+  padding-block: clamp(5.5rem, 10vw, 10.5rem);
   position: relative;
 }
 
 .section-sm {
-  padding-block: clamp(3rem, 6vw, 5rem);
+  padding-block: clamp(3.5rem, 7vw, 6rem);
 }
 
 .paper {
@@ -218,18 +220,22 @@ p {
   color: var(--cream);
 }
 
+.paper .hr {
+  background: var(--line-dark);
+}
+
 /* Botões --------------------------------------------------- */
 .btn {
   position: relative;
   display: inline-flex;
   align-items: center;
   gap: 0.7em;
-  padding: 1.05em 1.9em;
+  padding: 1.1em 2.1em;
   border: 1px solid transparent;
   border-radius: 999px;
   font-weight: 600;
   font-size: var(--step--1);
-  letter-spacing: 0.04em;
+  letter-spacing: 0.05em;
   text-transform: uppercase;
   overflow: hidden;
   isolation: isolate;
@@ -258,38 +264,64 @@ p {
   transform: translateY(0);
 }
 
+/* Primário: preenchido em verde-escuro, inverte para bege no hover */
 .btn--primary {
-  background: var(--lime);
-  color: var(--accent);
+  background: var(--forest);
+  color: var(--cream);
 }
 
 .btn--primary .btn__fill {
-  background: var(--forest);
+  background: var(--cream);
 }
 
 .btn--primary:hover,
 .btn--primary:focus-visible {
-  color: var(--lime);
+  color: var(--forest);
 }
 
+/* Contorno: usa a mesma cor de texto do fundo em que está */
 .btn--ghost {
   border-color: var(--line);
   color: var(--bone);
 }
 
 .btn--ghost .btn__fill {
-  background: var(--lime);
+  background: var(--forest);
 }
 
 .btn--ghost:hover,
 .btn--ghost:focus-visible {
-  color: var(--accent);
-  border-color: var(--lime);
+  color: var(--cream);
+  border-color: var(--forest);
+}
+
+.paper .btn--primary {
+  background: var(--cream);
+  color: var(--forest);
+}
+
+.paper .btn--primary .btn__fill {
+  background: var(--forest);
+}
+
+.paper .btn--primary:hover,
+.paper .btn--primary:focus-visible {
+  color: var(--cream);
 }
 
 .paper .btn--ghost {
   border-color: var(--line-dark);
   color: var(--cream);
+}
+
+.paper .btn--ghost .btn__fill {
+  background: var(--cream);
+}
+
+.paper .btn--ghost:hover,
+.paper .btn--ghost:focus-visible {
+  color: var(--forest);
+  border-color: var(--cream);
 }
 
 .btn .arrow {
@@ -383,10 +415,6 @@ p {
   margin: 0;
 }
 
-.paper .hr {
-  background: var(--line-dark);
-}
-
 /* Acessibilidade ------------------------------------------- */
 .visually-hidden {
   position: absolute;
@@ -406,8 +434,8 @@ p {
   left: 1rem;
   z-index: 200;
   padding: 0.7rem 1.1rem;
-  background: var(--lime);
-  color: var(--accent);
+  background: var(--forest);
+  color: var(--cream);
   border-radius: 8px;
   font-weight: 600;
   transition: top 0.3s var(--ease);
@@ -429,13 +457,13 @@ p {
   bottom: 2rem;
   z-index: 250;
   transform: translate(-50%, 150%);
-  padding: 0.85rem 1.4rem;
+  padding: 0.9rem 1.5rem;
   border-radius: 999px;
-  background: var(--lime);
-  color: var(--accent);
+  background: var(--forest);
+  color: var(--cream);
   font-size: 0.85rem;
   font-weight: 500;
-  box-shadow: 0 18px 40px rgba(23, 51, 23, 0.25);
+  box-shadow: 0 18px 40px rgba(23, 51, 23, 0.2);
   opacity: 0;
   transition: transform 0.55s var(--ease), opacity 0.4s var(--ease);
   pointer-events: none;
@@ -493,7 +521,7 @@ p {
     width: 70px;
     height: 70px;
     margin: -35px 0 0 -35px;
-    background: rgba(128, 239, 128, 0.2);
+    background: rgba(23, 51, 23, 0.1);
   }
 
   body.cursor-active .cursor-dot {

@@ -68,15 +68,15 @@ const links = [
     position: fixed;
     inset: 0 0 auto 0;
     z-index: 100;
-    padding-block: 1.1rem;
+    padding-block: 1.6rem;
     transition: transform 0.5s var(--ease), background-color 0.4s var(--ease),
       backdrop-filter 0.4s var(--ease), border-color 0.4s var(--ease), padding 0.4s var(--ease);
     border-bottom: 1px solid transparent;
   }
 
   .header.is-scrolled {
-    padding-block: 0.7rem;
-    background: rgba(255, 255, 227, 0.82);
+    padding-block: 1rem;
+    background: rgba(255, 255, 227, 0.88);
     backdrop-filter: blur(14px);
     border-bottom-color: var(--line);
   }
@@ -104,22 +104,10 @@ const links = [
   }
 
   .brand__mark {
-    width: 14px;
-    height: 14px;
+    width: 10px;
+    height: 10px;
     border-radius: 50%;
     background: var(--accent);
-    box-shadow: 0 0 0 4px rgba(128, 239, 128, 0.5);
-    animation: pulse 3.5s ease-in-out infinite;
-  }
-
-  @keyframes pulse {
-    0%,
-    100% {
-      box-shadow: 0 0 0 4px rgba(128, 239, 128, 0.5);
-    }
-    50% {
-      box-shadow: 0 0 0 9px rgba(128, 239, 128, 0);
-    }
   }
 
   .brand__accent {
@@ -194,9 +182,9 @@ const links = [
   }
 
   .header__cta:hover {
-    background: var(--lime);
-    border-color: var(--lime);
-    color: var(--accent);
+    background: var(--forest);
+    border-color: var(--forest);
+    color: var(--cream);
   }
 
   .burger {
@@ -230,7 +218,7 @@ const links = [
     transform: translateY(-3.3px) rotate(-45deg);
   }
 
-  /* Menu overlay */
+  /* Menu overlay — fundo liso em verde-escuro, texto bege */
   .menu {
     position: fixed;
     inset: 0;
@@ -240,8 +228,8 @@ const links = [
     justify-content: center;
     gap: 2.5rem;
     padding: 6rem var(--gutter) 3rem;
-    background: var(--ink-2);
-    background-image: radial-gradient(circle at 80% 10%, rgba(128, 239, 128, 0.22), transparent 45%);
+    background: var(--forest);
+    color: var(--cream);
   }
 
   .menu[hidden] {
@@ -257,33 +245,38 @@ const links = [
     display: flex;
     align-items: baseline;
     gap: 1rem;
-    padding: 0.5rem 0;
-    border-bottom: 1px solid var(--line);
+    padding: 0.6rem 0;
+    border-bottom: 1px solid var(--line-dark);
     font-family: var(--font-display);
     font-size: clamp(2rem, 11vw, 3.5rem);
     font-weight: 800;
     letter-spacing: -0.03em;
     text-transform: uppercase;
-    color: var(--bone);
-    transition: color 0.3s var(--ease), padding-left 0.4s var(--ease);
+    color: var(--cream);
+    opacity: 0.75;
+    transition: opacity 0.3s var(--ease), padding-left 0.4s var(--ease);
   }
 
   .menu__link:hover,
   .menu__link.is-active {
-    color: var(--accent);
+    opacity: 1;
     padding-left: 0.8rem;
   }
 
   .menu__index {
     font-size: 0.9rem;
     font-weight: 600;
-    color: var(--muted);
+    color: var(--muted-light);
     letter-spacing: 0;
   }
 
   .menu__foot {
-    color: var(--muted);
+    color: var(--muted-light);
     max-width: 30ch;
+  }
+
+  .menu__foot .eyebrow {
+    color: var(--muted-light);
   }
 
   @media (min-width: 940px) {
