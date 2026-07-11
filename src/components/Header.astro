@@ -5,42 +5,51 @@ interface Props {
 const { active = '' } = Astro.props;
 
 const links = [
-  { label: 'Início', href: '/', key: 'home' },
   { label: 'Embalagens', href: '/embalagens', key: 'embalagens' },
-  { label: 'Produtos Médicos', href: '/produtos-medicos', key: 'medicos' },
   { label: 'Construção Civil', href: '/construcao', key: 'construcao' },
+  { label: 'Produtos Médicos', href: '/produtos-medicos', key: 'medicos' },
   { label: 'Sobre', href: '/sobre', key: 'sobre' },
-  { label: 'Contato', href: '/contato', key: 'contato' },
 ];
 ---
 
 <header class="header" data-header>
-  <div class="header__inner container-wide">
-    <a class="brand" href="/" aria-label="Cibele Plastic — página inicial">
-      <span class="brand__mark" aria-hidden="true"></span>
-      <span class="brand__text">Cibele<span class="brand__accent">Plastic</span></span>
+  <div class="header__inner container">
+    <a class="brand" href="/" aria-label="Cibele — página inicial">
+      Cibele<span class="brand__sub">Bioplásticos</span>
     </a>
 
     <nav class="nav" aria-label="Navegação principal">
       {
         links.map((link) => (
-          <a class:list={['nav__link', { 'is-active': active === link.key }]} href={link.href}>
-            <span>{link.label}</span>
+          <a
+            class:list={['nav__link', { 'is-active': active === link.key }]}
+            href={link.href}
+            aria-current={active === link.key ? 'page' : undefined}
+          >
+            {link.label}
           </a>
         ))
       }
     </nav>
 
     <div class="header__actions">
-      <a class="header__cta" href="/contato" data-magnetic="0.35">
-        <span>Orçamento</span>
-        <svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true">
-          <path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
-        </svg>
+      <a
+        class:list={['header__cta', { 'is-active': active === 'contato' }]}
+        href="/contato"
+        aria-current={active === 'contato' ? 'page' : undefined}
+      >
+        Contato
       </a>
-      <button class="burger" type="button" data-menu-toggle aria-expanded="false" aria-controls="menu-mobile" aria-label="Abrir menu">
-        <span></span>
-        <span></span>
+      <button
+        class="burger"
+        type="button"
+        data-menu-toggle
+        aria-expanded="false"
+        aria-controls="menu-mobile"
+        aria-label="Abrir menu"
+      >
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
       </button>
     </div>
   </div>
@@ -49,17 +58,22 @@ const links = [
 <div class="menu" id="menu-mobile" data-menu hidden>
   <nav class="menu__nav" aria-label="Navegação mobile">
     {
-      links.map((link, index) => (
-        <a class:list={['menu__link', { 'is-active': active === link.key }]} href={link.href} data-menu-link>
-          <span class="menu__index">0{index + 1}</span>
+      [...links, { label: 'Contato', href: '/contato', key: 'contato' }].map((link, index) => (
+        <a
+          class:list={['menu__link', { 'is-active': active === link.key }]}
+          href={link.href}
+          aria-current={active === link.key ? 'page' : undefined}
+          style={`--i: ${index}`}
+        >
+          <span class="menu__index" aria-hidden="true">{String(index + 1).padStart(2, '0')}</span>
           <span class="menu__label">{link.label}</span>
         </a>
       ))
     }
   </nav>
-  <div class="menu__foot" data-menu-link>
-    <p class="eyebrow">Cibele Plastic</p>
-    <p>Bioplástico sustentável para embalagens, construção e saúde.</p>
+  <div class="menu__foot">
+    <p class="meta">Cibele — Bioplásticos de origem vegetal</p>
+    <a class="menu__mail" href="mailto:contato@cibeleplastic.com">contato@cibeleplastic.com</a>
   </div>
 </div>
 
@@ -68,16 +82,19 @@ const links = [
     position: fixed;
     inset: 0 0 auto 0;
     z-index: 100;
-    padding-block: 1.6rem;
-    transition: transform 0.5s var(--ease), background-color 0.4s var(--ease),
-      backdrop-filter 0.4s var(--ease), border-color 0.4s var(--ease), padding 0.4s var(--ease);
+    padding-block: 1.7rem;
     border-bottom: 1px solid transparent;
+    transition:
+      transform 0.55s var(--ease),
+      background-color 0.45s var(--ease),
+      border-color 0.45s var(--ease),
+      padding 0.45s var(--ease);
   }
 
   .header.is-scrolled {
-    padding-block: 1rem;
-    background: rgba(255, 255, 227, 0.88);
-    backdrop-filter: blur(14px);
+    padding-block: 1.05rem;
+    background: rgba(250, 248, 243, 0.92);
+    backdrop-filter: blur(12px);
     border-bottom-color: var(--line);
   }
 
@@ -89,151 +106,152 @@ const links = [
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 1.5rem;
+    gap: 2rem;
   }
 
   .brand {
     display: inline-flex;
-    align-items: center;
-    gap: 0.6rem;
-    font-family: var(--font-display);
-    font-weight: 800;
-    font-size: 1.15rem;
-    letter-spacing: -0.02em;
+    align-items: baseline;
+    gap: 0.7rem;
+    font-family: var(--font-serif);
+    font-size: 1.45rem;
+    font-weight: 420;
+    letter-spacing: 0.01em;
+    line-height: 1;
+  }
+
+  .brand__sub {
+    font-family: var(--font-sans);
+    font-size: 0.62rem;
+    font-weight: 500;
+    letter-spacing: 0.24em;
     text-transform: uppercase;
-  }
-
-  .brand__mark {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    background: var(--accent);
-  }
-
-  .brand__accent {
-    color: var(--accent);
+    color: var(--ink-3);
+    transform: translateY(-1px);
   }
 
   .nav {
     display: none;
-    gap: 0.35rem;
+    gap: 2.2rem;
   }
 
   .nav__link {
     position: relative;
-    padding: 0.5rem 0.85rem;
-    font-size: 0.82rem;
+    padding-block: 0.4rem;
+    font-size: 0.78rem;
     font-weight: 500;
-    letter-spacing: 0.01em;
-    color: var(--muted);
-    border-radius: 999px;
-    transition: color 0.3s var(--ease);
-    overflow: hidden;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-2);
+    transition: color 0.35s var(--ease);
   }
 
-  .nav__link span {
-    position: relative;
-    z-index: 1;
-  }
-
-  .nav__link::before {
+  .nav__link::after {
     content: '';
     position: absolute;
-    inset: auto 50% 6px;
+    left: 0;
+    bottom: 0;
+    width: 100%;
     height: 1px;
-    width: 0;
-    background: var(--accent);
-    transform: translateX(-50%);
-    transition: width 0.4s var(--ease);
+    background: currentColor;
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 0.5s var(--ease);
   }
 
-  .nav__link:hover {
-    color: var(--bone);
-  }
-
-  .nav__link:hover::before,
-  .nav__link.is-active::before {
-    width: calc(100% - 1.7rem);
-  }
-
+  .nav__link:hover,
   .nav__link.is-active {
-    color: var(--bone);
+    color: var(--ink);
+  }
+
+  .nav__link:hover::after,
+  .nav__link.is-active::after {
+    transform: scaleX(1);
+    transform-origin: left;
   }
 
   .header__actions {
     display: flex;
     align-items: center;
-    gap: 0.9rem;
+    gap: 1.2rem;
   }
 
   .header__cta {
     display: none;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.7rem 1.25rem;
-    border-radius: 999px;
-    border: 1px solid var(--line);
-    font-size: 0.78rem;
-    font-weight: 600;
-    letter-spacing: 0.05em;
+    padding: 0.85em 1.9em;
+    border: 1px solid var(--line-strong);
+    border-radius: 2px;
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.18em;
     text-transform: uppercase;
-    color: var(--bone);
-    transition: background-color 0.35s var(--ease), color 0.35s var(--ease), border-color 0.35s var(--ease);
+    color: var(--ink);
+    transition:
+      background-color 0.4s var(--ease),
+      border-color 0.4s var(--ease),
+      color 0.4s var(--ease);
   }
 
-  .header__cta:hover {
-    background: var(--forest);
-    border-color: var(--forest);
-    color: var(--cream);
+  .header__cta:hover,
+  .header__cta.is-active {
+    background: var(--ink);
+    border-color: var(--ink);
+    color: var(--paper);
   }
 
   .burger {
     position: relative;
-    width: 46px;
-    height: 46px;
-    border-radius: 50%;
-    border: 1px solid var(--line);
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    border: 0;
     background: transparent;
     display: grid;
     place-items: center;
+    align-content: center;
+    gap: 6px;
   }
 
   .burger span {
     display: block;
-    width: 18px;
-    height: 1.6px;
-    background: var(--bone);
-    transition: transform 0.35s var(--ease), opacity 0.25s var(--ease);
-  }
-
-  .burger span + span {
-    margin-top: 5px;
+    width: 22px;
+    height: 1px;
+    background: var(--ink);
+    transition: transform 0.4s var(--ease);
   }
 
   :global(body.menu-open) .burger span:first-child {
-    transform: translateY(3.3px) rotate(45deg);
+    transform: translateY(3.5px) rotate(45deg);
   }
 
   :global(body.menu-open) .burger span:last-child {
-    transform: translateY(-3.3px) rotate(-45deg);
+    transform: translateY(-3.5px) rotate(-45deg);
   }
 
-  /* Menu overlay — fundo liso em verde-escuro, texto bege */
+  /* Menu mobile — página de marfim, tipografia serifada */
   .menu {
     position: fixed;
     inset: 0;
     z-index: 95;
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    gap: 2.5rem;
-    padding: 6rem var(--gutter) 3rem;
-    background: var(--forest);
-    color: var(--cream);
+    justify-content: space-between;
+    padding: 7.5rem var(--gutter) 3rem;
+    background: var(--paper);
+    opacity: 0;
+    transition: opacity 0.45s var(--ease);
+  }
+
+  .menu.is-open {
+    opacity: 1;
   }
 
   .menu[hidden] {
     display: none;
+  }
+
+  :global(body.menu-open) {
+    overflow: hidden;
   }
 
   .menu__nav {
@@ -244,42 +262,58 @@ const links = [
   .menu__link {
     display: flex;
     align-items: baseline;
-    gap: 1rem;
-    padding: 0.6rem 0;
-    border-bottom: 1px solid var(--line-dark);
-    font-family: var(--font-display);
-    font-size: clamp(2rem, 11vw, 3.5rem);
-    font-weight: 800;
-    letter-spacing: -0.03em;
-    text-transform: uppercase;
-    color: var(--cream);
-    opacity: 0.75;
-    transition: opacity 0.3s var(--ease), padding-left 0.4s var(--ease);
+    gap: 1.4rem;
+    padding: 1.05rem 0;
+    border-bottom: 1px solid var(--line);
+    font-family: var(--font-serif);
+    font-size: clamp(1.9rem, 8vw, 3rem);
+    font-weight: 360;
+    line-height: 1;
+    color: var(--ink);
+    opacity: 0;
+    transform: translateY(18px);
+    transition:
+      opacity 0.6s var(--ease),
+      transform 0.6s var(--ease);
+    transition-delay: calc(80ms + var(--i, 0) * 60ms);
   }
 
-  .menu__link:hover,
-  .menu__link.is-active {
+  .menu.is-open .menu__link {
     opacity: 1;
-    padding-left: 0.8rem;
+    transform: none;
+  }
+
+  .menu__link.is-active .menu__label {
+    font-style: italic;
   }
 
   .menu__index {
-    font-size: 0.9rem;
-    font-weight: 600;
-    color: var(--muted-light);
-    letter-spacing: 0;
+    font-family: var(--font-sans);
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.16em;
+    color: var(--ink-3);
   }
 
   .menu__foot {
-    color: var(--muted-light);
-    max-width: 30ch;
+    display: grid;
+    gap: 0.6rem;
   }
 
-  .menu__foot .eyebrow {
-    color: var(--muted-light);
+  .menu__mail {
+    font-family: var(--font-serif);
+    font-size: 1.2rem;
+    font-weight: 400;
   }
 
-  @media (min-width: 940px) {
+  @media (prefers-reduced-motion: reduce) {
+    .menu__link {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  @media (min-width: 960px) {
     .nav {
       display: flex;
     }
