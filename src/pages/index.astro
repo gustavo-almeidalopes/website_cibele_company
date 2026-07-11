@@ -14,7 +14,7 @@ const featured = getFeaturedProducts();
       <h1 class="display hero__title">
         <span class="line-mask"><span class="line-inner">Plástico que</span></span>
         <span class="line-mask"><span class="line-inner">não custa o</span></span>
-        <span class="line-mask"><span class="line-inner"><span class="text-lime">planeta.</span></span></span>
+        <span class="line-mask"><span class="line-inner"><span class="text-lime text-italic">planeta.</span></span></span>
       </h1>
       <div class="hero__row">
         <p class="lead hero__lead" data-hero-item>
@@ -209,7 +209,7 @@ const featured = getFeaturedProducts();
       <p class="eyebrow" data-reveal="fade">Vamos juntos</p>
       <h2 class="h-xl cta__title" data-lines>
         <span class="line-mask"><span class="line-inner">Construa um futuro</span></span>
-        <span class="line-mask"><span class="line-inner">mais <span class="text-lime">limpo</span> com a gente.</span></span>
+        <span class="line-mask"><span class="line-inner">mais <span class="text-lime text-italic">limpo</span> com a gente.</span></span>
       </h2>
       <div class="cta__actions" data-reveal="up">
         <a class="btn btn--primary" href="/contato" data-magnetic="0.3">
@@ -233,7 +233,7 @@ const featured = getFeaturedProducts();
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
-    padding-block: 9rem 3.5rem;
+    padding-block: 9rem 6.5rem;
   }
 
   .hero__inner {
@@ -268,7 +268,7 @@ const featured = getFeaturedProducts();
   .hero__scroll {
     position: absolute;
     right: var(--gutter);
-    bottom: 3rem;
+    bottom: 1.5rem;
     display: none;
     flex-direction: column;
     align-items: center;
@@ -392,11 +392,11 @@ const featured = getFeaturedProducts();
   }
 
   .segment__title {
+    font-family: var(--font-display);
     font-size: clamp(1.8rem, 5vw, 3.4rem);
-    font-weight: 800;
-    letter-spacing: -0.03em;
-    text-transform: uppercase;
-    line-height: 1;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    line-height: 1.05;
     transition: color 0.4s var(--ease), transform 0.5s var(--ease);
   }
 
@@ -410,10 +410,10 @@ const featured = getFeaturedProducts();
     display: none;
     padding: 0.4rem 0.9rem;
     border: 1px solid var(--line);
-    border-radius: 999px;
+    border-radius: 2px;
     font-size: 0.7rem;
-    font-weight: 600;
-    letter-spacing: 0.08em;
+    font-weight: 500;
+    letter-spacing: 0.1em;
     text-transform: uppercase;
     color: var(--muted);
   }
