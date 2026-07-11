@@ -5,19 +5,11 @@ import { categories, stats } from '../data/catalog';
 // Produto em destaque do hero — o produto acompanhado de um significado,
 // nunca o item isolado. É o único momento da home que exibe um produto.
 const hero = {
-  image: 'prato.webp',
   eyebrow: 'Coleção Bioplástico',
   caption:
     'Louça que veste a mesa com a leveza de quem devolve à terra tudo o que dela tomou. O requinte do descartável, sem a herança fóssil.',
   cta: 'Descobrir embalagens',
   href: '/embalagens',
-};
-
-// Imagens editoriais para os grandes tiles de cada universo.
-const tileImages: Record<string, string> = {
-  embalagens: 'copo.webp',
-  construcao: 'bloco.webp',
-  medicos: 'luva.webp',
 };
 ---
 
@@ -42,7 +34,7 @@ const tileImages: Record<string, string> = {
       </div>
     </div>
     <div class="hero__media">
-      <img src={`/img/${hero.image}`} alt="Prato de bioplástico da Cibele Plastic" fetchpriority="high" />
+      <div class="media-ph"><span class="media-ph__label">Imagem do produto</span></div>
       <span class="hero__caption-media">Louça · Bioplástico</span>
     </div>
   </section>
@@ -79,11 +71,9 @@ const tileImages: Record<string, string> = {
           categories.map((cat) => (
             <a class="tile" href={cat.path} data-reveal-item data-cursor>
               <div class="tile__media">
-                <img
-                  src={`/img/${tileImages[cat.slug] ?? cat.imagem}`}
-                  alt={cat.titulo}
-                  loading="lazy"
-                />
+                <div class="media-ph">
+                  <span class="media-ph__label">{cat.titulo}</span>
+                </div>
                 <span class="tile__index">{cat.indice}</span>
               </div>
               <div class="tile__body">
@@ -105,7 +95,7 @@ const tileImages: Record<string, string> = {
   <section class="section paper editorial">
     <div class="container-wide editorial__grid">
       <div class="editorial__media" data-reveal="fade">
-        <img src="/img/isolante.webp" alt="Material de bioplástico de alto desempenho" loading="lazy" />
+        <div class="media-ph"><span class="media-ph__label">Imagem</span></div>
       </div>
       <div class="editorial__content">
         <p class="eyebrow" data-reveal="fade">O compromisso</p>

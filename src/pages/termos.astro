@@ -1,0 +1,132 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const updated = '11 de julho de 2026';
+
+const sections = [
+  {
+    id: 'aceitacao',
+    title: '1. Aceitação',
+    body: 'Ao navegar por este site, você concorda com estes Termos de Uso. Se não concordar, pedimos que não utilize o site.',
+  },
+  {
+    id: 'uso',
+    title: '2. Uso do site',
+    body: 'O conteúdo é fornecido para fins informativos sobre os produtos e serviços da Cibele Plastic. É vedado o uso para fins ilícitos ou que violem direitos de terceiros.',
+  },
+  {
+    id: 'propriedade',
+    title: '3. Propriedade intelectual',
+    body: 'Marcas, textos, layout e demais elementos deste site pertencem à Cibele Plastic ou a seus licenciadores e não podem ser reproduzidos sem autorização.',
+  },
+  {
+    id: 'orcamentos',
+    title: '4. Orçamentos e informações',
+    body: 'Valores, prazos e disponibilidade exibidos ou informados têm caráter indicativo e podem variar conforme análise do pedido. Nenhuma informação neste site constitui oferta vinculante.',
+  },
+  {
+    id: 'responsabilidade',
+    title: '5. Limitação de responsabilidade',
+    body: 'Empregamos esforços para manter o site preciso e disponível, mas não garantimos ausência de interrupções ou erros. O uso do site é de sua responsabilidade.',
+  },
+  {
+    id: 'privacidade',
+    title: '6. Privacidade',
+    body: 'O tratamento de dados pessoais é regido pela nossa Política de Privacidade, em conformidade com a LGPD.',
+  },
+  {
+    id: 'foro',
+    title: '7. Legislação e foro',
+    body: 'Estes Termos são regidos pela legislação brasileira, ficando eleito o foro do domicílio da empresa para dirimir controvérsias.',
+  },
+];
+---
+
+<BaseLayout
+  title="Termos de Uso — Cibele Plastic"
+  description="Termos e condições de uso do site da Cibele Plastic."
+>
+  <article class="legal">
+    <div class="container legal__inner">
+      <header class="legal__head">
+        <p class="eyebrow" data-reveal="fade">Legal</p>
+        <h1 class="legal__title" data-lines>
+          <span class="line-mask"><span class="line-inner">Termos</span></span>
+          <span class="line-mask"><span class="line-inner">de Uso</span></span>
+        </h1>
+        <p class="legal__meta">Última atualização: {updated}</p>
+      </header>
+
+      <div class="legal__body">
+        {
+          sections.map((s) => (
+            <section class="legal__section" id={s.id} data-reveal="up">
+              <h2 class="legal__h2">{s.title}</h2>
+              <p class="legal__p">{s.body}</p>
+            </section>
+          ))
+        }
+      </div>
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  .legal {
+    padding-block: clamp(8rem, 14vw, 12rem) clamp(4rem, 8vw, 7rem);
+  }
+
+  .legal__inner {
+    display: grid;
+    gap: clamp(2.5rem, 6vw, 4.5rem);
+  }
+
+  .legal__title {
+    font-family: var(--font-display);
+    font-size: clamp(2.6rem, 9vw, 5.5rem);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    line-height: 0.98;
+    margin: 1.2rem 0 1.4rem;
+  }
+
+  .legal__meta {
+    font-size: 0.85rem;
+    color: var(--muted);
+  }
+
+  .legal__body {
+    display: grid;
+    gap: 2.4rem;
+    max-width: 68ch;
+  }
+
+  .legal__section {
+    scroll-margin-top: 7rem;
+    border-top: 1px solid var(--line);
+    padding-top: 2rem;
+  }
+
+  .legal__h2 {
+    font-size: clamp(1.15rem, 2.5vw, 1.5rem);
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    margin-bottom: 0.9rem;
+  }
+
+  .legal__p {
+    color: var(--muted);
+    line-height: 1.7;
+  }
+
+  @media (min-width: 900px) {
+    .legal__inner {
+      grid-template-columns: 0.7fr 1.3fr;
+      align-items: start;
+    }
+    .legal__head {
+      position: sticky;
+      top: 7rem;
+    }
+  }
+</style>
