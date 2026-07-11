@@ -29,7 +29,7 @@ const sections = [
     id: 'cookies',
     title: '4. Cookies',
     body: [
-      'Cookies essenciais mantêm o site funcionando (por exemplo, sua preferência de tema e o registro do seu consentimento) e não podem ser desativados. Cookies de análise só são ativados se você aceitar no banner de consentimento. Você pode revisar sua escolha limpando os dados do site no navegador.',
+      'Cookies essenciais mantêm o site funcionando (por exemplo, o registro do seu consentimento) e não podem ser desativados. Cookies de análise só são ativados se você aceitar no banner de consentimento. Você pode revisar sua escolha limpando os dados do site no navegador.',
     ],
   },
   {
@@ -89,7 +89,7 @@ const sections = [
 
 <style>
   .legal {
-    padding-block: clamp(8rem, 14vw, 12rem) clamp(4rem, 8vw, 7rem);
+    padding-block: clamp(7.5rem, 12vw, 10rem) clamp(4rem, 8vw, 7rem);
   }
 
   .legal__inner {
@@ -99,11 +99,11 @@ const sections = [
 
   .legal__title {
     font-family: var(--font-display);
-    font-size: clamp(2.6rem, 9vw, 5.5rem);
+    font-size: var(--step-4);
     font-weight: 700;
     letter-spacing: -0.03em;
-    line-height: 0.98;
-    margin: 1.2rem 0 1.4rem;
+    line-height: 1.02;
+    margin: var(--space-32) 0 1.4rem;
   }
 
   .legal__meta {
