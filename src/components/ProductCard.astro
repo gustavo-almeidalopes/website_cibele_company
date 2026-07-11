@@ -1,33 +1,19 @@
 ---
-import { formatPrice, type Product } from '../data/catalog';
+import { formatPrice, collectionLabels, type Product } from '../data/catalog';
 
 interface Props {
   product: Product;
   index?: number;
-  eager?: boolean;
 }
 
-const { product, index = 0, eager = false } = Astro.props;
-
-const categoryLabels: Record<string, string> = {
-  embalagens: 'Embalagens',
-  construcao: 'Construção',
-  medicos: 'Médico',
-};
+const { product, index = 0 } = Astro.props;
 ---
 
 <article class="card" data-reveal-item>
   <div class="card__media">
     <span class="card__index">{String(index + 1).padStart(2, '0')}</span>
-    <span class="card__tag">{categoryLabels[product.categoria]}</span>
-    <img
-      src={`/img/${product.imagem}`}
-      alt={product.nome}
-      loading={eager ? 'eager' : 'lazy'}
-      decoding="async"
-      width="480"
-      height="480"
-    />
+    <span class="card__tag">{collectionLabels[product.colecao]}</span>
+    <div class="media-ph"><span class="media-ph__label">Imagem</span></div>
   </div>
 
   <div class="card__body">

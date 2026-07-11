@@ -1,6 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { categories, stats } from '../data/catalog';
+import { collections, stats } from '../data/catalog';
 
 // Produto em destaque do hero — o produto acompanhado de um significado,
 // nunca o item isolado. É o único momento da home que exibe um produto.
@@ -60,25 +60,25 @@ const hero = {
   <section class="section showcase" id="segmentos">
     <div class="container-wide">
       <header class="showcase__head">
-        <p class="eyebrow" data-reveal="fade">As frentes da casa</p>
+        <p class="eyebrow" data-reveal="fade">As coleções</p>
         <h2 class="h-xl" data-lines>
-          <span class="line-mask"><span class="line-inner">Universos</span></span>
+          <span class="line-mask"><span class="line-inner">Coleções</span></span>
         </h2>
       </header>
 
       <div class="showcase__grid" data-reveal-group>
         {
-          categories.map((cat) => (
-            <a class="tile" href={cat.path} data-reveal-item data-cursor>
+          collections.map((col) => (
+            <a class="tile" href={col.path} data-reveal-item data-cursor>
               <div class="tile__media">
                 <div class="media-ph">
-                  <span class="media-ph__label">{cat.titulo}</span>
+                  <span class="media-ph__label">{col.titulo}</span>
                 </div>
-                <span class="tile__index">{cat.indice}</span>
+                <span class="tile__index">{col.indice}</span>
               </div>
               <div class="tile__body">
-                <h3 class="tile__title">{cat.titulo}</h3>
-                <p class="tile__desc">{cat.resumo}</p>
+                <h3 class="tile__title">{col.titulo}</h3>
+                <p class="tile__desc">{col.resumo}</p>
                 <span class="lux-link tile__link">
                   <span>Explorar</span>
                   <span class="arrow" aria-hidden="true">↗</span>
@@ -88,6 +88,36 @@ const hero = {
           ))
         }
       </div>
+    </div>
+  </section>
+
+  <!-- APLICAÇÕES -->
+  <section class="section-sm apps">
+    <div class="container-wide">
+      <header class="apps__head">
+        <p class="eyebrow" data-reveal="fade">Onde entram</p>
+        <h2 class="h-lg apps__title" data-lines>
+          <span class="line-mask"><span class="line-inner">Feitas para o</span></span>
+          <span class="line-mask"><span class="line-inner">ritmo do seu <span class="text-italic">negócio</span>.</span></span>
+        </h2>
+      </header>
+      <ul class="apps__list" data-reveal-group>
+        {
+          [
+            'Food service',
+            'Eventos & buffet',
+            'Cafeterias & bares',
+            'Delivery & take-away',
+            'Hotelaria',
+            'Varejo & mercados',
+          ].map((item, i) => (
+            <li class="apps__item" data-reveal-item>
+              <span class="apps__num">{String(i + 1).padStart(2, '0')}</span>
+              <span class="apps__name">{item}</span>
+            </li>
+          ))
+        }
+      </ul>
     </div>
   </section>
 
@@ -453,6 +483,64 @@ const hero = {
     }
     .tile__media {
       aspect-ratio: 3 / 4;
+    }
+  }
+
+  /* ============================================================
+     APLICAÇÕES — onde as embalagens entram
+     ============================================================ */
+  .apps__head {
+    display: grid;
+    gap: 1rem;
+    margin-bottom: 2.4rem;
+  }
+
+  .apps__title {
+    max-width: 20ch;
+  }
+
+  .apps__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border-top: 1px solid var(--line);
+  }
+
+  .apps__item {
+    display: flex;
+    align-items: baseline;
+    gap: 1.2rem;
+    padding: 1.3rem 0;
+    border-bottom: 1px solid var(--line);
+    transition: padding-left 0.45s var(--ease), color 0.35s var(--ease);
+  }
+
+  .apps__num {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--muted);
+  }
+
+  .apps__name {
+    font-family: var(--font-display);
+    font-size: clamp(1.3rem, 3.5vw, 2.1rem);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+
+  .apps__item:hover {
+    padding-left: 0.8rem;
+    color: var(--accent);
+  }
+
+  @media (min-width: 760px) {
+    .apps__list {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      column-gap: 3rem;
+    }
+    .apps__item {
+      border-bottom: 1px solid var(--line);
     }
   }
 

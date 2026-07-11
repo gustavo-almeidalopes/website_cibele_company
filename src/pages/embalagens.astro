@@ -1,5 +1,285 @@
 ---
-import CategoryPage from '../components/CategoryPage.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ProductCard from '../components/ProductCard.astro';
+import { collections, getProductsByCollection, formatPrice, products } from '../data/catalog';
+
+const prices = products.map((p) => p.preco);
+const priceRange = `${formatPrice(Math.min(...prices))} – ${formatPrice(Math.max(...prices))}`;
 ---
 
-<CategoryPage slug="embalagens" active="embalagens" />
+<BaseLayout
+  active="embalagens"
+  title="Embalagens sustentáveis — Cibele Plastic"
+  description="Catálogo de embalagens em bioplástico da Cibele Plastic: mesa, bebidas e delivery. O desempenho do plástico convencional, sem a herança fóssil."
+>
+  <!-- HERO do catálogo -->
+  <section class="chero" data-hero>
+    <div class="container-wide">
+      <p class="eyebrow" data-hero-item>Catálogo · Bioplástico</p>
+      <h1 class="display chero__title">
+        <span class="line-mask"><span class="line-inner">Embalagens</span></span>
+        <span class="line-mask"><span class="line-inner">que <span class="text-italic">voltam</span></span></span>
+        <span class="line-mask"><span class="line-inner">à terra.</span></span>
+      </h1>
+      <div class="chero__meta">
+        <p class="lead chero__desc" data-hero-item>
+          Uma linha completa de embalagens descartáveis feitas de fontes renováveis — para food
+          service, eventos, cafeterias e delivery.
+        </p>
+        <dl class="chero__facts" data-hero-item>
+          <div>
+            <dt>Itens</dt>
+            <dd>{String(products.length).padStart(2, '0')}</dd>
+          </div>
+          <div>
+            <dt>Coleções</dt>
+            <dd>{String(collections.length).padStart(2, '0')}</dd>
+          </div>
+          <div>
+            <dt>Faixa de preço</dt>
+            <dd>{priceRange}</dd>
+          </div>
+        </dl>
+      </div>
+    </div>
+  </section>
+
+  <!-- Navegação por coleção (sticky) -->
+  <nav class="colnav" aria-label="Coleções">
+    <div class="container-wide colnav__inner">
+      <span class="colnav__label">Coleções</span>
+      <ul class="colnav__list">
+        {
+          collections.map((col) => (
+            <li>
+              <a href={`#${col.slug}`} data-cursor>
+                <span class="colnav__idx">{col.indice}</span>
+                {col.titulo}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Coleções -->
+  {
+    collections.map((col) => {
+      const items = getProductsByCollection(col.slug);
+      return (
+        <section class="colsec" id={col.slug}>
+          <div class="container-wide">
+            <header class="colsec__head">
+              <div class="colsec__heading">
+                <span class="colsec__idx">{col.indice}</span>
+                <h2 class="colsec__title" data-reveal="fade">
+                  {col.titulo}
+                </h2>
+              </div>
+              <p class="colsec__desc text-muted" data-reveal="fade">
+                {col.descricao}
+              </p>
+            </header>
+            <div class="colsec__grid" data-reveal-group>
+              {items.map((product, i) => (
+                <ProductCard product={product} index={i} />
+              ))}
+            </div>
+          </div>
+        </section>
+      );
+    })
+  }
+
+  <!-- CTA -->
+  <section class="section paper cta2">
+    <div class="container cta2__inner">
+      <p class="eyebrow" data-reveal="fade">Para empresas</p>
+      <h2 class="h-xl cta2__title" data-lines>
+        <span class="line-mask"><span class="line-inner">Um orçamento sob</span></span>
+        <span class="line-mask"><span class="line-inner">medida para o seu <span class="text-italic">negócio</span>.</span></span>
+      </h2>
+      <a class="lux-link cta2__link" href="/contato" data-reveal="fade" data-cursor>
+        <span>Solicitar orçamento</span>
+        <span class="arrow" aria-hidden="true">↗</span>
+      </a>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .chero {
+    padding-block: clamp(9.5rem, 16vw, 14rem) clamp(2.5rem, 5vw, 4rem);
+  }
+
+  .chero .eyebrow {
+    margin-bottom: 1.5rem;
+  }
+
+  .chero__title {
+    font-size: clamp(2.8rem, 11vw, 7rem);
+    line-height: 0.96;
+    margin-bottom: 2.5rem;
+  }
+
+  .chero__meta {
+    display: grid;
+    gap: 2rem;
+    align-items: end;
+  }
+
+  .chero__desc {
+    max-width: 50ch;
+    color: var(--muted);
+  }
+
+  .chero__facts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2.5rem;
+    margin: 0;
+  }
+
+  .chero__facts dt {
+    font-size: 0.7rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 0.4rem;
+  }
+
+  .chero__facts dd {
+    margin: 0;
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--bone);
+  }
+
+  @media (min-width: 900px) {
+    .chero__meta {
+      grid-template-columns: 1fr auto;
+    }
+  }
+
+  /* NAV de coleções (sticky) */
+  .colnav {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: color-mix(in srgb, var(--ink) 86%, transparent);
+    backdrop-filter: blur(12px);
+    border-block: 1px solid var(--line);
+  }
+
+  .colnav__inner {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem 2rem;
+    flex-wrap: wrap;
+    padding-block: 1rem;
+  }
+
+  .colnav__label {
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .colnav__list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.8rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .colnav__list a {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.5rem;
+    font-size: 0.86rem;
+    font-weight: 500;
+    color: var(--muted);
+    transition: color 0.3s var(--ease);
+  }
+
+  .colnav__list a:hover {
+    color: var(--accent);
+  }
+
+  .colnav__idx {
+    font-size: 0.66rem;
+    font-weight: 600;
+    color: var(--muted-dark);
+  }
+
+  /* Seções de coleção */
+  .colsec {
+    padding-block: clamp(3rem, 7vw, 5.5rem);
+    scroll-margin-top: 4.5rem;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .colsec__head {
+    display: grid;
+    gap: 1rem;
+    margin-bottom: 2.6rem;
+  }
+
+  .colsec__heading {
+    display: flex;
+    align-items: baseline;
+    gap: 1rem;
+  }
+
+  .colsec__idx {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--accent);
+  }
+
+  .colsec__title {
+    font-family: var(--font-display);
+    font-size: clamp(1.8rem, 5vw, 3.2rem);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1;
+  }
+
+  .colsec__desc {
+    max-width: 60ch;
+    font-size: 0.98rem;
+  }
+
+  .colsec__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 1.4rem;
+  }
+
+  @media (min-width: 900px) {
+    .colsec__head {
+      grid-template-columns: 1fr 1fr;
+      align-items: end;
+    }
+  }
+
+  /* CTA */
+  .cta2 {
+    text-align: center;
+  }
+
+  .cta2__inner {
+    display: grid;
+    justify-items: center;
+    gap: 1.6rem;
+  }
+
+  .cta2__title {
+    max-width: 18ch;
+  }
+</style>
