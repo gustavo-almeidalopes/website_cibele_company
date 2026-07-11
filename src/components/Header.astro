@@ -1,12 +1,12 @@
 ---
-import { categories } from '../data/catalog';
+import { collections } from '../data/catalog';
 
 interface Props {
   active?: string;
 }
 const { active = '' } = Astro.props;
 
-const isProductActive = ['embalagens', 'construcao', 'medicos'].includes(active);
+const isProductActive = active === 'embalagens';
 ---
 
 <header class="header" data-header>
@@ -26,7 +26,7 @@ const isProductActive = ['embalagens', 'construcao', 'medicos'].includes(active)
           aria-controls="mega-produtos"
           data-mega-toggle
         >
-          <span>Produtos</span>
+          <span>Coleções</span>
           <svg class="nav__chevron" viewBox="0 0 10 6" width="10" height="6" aria-hidden="true">
             <path d="M1 1l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"></path>
           </svg>
@@ -36,12 +36,12 @@ const isProductActive = ['embalagens', 'construcao', 'medicos'].includes(active)
           <div class="mega__inner container-wide">
             <div class="mega__grid">
               {
-                categories.map((cat) => (
-                  <a class="mega__item" href={cat.path} data-mega-link>
-                    <span class="mega__index">{cat.indice}</span>
-                    <span class="mega__title">{cat.titulo}</span>
-                    <span class="mega__desc">{cat.resumo}</span>
-                    <span class="mega__cue">Ver segmento <span class="arrow">↗</span></span>
+                collections.map((col) => (
+                  <a class="mega__item" href={col.path} data-mega-link>
+                    <span class="mega__index">{col.indice}</span>
+                    <span class="mega__title">{col.titulo}</span>
+                    <span class="mega__desc">{col.resumo}</span>
+                    <span class="mega__cue">Ver coleção <span class="arrow">↗</span></span>
                   </a>
                 ))
               }
@@ -85,26 +85,30 @@ const isProductActive = ['embalagens', 'construcao', 'medicos'].includes(active)
 
 <div class="menu" id="menu-mobile" data-menu hidden>
   <nav class="menu__nav" aria-label="Navegação mobile">
-    <p class="menu__group-label eyebrow" data-menu-link>Produtos</p>
+    <a
+      class:list={['menu__link', { 'is-active': active === 'embalagens' }]}
+      href="/embalagens"
+      data-menu-link
+    >
+      <span class="menu__index">01</span>
+      <span class="menu__label">Embalagens</span>
+    </a>
+    <p class="menu__group-label eyebrow" data-menu-link>Coleções</p>
     {
-      categories.map((cat, index) => (
-        <a
-          class:list={['menu__link', 'menu__link--sub', { 'is-active': active === cat.slug }]}
-          href={cat.path}
-          data-menu-link
-        >
+      collections.map((col, index) => (
+        <a class="menu__link menu__link--sub" href={col.path} data-menu-link>
           <span class="menu__index">0{index + 1}</span>
-          <span class="menu__label">{cat.titulo}</span>
+          <span class="menu__label">{col.titulo}</span>
         </a>
       ))
     }
 
     <a class:list={['menu__link', { 'is-active': active === 'sobre' }]} href="/sobre" data-menu-link>
-      <span class="menu__index">04</span>
+      <span class="menu__index">02</span>
       <span class="menu__label">Sobre</span>
     </a>
     <a class:list={['menu__link', { 'is-active': active === 'contato' }]} href="/contato" data-menu-link>
-      <span class="menu__index">05</span>
+      <span class="menu__index">03</span>
       <span class="menu__label">Contato</span>
     </a>
   </nav>
