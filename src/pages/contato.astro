@@ -14,7 +14,7 @@ const info = [
   description="Fale com a Cibele Plastic: dúvidas, sugestões ou orçamento de bioplásticos sustentáveis."
 >
   <section class="phero" data-hero>
-    <div class="container-wide">
+    <div class="container">
       <p class="eyebrow" data-hero-item>Fale com a gente</p>
       <h1 class="display phero__title">
         <span class="line-mask"><span class="line-inner">Vamos</span></span>
@@ -27,7 +27,7 @@ const info = [
   </section>
 
   <section class="section-sm contact">
-    <div class="container-wide contact__grid">
+    <div class="container contact__grid">
       <aside class="contact__aside" data-reveal="up">
         <dl class="contact__info">
           {
@@ -41,21 +41,21 @@ const info = [
         </dl>
         <div class="contact__note">
           <p class="eyebrow">Atendemos</p>
-          <p>Embalagens · Construção Civil · Produtos Médicos</p>
+          <p class="text-muted">Embalagens · Construção Civil · Produtos Médicos</p>
         </div>
       </aside>
 
       <form class="form" id="contato-form" novalidate data-reveal="up">
         <div class="field">
           <label for="nome">Nome</label>
-          <input id="nome" name="nome" type="text" autocomplete="name" required placeholder="Seu nome" />
-          <span class="field__error" data-error-for="nome"></span>
+          <input id="nome" name="nome" type="text" autocomplete="name" required placeholder="Seu nome" aria-describedby="erro-nome" />
+          <span class="field__error" id="erro-nome" data-error-for="nome" role="alert"></span>
         </div>
 
         <div class="field">
           <label for="email">E-mail</label>
-          <input id="email" name="email" type="email" autocomplete="email" required placeholder="voce@email.com" />
-          <span class="field__error" data-error-for="email"></span>
+          <input id="email" name="email" type="email" autocomplete="email" required placeholder="voce@email.com" aria-describedby="erro-email" />
+          <span class="field__error" id="erro-email" data-error-for="email" role="alert"></span>
         </div>
 
         <div class="field">
@@ -74,16 +74,18 @@ const info = [
 
         <div class="field">
           <label for="mensagem">Mensagem</label>
-          <textarea id="mensagem" name="mensagem" rows="5" required placeholder="Como podemos ajudar?"></textarea>
-          <span class="field__error" data-error-for="mensagem"></span>
+          <textarea id="mensagem" name="mensagem" rows="5" required placeholder="Como podemos ajudar?" aria-describedby="erro-mensagem"></textarea>
+          <span class="field__error" id="erro-mensagem" data-error-for="mensagem" role="alert"></span>
         </div>
 
         <button class="btn btn--primary form__submit" type="submit">
-          <span class="btn__label">Enviar mensagem <span class="arrow">↗</span></span>
-          <span class="btn__fill"></span>
+          <span>Enviar mensagem</span>
+          <svg class="arrow" viewBox="0 0 24 24" width="15" height="15" aria-hidden="true">
+            <path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+          </svg>
         </button>
 
-        <p class="form__success" id="form-success" hidden>
+        <p class="form__success" id="form-success" role="status" hidden>
           ✓ Mensagem enviada! Em breve entraremos em contato.
         </p>
       </form>
@@ -132,16 +134,14 @@ const info = [
     form.addEventListener('submit', (event) => {
       event.preventDefault();
       if (!validate()) {
-        const firstError = form.querySelector('.has-error');
-        if (firstError) {
-          animate(firstError, { translateX: [-8, 8, -6, 6, 0], duration: 400, ease: 'inOutSine' });
-        }
+        const firstError = form.querySelector<HTMLElement>('.has-error');
+        firstError?.focus();
         return;
       }
 
       if (success) {
         success.hidden = false;
-        animate(success, { opacity: [0, 1], translateY: [12, 0], duration: 600, ease: 'outExpo' });
+        animate(success, { opacity: [0, 1], translateY: [10, 0], duration: 240, ease: 'outQuart' });
       }
       form.reset();
       window.setTimeout(() => {
@@ -153,7 +153,7 @@ const info = [
 
 <style>
   .phero {
-    padding-block: clamp(9rem, 16vw, 14rem) clamp(2rem, 5vw, 4rem);
+    padding-block: clamp(8rem, 14vw, 11rem) clamp(2rem, 5vw, 4rem);
   }
 
   .phero .eyebrow {
@@ -161,7 +161,7 @@ const info = [
   }
 
   .phero__title {
-    margin-bottom: 2rem;
+    margin-bottom: var(--space-32);
   }
 
   .phero__lead {
@@ -197,7 +197,6 @@ const info = [
   .contact__note {
     padding-top: 1.6rem;
     border-top: 1px solid var(--line);
-    color: var(--muted);
   }
 
   .contact__note .eyebrow {
@@ -216,24 +215,24 @@ const info = [
   }
 
   .field label {
-    font-size: 0.78rem;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--muted);
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--bone);
   }
 
   .field input,
   .field textarea,
   .field select {
     width: 100%;
-    padding: 1rem 1.1rem;
+    min-height: 44px;
+    padding: 0.9rem 1.1rem;
     background: var(--ink-2);
-    border: 1px solid var(--line);
-    border-radius: 12px;
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius-sm);
     color: var(--bone);
     font-family: inherit;
     font-size: 1rem;
-    transition: border-color 0.3s var(--ease), background-color 0.3s var(--ease);
+    transition: border-color var(--duration) var(--ease), background-color var(--duration) var(--ease);
   }
 
   .field textarea {
@@ -246,22 +245,21 @@ const info = [
     color: var(--muted-dark);
   }
 
-  .field input:focus,
-  .field textarea:focus,
-  .field select:focus {
-    outline: none;
-    border-color: var(--accent);
+  .field input:focus-visible,
+  .field textarea:focus-visible,
+  .field select:focus-visible {
+    border-color: var(--forest);
     background: var(--ink-3);
   }
 
   .field input.has-error,
   .field textarea.has-error {
-    border-color: #c0392b;
+    border-color: var(--color-error);
   }
 
   .field__error {
-    font-size: 0.78rem;
-    color: #c0392b;
+    font-size: 0.8rem;
+    color: var(--color-error);
     min-height: 1em;
   }
 
@@ -290,10 +288,10 @@ const info = [
 
   .form__success {
     padding: 1.1rem 1.3rem;
-    border-radius: 12px;
-    background: rgba(23, 51, 23, 0.08);
+    border-radius: var(--radius-sm);
+    background: color-mix(in srgb, var(--forest) 8%, var(--cream));
     border: 1px solid var(--forest);
-    color: var(--accent);
+    color: var(--forest);
     font-weight: 500;
   }
 

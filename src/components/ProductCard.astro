@@ -42,13 +42,13 @@ const { product, index = 0 } = Astro.props;
     border: 1px solid var(--line);
     border-radius: var(--radius);
     overflow: hidden;
-    transition: transform 0.5s var(--ease), border-color 0.5s var(--ease),
-      background-color 0.5s var(--ease);
+    transition: transform var(--duration-slow) var(--ease), border-color var(--duration-slow) var(--ease),
+      background-color var(--duration-slow) var(--ease);
   }
 
   .card:hover {
-    transform: translateY(-6px);
-    border-color: rgba(23, 51, 23, 0.4);
+    transform: translateY(-4px);
+    border-color: var(--line-strong);
     background: var(--ink-3);
   }
 
@@ -64,11 +64,6 @@ const { product, index = 0 } = Astro.props;
     height: 100%;
     object-fit: contain;
     padding: 14%;
-    transition: transform 0.7s var(--ease);
-  }
-
-  .card:hover .card__media img {
-    transform: scale(1.08) rotate(-1deg);
   }
 
   .card__index {
@@ -88,9 +83,8 @@ const { product, index = 0 } = Astro.props;
     right: 1rem;
     z-index: 2;
     padding: 0.3rem 0.7rem;
-    border-radius: 999px;
+    border-radius: var(--radius-pill);
     background: var(--forest);
-    border: 1px solid var(--forest);
     font-size: 0.66rem;
     font-weight: 600;
     letter-spacing: 0.08em;
@@ -102,7 +96,7 @@ const { product, index = 0 } = Astro.props;
     display: flex;
     flex-direction: column;
     gap: 0.8rem;
-    padding: 1.6rem;
+    padding: 24px;
     flex: 1;
   }
 
@@ -124,7 +118,7 @@ const { product, index = 0 } = Astro.props;
     flex-shrink: 0;
     font-size: 0.95rem;
     font-weight: 700;
-    color: var(--accent);
+    color: var(--accent-ink);
   }
 
   .card__desc {
@@ -139,46 +133,42 @@ const { product, index = 0 } = Astro.props;
     align-items: center;
     justify-content: space-between;
     gap: 0.5rem;
+    min-height: 44px;
     margin-top: 0.4rem;
-    padding: 0.75rem 0.9rem 0.75rem 1.1rem;
-    border-radius: 999px;
-    border: 1px solid var(--line);
+    padding: 0.6rem 0.6rem 0.6rem 1.1rem;
+    border-radius: var(--radius-pill);
+    border: 1px solid var(--line-strong);
     background: transparent;
     color: var(--bone);
     font-size: 0.76rem;
     font-weight: 600;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    transition: background-color 0.35s var(--ease), color 0.35s var(--ease),
-      border-color 0.35s var(--ease);
+    letter-spacing: 0.02em;
+    transition: background-color var(--duration) var(--ease), color var(--duration) var(--ease),
+      border-color var(--duration) var(--ease);
   }
 
   .card__add-icon {
     display: grid;
     place-items: center;
-    width: 26px;
-    height: 26px;
+    width: 28px;
+    height: 28px;
     border-radius: 50%;
     background: var(--forest);
     color: var(--cream);
-    transition: transform 0.4s var(--ease);
+    transition: transform var(--duration) var(--ease);
   }
 
   .card__add:hover {
-    background: var(--forest);
     border-color: var(--forest);
-    color: var(--cream);
   }
 
   .card__add:hover .card__add-icon {
     transform: rotate(90deg);
-    background: var(--cream);
-    color: var(--forest);
   }
 
   .card__add.is-added {
-    background: var(--forest);
     border-color: var(--forest);
+    background: var(--forest);
     color: var(--cream);
   }
 
