@@ -38,9 +38,6 @@ const isProductActive = ['embalagens', 'construcao', 'medicos'].includes(active)
               {
                 categories.map((cat) => (
                   <a class="mega__item" href={cat.path} data-mega-link>
-                    <span class="mega__media" aria-hidden="true">
-                      <img src={`/img/${cat.imagem}`} alt="" loading="lazy" width="200" height="200" />
-                    </span>
                     <span class="mega__index">{cat.indice}</span>
                     <span class="mega__title">{cat.titulo}</span>
                     <span class="mega__desc">{cat.resumo}</span>
@@ -265,41 +262,15 @@ const isProductActive = ['embalagens', 'construcao', 'medicos'].includes(active)
   .mega__item {
     position: relative;
     display: grid;
-    grid-template-rows: auto auto auto 1fr auto;
-    gap: 0.35rem;
-    padding: 1.2rem;
+    grid-template-rows: auto auto 1fr auto;
+    gap: 0.5rem;
+    padding: 1.6rem 1.2rem;
     border-radius: var(--radius);
     transition: background-color 0.4s var(--ease);
   }
 
   .mega__item:hover {
     background: var(--ink-2);
-  }
-
-  .mega__media {
-    display: block;
-    width: 100%;
-    aspect-ratio: 4 / 3;
-    margin-bottom: 0.8rem;
-    background: var(--ink-2);
-    border-radius: var(--radius);
-    overflow: hidden;
-  }
-
-  .mega__item:hover .mega__media {
-    background: var(--ink-3);
-  }
-
-  .mega__media img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    padding: 16%;
-    transition: transform 0.6s var(--ease);
-  }
-
-  .mega__item:hover .mega__media img {
-    transform: scale(1.06);
   }
 
   .mega__index {
@@ -436,6 +407,12 @@ const isProductActive = ['embalagens', 'construcao', 'medicos'].includes(active)
 
   :global(body.menu-open) .brand__mark {
     background: var(--cream);
+  }
+
+  :global(html.menu-open),
+  :global(body.menu-open) {
+    overflow: hidden;
+    height: 100%;
   }
 
   /* Menu overlay — fundo liso em verde-escuro, texto bege */
