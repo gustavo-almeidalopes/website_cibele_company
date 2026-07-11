@@ -110,17 +110,16 @@ const isProductActive = ['embalagens', 'construcao', 'medicos'].includes(active)
     position: fixed;
     inset: 0 0 auto 0;
     z-index: 100;
-    padding-block: 1.6rem;
-    transition: transform 0.5s var(--ease), background-color 0.4s var(--ease),
-      backdrop-filter 0.4s var(--ease), border-color 0.4s var(--ease), padding 0.4s var(--ease);
-    border-bottom: 1px solid transparent;
+    padding-block: 1.5rem;
+    background: var(--forest);
+    color: var(--cream);
+    transition: transform 0.5s var(--ease), padding 0.4s var(--ease), box-shadow 0.4s var(--ease);
+    border-bottom: 1px solid var(--line-dark);
   }
 
   .header.is-scrolled {
-    padding-block: 1rem;
-    background: rgba(255, 255, 227, 0.88);
-    backdrop-filter: blur(14px);
-    border-bottom-color: var(--line);
+    padding-block: 0.85rem;
+    box-shadow: 0 20px 50px -30px rgba(0, 0, 0, 0.5);
   }
 
   .header.is-hidden {
@@ -137,29 +136,31 @@ const isProductActive = ['embalagens', 'construcao', 'medicos'].includes(active)
   .brand {
     display: inline-flex;
     align-items: center;
-    gap: 0.6rem;
+    gap: 0.65rem;
     font-family: var(--font-display);
-    font-weight: 800;
-    font-size: 1.15rem;
-    letter-spacing: -0.02em;
-    text-transform: uppercase;
+    font-weight: 700;
+    font-size: 1.2rem;
+    letter-spacing: -0.01em;
+    color: var(--cream);
   }
 
   .brand__mark {
-    width: 10px;
-    height: 10px;
+    width: 8px;
+    height: 8px;
     border-radius: 50%;
-    background: var(--accent);
+    background: var(--cream);
   }
 
   .brand__accent {
-    color: var(--accent);
+    color: var(--cream);
+    opacity: 0.6;
+    font-weight: 400;
   }
 
   .nav {
     display: none;
     align-items: center;
-    gap: 0.35rem;
+    gap: 0.2rem;
   }
 
   .nav__item {
@@ -171,11 +172,12 @@ const isProductActive = ['embalagens', 'construcao', 'medicos'].includes(active)
     display: inline-flex;
     align-items: center;
     gap: 0.4rem;
-    padding: 0.5rem 0.85rem;
-    font-size: 0.82rem;
+    padding: 0.6rem 1.1rem;
+    font-size: 0.8rem;
     font-weight: 500;
-    letter-spacing: 0.01em;
-    color: var(--muted);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--muted-light);
     border-radius: 999px;
     border: 0;
     background: transparent;
@@ -207,24 +209,24 @@ const isProductActive = ['embalagens', 'construcao', 'medicos'].includes(active)
     inset: auto 50% 6px;
     height: 1px;
     width: 0;
-    background: var(--accent);
+    background: currentColor;
     transform: translateX(-50%);
     transition: width 0.4s var(--ease);
   }
 
   .nav__link:hover,
   .nav__trigger.is-open {
-    color: var(--bone);
+    color: var(--cream);
   }
 
   .nav__link:hover::before,
   .nav__link.is-active::before,
   .nav__trigger.is-open::before {
-    width: calc(100% - 1.7rem);
+    width: calc(100% - 2.2rem);
   }
 
   .nav__link.is-active {
-    color: var(--bone);
+    color: var(--cream);
   }
 
   /* Mega menu — painel de categorias, estilo e-commerce de luxo.
@@ -236,10 +238,10 @@ const isProductActive = ['embalagens', 'construcao', 'medicos'].includes(active)
     left: 0;
     right: 0;
     z-index: 90;
-    background: rgba(255, 255, 227, 0.97);
-    backdrop-filter: blur(18px);
-    border-bottom: 1px solid var(--line);
-    box-shadow: 0 30px 60px -30px rgba(23, 51, 23, 0.25);
+    background: var(--forest);
+    color: var(--cream);
+    border-bottom: 1px solid var(--line-dark);
+    box-shadow: 0 40px 70px -30px rgba(0, 0, 0, 0.45);
   }
 
   .mega[hidden] {
@@ -247,52 +249,51 @@ const isProductActive = ['embalagens', 'construcao', 'medicos'].includes(active)
   }
 
   .mega__inner {
-    padding-block: clamp(2.2rem, 5vw, 3.5rem);
+    padding-block: clamp(2.4rem, 5vw, 3.8rem);
   }
 
   .mega__grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 2.5rem;
-    border-top: 1px solid var(--line);
-    border-bottom: 1px solid var(--line);
-    padding-block: 2rem;
+    gap: 1px;
+    background: var(--line-dark);
+    border-top: 1px solid var(--line-dark);
+    border-bottom: 1px solid var(--line-dark);
   }
 
   .mega__item {
     position: relative;
     display: grid;
     grid-template-rows: auto auto 1fr auto;
-    gap: 0.5rem;
-    padding: 1.6rem 1.2rem;
-    border-radius: var(--radius);
+    gap: 0.6rem;
+    padding: 2rem 1.8rem;
+    background: var(--forest);
     transition: background-color 0.4s var(--ease);
   }
 
   .mega__item:hover {
-    background: var(--ink-2);
+    background: var(--paper-2);
   }
 
   .mega__index {
     font-size: 0.72rem;
     font-weight: 700;
     letter-spacing: 0.1em;
-    color: var(--muted);
+    color: var(--muted-light);
   }
 
   .mega__title {
     font-family: var(--font-display);
-    font-size: 1.3rem;
-    font-weight: 800;
+    font-size: 1.5rem;
+    font-weight: 700;
     letter-spacing: -0.02em;
-    text-transform: uppercase;
-    color: var(--bone);
+    color: var(--cream);
   }
 
   .mega__desc {
-    font-size: 0.85rem;
-    color: var(--muted);
-    line-height: 1.5;
+    font-size: 0.86rem;
+    color: var(--muted-light);
+    line-height: 1.55;
     max-width: 32ch;
   }
 
@@ -305,7 +306,7 @@ const isProductActive = ['embalagens', 'construcao', 'medicos'].includes(active)
     font-weight: 600;
     letter-spacing: 0.06em;
     text-transform: uppercase;
-    color: var(--accent);
+    color: var(--cream);
   }
 
   .mega__cue .arrow {
@@ -320,12 +321,12 @@ const isProductActive = ['embalagens', 'construcao', 'medicos'].includes(active)
     display: inline-flex;
     align-items: center;
     gap: 0.6em;
-    margin-top: 1.6rem;
+    margin-top: 1.8rem;
     font-size: 0.78rem;
     font-weight: 600;
-    letter-spacing: 0.05em;
+    letter-spacing: 0.08em;
     text-transform: uppercase;
-    color: var(--bone);
+    color: var(--cream);
   }
 
   .mega__all .arrow {
@@ -346,21 +347,21 @@ const isProductActive = ['embalagens', 'construcao', 'medicos'].includes(active)
     display: none;
     align-items: center;
     gap: 0.5rem;
-    padding: 0.7rem 1.3rem;
+    padding: 0.75rem 1.4rem;
     border-radius: 2px;
-    border: 1px solid var(--line);
+    border: 1px solid var(--line-dark);
     font-size: 0.74rem;
     font-weight: 500;
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    color: var(--bone);
+    color: var(--cream);
     transition: background-color 0.35s var(--ease), color 0.35s var(--ease), border-color 0.35s var(--ease);
   }
 
   .header__cta:hover {
-    background: var(--forest);
-    border-color: var(--forest);
-    color: var(--cream);
+    background: var(--cream);
+    border-color: var(--cream);
+    color: var(--forest);
   }
 
   .burger {
@@ -368,7 +369,7 @@ const isProductActive = ['embalagens', 'construcao', 'medicos'].includes(active)
     width: 46px;
     height: 46px;
     border-radius: 50%;
-    border: 1px solid var(--line);
+    border: 1px solid var(--line-dark);
     background: transparent;
     display: grid;
     place-items: center;
@@ -378,7 +379,7 @@ const isProductActive = ['embalagens', 'construcao', 'medicos'].includes(active)
     display: block;
     width: 18px;
     height: 1.6px;
-    background: var(--bone);
+    background: var(--cream);
     transition: transform 0.35s var(--ease), opacity 0.25s var(--ease);
   }
 
@@ -392,21 +393,6 @@ const isProductActive = ['embalagens', 'construcao', 'medicos'].includes(active)
 
   :global(body.menu-open) .burger span:last-child {
     transform: translateY(-3.3px) rotate(-45deg);
-  }
-
-  /* O overlay do menu mobile usa o mesmo verde-escuro do texto do
-     cabeçalho — sem isso, logo e burger ficam invisíveis por cima dele. */
-  :global(body.menu-open) .burger span {
-    background: var(--cream);
-  }
-
-  :global(body.menu-open) .brand,
-  :global(body.menu-open) .brand__accent {
-    color: var(--cream);
-  }
-
-  :global(body.menu-open) .brand__mark {
-    background: var(--cream);
   }
 
   :global(html.menu-open),
@@ -453,8 +439,8 @@ const isProductActive = ['embalagens', 'construcao', 'medicos'].includes(active)
     border-bottom: 1px solid var(--line-dark);
     font-family: var(--font-display);
     font-size: clamp(2rem, 11vw, 3.5rem);
-    font-weight: 800;
-    letter-spacing: -0.03em;
+    font-weight: 700;
+    letter-spacing: -0.02em;
     text-transform: uppercase;
     color: var(--cream);
     opacity: 0.75;
