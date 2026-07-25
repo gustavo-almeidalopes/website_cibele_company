@@ -1,0 +1,53 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ProductCard from '../components/ProductCard.astro';
+import { products } from '../data/catalog';
+---
+
+<BaseLayout
+  active="favoritos"
+  title="Favoritos — Cibele Plastic"
+  description="Os produtos que você favoritou no catálogo da Cibele Plastic."
+>
+  <div class="container fav">
+    <nav class="breadcrumb" aria-label="Trilha">
+      <a href="/">Início</a>
+      <span class="breadcrumb__sep" aria-hidden="true">/</span>
+      <span class="breadcrumb__current">Favoritos</span>
+    </nav>
+
+    <h1 class="fav__title">Favoritos</h1>
+
+    <div class="card-grid fav__grid" data-wishlist-grid data-reveal-group>
+      {products.map((product) => <ProductCard product={product} />)}
+    </div>
+
+    <div class="fav__empty" data-wishlist-empty hidden>
+      <p class="lead">Você ainda não favoritou nenhum produto.</p>
+      <a class="btn btn--primary" href="/embalagens">Ver catálogo</a>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .fav {
+    padding-block: clamp(2rem, 5vw, 3rem) var(--space-128);
+    display: grid;
+    gap: 1.6rem;
+  }
+
+  .fav__title {
+    font-size: var(--step-4);
+  }
+
+  .fav__empty {
+    display: grid;
+    gap: 1.2rem;
+    justify-items: start;
+    padding-block: 2rem;
+  }
+
+  .fav__empty[hidden] {
+    display: none;
+  }
+</style>

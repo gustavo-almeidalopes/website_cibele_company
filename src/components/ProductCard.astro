@@ -3,29 +3,46 @@ import { formatPrice, collectionLabels, type Product } from '../data/catalog';
 
 interface Props {
   product: Product;
-  index?: number;
 }
 
-const { product, index = 0 } = Astro.props;
+const { product } = Astro.props;
+const href = `/produto/${product.slug}`;
 ---
 
-<article class="card" data-reveal-item>
-  <div class="card__media">
-    <span class="card__index">{String(index + 1).padStart(2, '0')}</span>
+<article
+  class="card"
+  data-reveal-item
+  data-product-card
+  data-id={product.id}
+  data-collection={product.colecao}
+  data-price={product.preco}
+  data-name={product.nome.toLowerCase()}
+  data-desc={product.descricao.toLowerCase()}
+>
+  <a class="card__media" href={href}>
     <span class="card__tag">{collectionLabels[product.colecao]}</span>
     <div class="media-ph"><span class="media-ph__label">Imagem</span></div>
-  </div>
+  </a>
+
+  <button class="wishlist-btn" type="button" data-wishlist-toggle data-id={product.id} aria-pressed="false" aria-label={`Favoritar ${product.nome}`}>
+    <svg class="icon-heart-line" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M12 20.5s-7.5-4.6-10-9.3C.5 8 1.8 4.5 5.2 3.6c2.1-.6 4.2.3 5.4 2 .4.5.5.7 1.4 2 .9-1.3 1-1.5 1.4-2 1.2-1.7 3.3-2.6 5.4-2 3.4.9 4.7 4.4 3.2 7.6-2.5 4.7-10 9.3-10 9.3z"></path>
+    </svg>
+    <svg class="icon-heart-fill" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+      <path d="M12 20.5s-7.5-4.6-10-9.3C.5 8 1.8 4.5 5.2 3.6c2.1-.6 4.2.3 5.4 2 .4.5.5.7 1.4 2 .9-1.3 1-1.5 1.4-2 1.2-1.7 3.3-2.6 5.4-2 3.4.9 4.7 4.4 3.2 7.6-2.5 4.7-10 9.3-10 9.3z"></path>
+    </svg>
+  </button>
 
   <div class="card__body">
     <div class="card__head">
-      <h3 class="card__name">{product.nome}</h3>
+      <a class="card__name" href={href}>{product.nome}</a>
       <span class="card__price">{formatPrice(product.preco)}</span>
     </div>
     <p class="card__desc">{product.descricao}</p>
-    <button class="card__add" type="button" data-add data-name={product.nome} aria-label={`Adicionar ${product.nome} ao carrinho`}>
-      <span class="card__add-label">Adicionar</span>
+    <button class="card__add" type="button" data-add data-id={product.id} data-name={product.nome} aria-label={`Adicionar ${product.nome} à sacola`}>
+      <span class="card__add-label">Adicionar à sacola</span>
       <span class="card__add-icon" aria-hidden="true">
-        <svg viewBox="0 0 24 24" width="16" height="16">
+        <svg viewBox="0 0 24 24" width="14" height="14">
           <path d="M12 5v14M5 12h14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path>
         </svg>
       </span>
@@ -38,55 +55,33 @@ const { product, index = 0 } = Astro.props;
     position: relative;
     display: flex;
     flex-direction: column;
-    background: var(--ink-2);
+    background: var(--cream);
     border: 1px solid var(--line);
-    border-radius: var(--radius);
     overflow: hidden;
-    transition: transform var(--duration-slow) var(--ease), border-color var(--duration-slow) var(--ease),
-      background-color var(--duration-slow) var(--ease);
+    transition: transform var(--duration-slow) var(--ease), border-color var(--duration-slow) var(--ease);
   }
 
   .card:hover {
-    transform: translateY(-4px);
     border-color: var(--line-strong);
-    background: var(--ink-3);
   }
 
   .card__media {
     position: relative;
-    aspect-ratio: 4 / 3;
+    display: block;
+    aspect-ratio: 3 / 4;
     background: var(--ink-3);
     overflow: hidden;
   }
 
-  .card__media img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    padding: 14%;
-  }
-
-  .card__index {
-    position: absolute;
-    top: 1rem;
-    left: 1rem;
-    font-size: 0.72rem;
-    font-weight: 600;
-    letter-spacing: 0.1em;
-    color: var(--muted);
-    z-index: 2;
-  }
-
   .card__tag {
     position: absolute;
-    top: 1rem;
-    right: 1rem;
+    top: 0.7rem;
+    left: 0.7rem;
     z-index: 2;
-    padding: 0.3rem 0.7rem;
-    border-radius: var(--radius-pill);
+    padding: 0.28rem 0.6rem;
     background: var(--forest);
-    font-size: 0.66rem;
-    font-weight: 600;
+    font-size: 0.62rem;
+    font-weight: 700;
     letter-spacing: 0.08em;
     text-transform: uppercase;
     color: var(--cream);
@@ -95,34 +90,32 @@ const { product, index = 0 } = Astro.props;
   .card__body {
     display: flex;
     flex-direction: column;
-    gap: 0.8rem;
-    padding: 24px;
+    gap: 0.6rem;
+    padding: 1rem;
     flex: 1;
   }
 
   .card__head {
     display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    gap: 1rem;
+    flex-direction: column;
+    gap: 0.25rem;
   }
 
   .card__name {
-    font-size: 1.02rem;
-    font-weight: 700;
-    line-height: 1.15;
-    letter-spacing: -0.01em;
+    font-size: 0.9rem;
+    font-weight: 600;
+    line-height: 1.3;
+    color: var(--bone);
   }
 
   .card__price {
-    flex-shrink: 0;
-    font-size: 0.95rem;
+    font-size: 0.94rem;
     font-weight: 700;
-    color: var(--accent-ink);
+    color: var(--bone);
   }
 
   .card__desc {
-    font-size: 0.85rem;
+    font-size: 0.8rem;
     color: var(--muted);
     line-height: 1.5;
     flex: 1;
@@ -133,16 +126,16 @@ const { product, index = 0 } = Astro.props;
     align-items: center;
     justify-content: space-between;
     gap: 0.5rem;
-    min-height: 44px;
-    margin-top: 0.4rem;
-    padding: 0.6rem 0.6rem 0.6rem 1.1rem;
-    border-radius: var(--radius-pill);
+    min-height: 40px;
+    margin-top: 0.3rem;
+    padding: 0.55rem 0.55rem 0.55rem 0.9rem;
     border: 1px solid var(--line-strong);
     background: transparent;
     color: var(--bone);
-    font-size: 0.76rem;
-    font-weight: 600;
-    letter-spacing: 0.02em;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
     transition: background-color var(--duration) var(--ease), color var(--duration) var(--ease),
       border-color var(--duration) var(--ease);
   }
@@ -150,8 +143,8 @@ const { product, index = 0 } = Astro.props;
   .card__add-icon {
     display: grid;
     place-items: center;
-    width: 28px;
-    height: 28px;
+    width: 24px;
+    height: 24px;
     border-radius: 50%;
     background: var(--forest);
     color: var(--cream);

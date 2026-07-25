@@ -9,6 +9,10 @@ const { active = '' } = Astro.props;
 const isProductActive = active === 'embalagens';
 ---
 
+<div class="promo-bar">
+  <p class="promo-bar__inner container">Catálogo 2026 · Bioplástico para food service, eventos e delivery</p>
+</div>
+
 <header class="header" data-header>
   <div class="header__inner container">
     <a class="brand" href="/" aria-label="Cibele Plastic — página inicial">
@@ -57,14 +61,48 @@ const isProductActive = active === 'embalagens';
       <a class:list={['nav__link', { 'is-active': active === 'sobre' }]} href="/sobre">
         <span>Sobre</span>
       </a>
+      <a class:list={['nav__link', { 'is-active': active === 'contato' }]} href="/contato">
+        <span>Contato</span>
+      </a>
     </nav>
 
-    <div class="header__actions">
-      <a class="btn btn--primary header__cta" href="/contato">
-        <span>Orçamento</span>
-        <svg class="arrow" viewBox="0 0 24 24" width="15" height="15" aria-hidden="true">
-          <path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+    <div class="header__search" data-search-wrap>
+      <button class="icon-btn" type="button" data-search-toggle aria-expanded="false" aria-controls="header-search-form" aria-label="Buscar produtos">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true">
+          <circle cx="11" cy="11" r="7"></circle>
+          <path d="M21 21l-4.3-4.3"></path>
         </svg>
+      </button>
+      <form class="search-panel" id="header-search-form" data-search-panel hidden action="/embalagens" method="get">
+        <input
+          class="search-panel__input"
+          type="search"
+          name="busca"
+          placeholder="Buscar por prato, copo, marmita…"
+          aria-label="Buscar produtos"
+          data-search-input
+        />
+        <button class="search-panel__submit icon-btn" type="submit" aria-label="Buscar">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true">
+            <path d="M5 12h14M13 6l6 6-6 6"></path>
+          </svg>
+        </button>
+      </form>
+    </div>
+
+    <div class="header__actions">
+      <a class="icon-btn icon-btn--wishlist" href="/favoritos" aria-label="Favoritos">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M12 20.5s-7.5-4.6-10-9.3C.5 8 1.8 4.5 5.2 3.6c2.1-.6 4.2.3 5.4 2 .4.5.5.7 1.4 2 .9-1.3 1-1.5 1.4-2 1.2-1.7 3.3-2.6 5.4-2 3.4.9 4.7 4.4 3.2 7.6-2.5 4.7-10 9.3-10 9.3z"></path>
+        </svg>
+        <span class="icon-btn__badge" data-badge="wishlist">0</span>
+      </a>
+      <a class="icon-btn" href="/sacola" aria-label="Sacola">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M6 8h12l-1 12.5a1 1 0 0 1-1 .9H8a1 1 0 0 1-1-.9L6 8Z"></path>
+          <path d="M9 8V6a3 3 0 0 1 6 0v2"></path>
+        </svg>
+        <span class="icon-btn__badge" data-badge="cart">0</span>
       </a>
       <button class="burger" type="button" data-menu-toggle aria-expanded="false" aria-controls="menu-mobile" aria-label="Abrir menu">
         <span></span>
@@ -102,6 +140,10 @@ const isProductActive = active === 'embalagens';
       <span class="menu__index">03</span>
       <span class="menu__label">Contato</span>
     </a>
+    <a class:list={['menu__link', { 'is-active': active === 'favoritos' }]} href="/favoritos" data-menu-link>
+      <span class="menu__index">04</span>
+      <span class="menu__label">Favoritos</span>
+    </a>
   </nav>
   <div class="menu__foot" data-menu-link>
     <p class="eyebrow">Cibele Plastic</p>
@@ -111,43 +153,38 @@ const isProductActive = active === 'embalagens';
 
 <style>
   .header {
-    position: fixed;
-    inset: 0 0 auto 0;
+    position: sticky;
+    top: 0;
     z-index: 100;
-    height: 72px;
+    height: var(--header-height);
     display: flex;
     align-items: center;
-    background: color-mix(in srgb, var(--cream) 92%, transparent);
-    backdrop-filter: blur(10px);
+    background: var(--cream);
     border-bottom: 1px solid var(--line);
-    transition: transform var(--duration-slow) var(--ease), box-shadow var(--duration-slow) var(--ease);
+    transition: box-shadow var(--duration-slow) var(--ease);
   }
 
   .header.is-scrolled {
     box-shadow: var(--shadow-sm);
   }
 
-  .header.is-hidden {
-    transform: translateY(-100%);
-  }
-
   .header__inner {
     width: 100%;
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    gap: 1.5rem;
+    gap: 1.2rem;
   }
 
   .brand {
     display: inline-flex;
     align-items: center;
-    gap: 0.6rem;
+    gap: 0.55rem;
     font-family: var(--font-display);
     font-weight: 700;
     font-size: 1.05rem;
     letter-spacing: -0.01em;
     color: var(--bone);
+    margin-right: 0.4rem;
   }
 
   .brand__mark {
@@ -165,7 +202,7 @@ const isProductActive = active === 'embalagens';
   .nav {
     display: none;
     align-items: center;
-    gap: 0.2rem;
+    gap: 0.1rem;
   }
 
   .nav__item {
@@ -177,14 +214,13 @@ const isProductActive = active === 'embalagens';
     display: inline-flex;
     align-items: center;
     gap: 0.4rem;
-    min-height: 44px;
-    padding: 0.6rem 1rem;
+    min-height: 40px;
+    padding: 0.5rem 0.8rem;
     font-size: 0.78rem;
     font-weight: 600;
-    letter-spacing: 0.1em;
+    letter-spacing: 0.08em;
     text-transform: uppercase;
     color: var(--muted);
-    border-radius: var(--radius-pill);
     border: 0;
     background: transparent;
     font-family: inherit;
@@ -235,8 +271,6 @@ const isProductActive = active === 'embalagens';
     gap: 1px;
     background: var(--line);
     border: 1px solid var(--line);
-    border-radius: var(--radius);
-    overflow: hidden;
   }
 
   .mega__item {
@@ -297,32 +331,79 @@ const isProductActive = active === 'embalagens';
     margin-top: 1.6rem;
   }
 
+  /* Busca */
+  .header__search {
+    position: relative;
+    margin-left: auto;
+  }
+
+  .search-panel {
+    position: absolute;
+    top: calc(100% + 0.6rem);
+    right: 0;
+    z-index: 90;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    width: min(88vw, 360px);
+    padding: 0.5rem;
+    background: var(--cream);
+    border: 1px solid var(--line-strong);
+    box-shadow: var(--shadow-md);
+    opacity: 0;
+    transform: translateY(-6px);
+    transition: opacity var(--duration) var(--ease), transform var(--duration) var(--ease);
+  }
+
+  .search-panel[hidden] {
+    display: none;
+  }
+
+  .search-panel.is-visible {
+    opacity: 1;
+    transform: none;
+  }
+
+  .search-panel__input {
+    flex: 1;
+    min-width: 0;
+    min-height: 40px;
+    padding: 0.5rem 0.7rem;
+    border: 0;
+    background: transparent;
+    color: var(--bone);
+    font-family: inherit;
+    font-size: 0.9rem;
+  }
+
+  .search-panel__input:focus-visible {
+    outline: none;
+  }
+
+  .search-panel__submit {
+    flex-shrink: 0;
+  }
+
   .header__actions {
     display: flex;
     align-items: center;
-    gap: 0.7rem;
-  }
-
-  .header__cta {
-    display: none;
-    padding: 0.65rem 1.2rem;
-    font-size: 0.82rem;
+    gap: 0.2rem;
   }
 
   .burger {
     position: relative;
-    width: 44px;
-    height: 44px;
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
-    border: 1px solid var(--line-strong);
+    border: 0;
     background: transparent;
     display: grid;
     place-items: center;
-    transition: border-color var(--duration) var(--ease);
+    transition: background-color var(--duration) var(--ease);
   }
 
   .burger:hover {
-    border-color: var(--forest);
+    background: var(--ink-2);
   }
 
   .burger span {
@@ -422,11 +503,15 @@ const isProductActive = active === 'embalagens';
     max-width: 30ch;
   }
 
+  .icon-btn--wishlist {
+    display: none;
+  }
+
   @media (min-width: 940px) {
     .nav {
       display: flex;
     }
-    .header__cta {
+    .icon-btn--wishlist {
       display: inline-flex;
     }
     .burger {
