@@ -8,9 +8,19 @@ import { animate, createTimeline, stagger, utils } from 'animejs';
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 const fine = window.matchMedia('(pointer: fine)').matches;
 
-const DURATION = 240;
-const DURATION_FAST = 200;
-const EASE = 'outQuart';
+// Movimento lento e contínuo: o vocabulário é fade + translate curto.
+const DURATION = 620;
+const DURATION_FAST = 280;
+const EASE = 'outExpo';
+
+/* --------------------------------------------------------
+   Rede de segurança: se o motor de animações não iniciar
+   (erro de script, chunk que não chegou), o conteúdo não pode
+   ficar invisível para sempre. Um vigia devolve tudo à tela.
+-------------------------------------------------------- */
+const vigia = window.setTimeout(() => {
+  document.documentElement.classList.remove('is-animate');
+}, 2500);
 
 /* --------------------------------------------------------
    Fallback sem movimento: apenas mostra tudo.
@@ -27,6 +37,13 @@ function showEverything() {
    Reveal de elementos e grupos via IntersectionObserver.
 -------------------------------------------------------- */
 function initReveals() {
+  // `will-change` é caro: mantê-lo depois da animação pressiona o
+  // compositor e trava a rolagem no celular. Sai assim que termina.
+  const soltar = (alvos: HTMLElement | NodeListOf<HTMLElement>) => {
+    const lista = alvos instanceof HTMLElement ? [alvos] : Array.from(alvos);
+    lista.forEach((el) => (el.style.willChange = 'auto'));
+  };
+
   const observer = new IntersectionObserver(
     (entries, obs) => {
       for (const entry of entries) {
@@ -38,25 +55,29 @@ function initReveals() {
           const items = el.querySelectorAll<HTMLElement>('[data-reveal-item]');
           animate(items, {
             opacity: [0, 1],
-            translateY: [16, 0],
+            translateY: [22, 0],
             duration: DURATION,
-            delay: stagger(45),
+            delay: stagger(70),
             ease: EASE,
+            onComplete: () => soltar(items),
           });
         } else if (el.hasAttribute('data-lines')) {
-          animate(el.querySelectorAll<HTMLElement>('.line-inner'), {
+          const linhas = el.querySelectorAll<HTMLElement>('.line-inner');
+          animate(linhas, {
             translateY: ['105%', '0%'],
             duration: DURATION,
-            delay: stagger(45),
+            delay: stagger(70),
             ease: EASE,
+            onComplete: () => soltar(linhas),
           });
         } else {
-          const distance = el.getAttribute('data-reveal') === 'fade' ? 0 : 16;
+          const distance = el.getAttribute('data-reveal') === 'fade' ? 0 : 22;
           animate(el, {
             opacity: [0, 1],
             translateY: [distance, 0],
             duration: DURATION,
             ease: EASE,
+            onComplete: () => soltar(el),
           });
         }
       }
@@ -333,6 +354,9 @@ function initCookieConsent() {
    Boot.
 -------------------------------------------------------- */
 function boot() {
+  // O motor chegou: o vigia não precisa mais devolver o conteúdo à força.
+  window.clearTimeout(vigia);
+
   initCookieConsent();
   initHeader();
   initMegaMenu();

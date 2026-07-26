@@ -24,7 +24,7 @@ const faixa = `${formatPrice(Math.min(...precos))} – ${formatPrice(Math.max(..
       </nav>
 
       <div class="shop-head__grid">
-        <h1 class="h-xl shop-head__title" data-reveal="fade">Todas as embalagens</h1>
+        <h1 class="h-xl shop-head__title" data-reveal="fade">Todas as <span class="em">embalagens</span></h1>
         <p class="shop-head__desc text-muted" data-reveal="fade">
           {products.length} referências em bioplástico, de {faixa}. Compostáveis, com desempenho de
           plástico convencional e prontas para envio.
@@ -257,9 +257,15 @@ const faixa = `${formatPrice(Math.min(...precos))} – ${formatPrice(Math.max(..
     position: sticky;
     top: var(--header-h);
     z-index: 60;
-    background: color-mix(in srgb, var(--cream) 92%, transparent);
-    backdrop-filter: blur(12px);
+    background: var(--cream);
     border-block: 1px solid var(--line);
+  }
+
+  @media (min-width: 900px) {
+    .toolbar {
+      background: color-mix(in srgb, var(--cream) 90%, transparent);
+      backdrop-filter: blur(12px);
+    }
   }
 
   .toolbar__inner {

@@ -1,9 +1,56 @@
 /* ============================================================
    Cibele Plastic — Design System
-   Editorial de moda aplicado ao e-commerce: arestas retas,
-   caixa-alta espaçada, pesos leves e muito respiro.
+   Alta costura aplicada ao e-commerce: serifa fina nos títulos,
+   caixa-alta espaçada na interface, fios discretos e muito ar.
    Tema claro único — uma paleta deliberada, sem variantes.
    ============================================================ */
+
+/* Fontes hospedadas aqui: sem terceiros (nada sai para o Google),
+   sem salto de layout e com uma requisição a menos no caminho crítico.
+   Ambas são variáveis — um arquivo cobre toda a faixa de peso. */
+@font-face {
+  font-family: 'Cormorant Garamond';
+  font-style: normal;
+  font-weight: 300 600;
+  font-display: swap;
+  src: url('/fonts/cormorant-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC,
+    U+0304, U+0308, U+0329, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212,
+    U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: 'Cormorant Garamond';
+  font-style: normal;
+  font-weight: 300 600;
+  font-display: swap;
+  src: url('/fonts/cormorant-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304,
+    U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0,
+    U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 300 600;
+  font-display: swap;
+  src: url('/fonts/inter-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC,
+    U+0304, U+0308, U+0329, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212,
+    U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 300 600;
+  font-display: swap;
+  src: url('/fonts/inter-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304,
+    U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0,
+    U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
 
 :root {
   /* Cor — paleta da casa. O verde primário fica abaixo de ~20%
@@ -15,22 +62,24 @@
   --accent-ink: #8b4a35; /* Acento escurecido — links e texto pequeno (AA) */
   --accent-premium: #c8b38a; /* Acento premium — dourado, uso pontual no escuro */
 
-  --cream: #f7f6f2; /* Fundo */
+  --cream: #faf8f4; /* Fundo — marfim, mais quente que branco */
   --ink: var(--cream);
-  --ink-2: #eceae4; /* Superfície secundária */
-  --ink-3: color-mix(in srgb, var(--ink-2) 88%, var(--forest) 12%);
+  --ink-2: #f1eee7; /* Superfície secundária — fundo de produto */
+  --ink-3: color-mix(in srgb, var(--ink-2) 90%, var(--forest) 10%);
   --paper: var(--forest);
-  --paper-2: #0f2e26;
+  --paper-2: #0d2b23;
 
-  --bone: #181a19; /* Texto primário */
+  --bone: #1a1c1b; /* Texto primário */
   --muted: #5c615f; /* Texto secundário */
   --muted-dark: color-mix(in srgb, var(--muted) 65%, var(--cream) 35%);
   --muted-light: var(--analogous);
 
-  --line: #dddbd4; /* Fio decorativo */
-  --line-soft: #e6e4dd; /* Fio quase invisível — grades de vitrine */
-  --line-dark: rgba(143, 184, 168, 0.28);
-  --line-strong: color-mix(in srgb, var(--muted) 75%, var(--cream) 25%);
+  /* Fios: quanto mais discretos, mais caro parece. */
+  --line: #e3e0d8;
+  --line-soft: #ece9e2;
+  --line-dark: rgba(143, 184, 168, 0.24);
+  --line-strong: color-mix(in srgb, var(--muted) 62%, var(--cream) 38%);
+  --line-gold: color-mix(in srgb, var(--accent-premium) 70%, var(--cream) 30%);
 
   --accent-inverse: var(--accent-premium);
   --color-error: #b3261e;
@@ -38,19 +87,22 @@
 
   color-scheme: light;
 
-  /* Tipografia — Manrope (títulos) e Inter (texto). Só duas famílias. */
+  /* Tipografia — a serifa carrega o luxo nos títulos; a grotesca
+     carrega a clareza na interface. Só duas famílias. */
   --font: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
-  --font-display: 'Manrope', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-display: 'Cormorant Garamond', 'Times New Roman', Georgia, serif;
 
   --step--2: 0.75rem; /* 12 — rótulos de interface */
   --step--1: 0.8125rem; /* 13 */
   --step-0: 0.9375rem; /* 15 — corpo */
   --step-1: clamp(1rem, 0.95rem + 0.25vw, 1.125rem); /* 18 — lead */
-  --step-2: clamp(1.4rem, 1.2rem + 0.9vw, 1.9rem);
-  --step-3: clamp(1.8rem, 1.4rem + 1.8vw, 2.5rem);
-  --step-4: clamp(2.1rem, 1.6rem + 2.4vw, 3.4rem);
-  --step-5: clamp(2.6rem, 1.8rem + 4vw, 5rem);
-  --step-h4: clamp(1.15rem, 1.05rem + 0.4vw, 1.4rem);
+  /* A serifa tem olho pequeno: os títulos pedem corpos maiores que
+     os de uma grotesca para pesarem o mesmo na página. */
+  --step-2: clamp(1.6rem, 1.35rem + 1.1vw, 2.25rem);
+  --step-3: clamp(2rem, 1.55rem + 2.1vw, 3rem);
+  --step-4: clamp(2.4rem, 1.7rem + 3.2vw, 4.25rem);
+  --step-5: clamp(3rem, 1.9rem + 5.2vw, 6.5rem);
+  --step-h4: clamp(1.25rem, 1.1rem + 0.5vw, 1.55rem);
 
   /* Layout */
   --container: 1560px;
@@ -58,7 +110,7 @@
   --gutter: clamp(1.1rem, 3.5vw, 2.75rem);
   --gutter-col: clamp(0.5rem, 1.2vw, 1rem);
 
-  --header-h: 74px;
+  --header-h: 68px;
 
   --space-32: 2rem;
   --space-96: clamp(3.5rem, 7vw, 6rem);
@@ -71,11 +123,11 @@
   --radius-btn: 0px;
   --radius-pill: 999px;
 
-  /* Movimento — contido: fade, translate e escala sutil. */
-  --duration: 220ms;
-  --duration-fast: 160ms;
-  --duration-slow: 320ms;
-  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  /* Movimento — lento e deliberado. Pressa é a marca do barato. */
+  --duration: 340ms;
+  --duration-fast: 200ms;
+  --duration-slow: 560ms;
+  --ease: cubic-bezier(0.19, 1, 0.22, 1);
   --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
 
   --shadow-sm: 0 1px 2px rgba(24, 26, 25, 0.05);
@@ -85,6 +137,13 @@
   /* Rastro de caixa-alta usado em toda a interface da loja */
   --track: 0.14em;
   --track-wide: 0.22em;
+}
+
+/* O cabeçalho respira mais no desktop; no celular, ocupa o mínimo. */
+@media (min-width: 1040px) {
+  :root {
+    --header-h: 88px;
+  }
 }
 
 /* Reset ---------------------------------------------------- */
@@ -147,9 +206,10 @@ h3,
 h4 {
   margin: 0;
   font-family: var(--font-display);
-  font-weight: 600;
-  line-height: 1.1;
-  letter-spacing: -0.02em;
+  font-weight: 500;
+  line-height: 1.12;
+  /* Serifa não pede tracking negativo forte: o desenho já é fechado. */
+  letter-spacing: -0.005em;
 }
 
 p {
@@ -167,39 +227,46 @@ p {
   font-family: var(--font-display);
   font-size: var(--step-5);
   font-weight: 300;
-  line-height: 1;
-  letter-spacing: -0.035em;
+  line-height: 1.02;
+  letter-spacing: -0.012em;
 }
 
 .h-xl {
   font-family: var(--font-display);
   font-size: var(--step-4);
   font-weight: 300;
-  letter-spacing: -0.03em;
-  line-height: 1.04;
+  letter-spacing: -0.008em;
+  line-height: 1.06;
 }
 
 .h-lg {
   font-family: var(--font-display);
   font-size: var(--step-3);
   font-weight: 400;
-  letter-spacing: -0.025em;
-  line-height: 1.08;
+  letter-spacing: -0.005em;
+  line-height: 1.1;
 }
 
 .h-md {
   font-family: var(--font-display);
   font-size: var(--step-2);
   font-weight: 500;
-  letter-spacing: -0.02em;
-  line-height: 1.12;
+  letter-spacing: 0;
+  line-height: 1.15;
 }
 
 .h-sm {
   font-family: var(--font-display);
   font-size: var(--step-h4);
   font-weight: 600;
-  line-height: 1.2;
+  line-height: 1.25;
+}
+
+/* Itálico da serifa — usado em uma palavra por título, no máximo.
+   É o gesto que separa "editorial" de "genérico". */
+.em {
+  font-style: italic;
+  font-weight: 300;
 }
 
 /* Rótulo de interface — a voz da loja */
@@ -320,18 +387,19 @@ p {
    contornado (secundário) e link editorial com seta.
    ------------------------------------------------------------ */
 .btn {
+  position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 0.7em;
-  min-height: 48px;
-  padding: 0.95rem 2rem;
+  min-height: 52px;
+  padding: 1rem 2.4rem;
   border-radius: var(--radius-btn);
   border: 1px solid transparent;
   font-family: var(--font);
-  font-size: var(--step--2);
+  font-size: 0.6875rem;
   font-weight: 500;
-  letter-spacing: var(--track);
+  letter-spacing: 0.18em;
   text-transform: uppercase;
   transition: background-color var(--duration) var(--ease), color var(--duration) var(--ease),
     border-color var(--duration) var(--ease), opacity var(--duration) var(--ease);

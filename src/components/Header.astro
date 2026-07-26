@@ -216,10 +216,18 @@ const avisos = [
     height: var(--header-h);
     display: flex;
     align-items: center;
-    background: color-mix(in srgb, var(--cream) 88%, transparent);
-    backdrop-filter: blur(14px);
+    /* Fundo sólido por padrão: `backdrop-filter` num elemento fixo custa
+       caro no celular e engasga a rolagem. O vidro fica só no desktop. */
+    background: var(--cream);
     border-bottom: 1px solid transparent;
     transition: border-color var(--duration) var(--ease), background-color var(--duration) var(--ease);
+  }
+
+  @media (min-width: 1040px) {
+    .header {
+      background: color-mix(in srgb, var(--cream) 86%, transparent);
+      backdrop-filter: blur(16px);
+    }
   }
 
   .header.is-scrolled {
@@ -227,34 +235,42 @@ const avisos = [
   }
 
   /* Sem `width: 100%` aqui: a largura e as margens vêm do .container-wide —
-     senão a marca encosta na borda da tela. */
+     senão a marca encosta na borda da tela. As três colunas podem encolher
+     (`minmax(0, …)`), o que evita estouro horizontal em telas de 320 px. */
   .header__inner {
     display: grid;
-    grid-template-columns: auto 1fr auto;
+    grid-template-columns: minmax(0, auto) minmax(0, 1fr) minmax(0, auto);
     align-items: center;
-    gap: 1rem;
+    gap: clamp(0.25rem, 2vw, 1rem);
   }
 
+  /* Lockup vertical: a serifa espaçada em cima, a linha de apoio embaixo.
+     Empilhado, o conjunto é estreito o bastante para caber em 320 px. */
   .brand {
-    display: inline-flex;
-    align-items: baseline;
-    gap: 0.45rem;
-    font-family: var(--font-display);
+    display: inline-grid;
+    justify-items: center;
+    gap: 0.15rem;
     color: var(--bone);
+    min-width: 0;
   }
 
   .brand__text {
-    font-size: 1.35rem;
-    font-weight: 600;
-    letter-spacing: 0.02em;
+    font-family: var(--font-display);
+    font-size: clamp(1.15rem, 4.5vw, 1.5rem);
+    font-weight: 400;
+    letter-spacing: 0.2em;
+    text-indent: 0.2em; /* compensa o rastro da última letra */
+    line-height: 1;
     text-transform: uppercase;
   }
 
   .brand__sub {
     font-family: var(--font);
-    font-size: 0.625rem;
+    font-size: 0.5rem;
     font-weight: 500;
-    letter-spacing: var(--track-wide);
+    letter-spacing: 0.42em;
+    text-indent: 0.42em;
+    line-height: 1;
     text-transform: uppercase;
     color: var(--muted);
   }
