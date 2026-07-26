@@ -1,0 +1,716 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ProductCard from '../../components/ProductCard.astro';
+import {
+  products,
+  collections,
+  collectionLabels,
+  badges,
+  formatPrice,
+  precoBase,
+  precoUnitario,
+  relacionados,
+  shop,
+  type Product,
+} from '../../data/catalog';
+
+export function getStaticPaths() {
+  return products.map((product) => ({
+    params: { slug: product.slug },
+    props: { product },
+  }));
+}
+
+interface Props {
+  product: Product;
+}
+
+const { product } = Astro.props;
+
+const colecao = collections.find((c) => c.slug === product.colecao)!;
+const preco = precoBase(product);
+const unitario = precoUnitario(product);
+const parcela = preco / shop.parcelas;
+const similares = relacionados(product, 4);
+const esgotado = product.variantes.every((v) => v.estoque === 0);
+const primeiraDisponivel = product.variantes.find((v) => v.estoque > 0) ?? product.variantes[0];
+
+// Com uma única foto, ela ocupa a largura inteira em vez de aparecer
+// duplicada — repetir a mesma imagem parece defeito.
+const galeria = product.imagens;
+const galeriaUnica = galeria.length === 1;
+---
+
+<BaseLayout
+  active="produto"
+  title={`${product.nome} — Cibele Plastic`}
+  description={product.descricao}
+>
+  <div class="pdp page-top">
+    <div class="container-wide">
+      <nav aria-label="Trilha de navegação">
+        <ol class="crumbs pdp__crumbs">
+          <li><a href="/">Início</a></li>
+          <li><a href="/embalagens">Catálogo</a></li>
+          <li><a href={colecao.path}>{colecao.titulo}</a></li>
+          <li><span aria-current="page">{product.nome}</span></li>
+        </ol>
+      </nav>
+
+      <div class="pdp__grid">
+        <!-- Galeria -->
+        <div class:list={['pdp__gallery', { 'pdp__gallery--single': galeriaUnica }]}>
+          {
+            galeria.map((src, i) => (
+              <figure class="pdp__shot" data-reveal="fade">
+                <img
+                  src={src}
+                  alt={i === 0 ? product.nome : `${product.nome} — vista ${i + 1}`}
+                  loading={i === 0 ? 'eager' : 'lazy'}
+                  decoding="async"
+                  width="900"
+                  height="1125"
+                />
+                {i === 0 && product.badge && (
+                  <figcaption class:list={['badge', `badge--${product.badge}`, 'pdp__badge']}>
+                    {badges[product.badge]}
+                  </figcaption>
+                )}
+              </figure>
+            ))
+          }
+        </div>
+
+        <!-- Painel de compra -->
+        <div class="pdp__panel">
+          <div class="pdp__sticky">
+            <p class="ui-sm text-muted">{colecao.titulo}</p>
+            <h1 class="pdp__title">{product.nome}</h1>
+
+            <div class="pdp__price">
+              <span class="pdp__price-value" data-price>{formatPrice(preco)}</span>
+              <span class="pdp__price-unit" data-unit>{formatPrice(unitario)} por unidade</span>
+            </div>
+            <p class="pdp__installment text-muted" data-installment>
+              Em até {shop.parcelas}× de {formatPrice(parcela)} sem juros
+            </p>
+
+            <p class="pdp__desc">{product.descricao}</p>
+
+            <!-- Formato / embalagem -->
+            <fieldset class="pdp__variants">
+              <legend class="ui-sm pdp__variants-legend">
+                Formato
+                <span class="text-muted" data-variant-stock></span>
+              </legend>
+              <div class="pdp__variant-list">
+                {
+                  product.variantes.map((variante, i) => (
+                    <label class:list={['vopt', { 'is-out': variante.estoque === 0 }]}>
+                      <input
+                        type="radio"
+                        name="variante"
+                        value={variante.sku}
+                        data-variant
+                        data-preco={variante.preco}
+                        data-unidades={variante.unidades}
+                        data-estoque={variante.estoque}
+                        checked={variante.sku === primeiraDisponivel.sku}
+                        disabled={variante.estoque === 0}
+                      />
+                      <span class="vopt__label">{variante.rotulo}</span>
+                      <span class="vopt__price">{formatPrice(variante.preco)}</span>
+                    </label>
+                  ))
+                }
+              </div>
+            </fieldset>
+
+            <!-- Quantidade + ações -->
+            <div class="pdp__actions">
+              <div class="qty" data-qty>
+                <button class="qty__btn" type="button" data-qty-dec aria-label="Diminuir quantidade">−</button>
+                <span class="qty__value" data-qty-value>1</span>
+                <button class="qty__btn" type="button" data-qty-inc aria-label="Aumentar quantidade">+</button>
+              </div>
+
+              <button
+                class="btn btn--primary pdp__add"
+                type="button"
+                data-add-sku={primeiraDisponivel.sku}
+                data-add-name={product.nome}
+                data-add-qty="1"
+                data-add-open
+                data-pdp-add
+                disabled={esgotado}
+              >
+                <span>{esgotado ? 'Indisponível' : 'Adicionar à cesta'}</span>
+              </button>
+
+              <button
+                class="pdp__wish"
+                type="button"
+                data-wish={product.slug}
+                aria-pressed="false"
+                aria-label={`Favoritar ${product.nome}`}
+              >
+                <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+                  <path
+                    d="M12 20.5 4.3 13a4.6 4.6 0 0 1 6.5-6.5l1.2 1.2 1.2-1.2A4.6 4.6 0 0 1 19.7 13Z"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.4"
+                    stroke-linejoin="round"></path>
+                </svg>
+              </button>
+            </div>
+
+            <ul class="pdp__perks">
+              <li>Frete grátis acima de {formatPrice(shop.freteGratisAcima)}</li>
+              <li>Envio em até 2 dias úteis</li>
+              <li>Amostra grátis para novos clientes corporativos</li>
+            </ul>
+
+            <!-- Detalhes -->
+            <div class="acc pdp__acc">
+              <div class="acc__item">
+                <h2>
+                  <button class="acc__trigger" type="button" aria-expanded="true" aria-controls="acc-descricao">
+                    Descrição
+                    <span class="acc__sign" aria-hidden="true"></span>
+                  </button>
+                </h2>
+                <div class="acc__panel" id="acc-descricao">
+                  <div class="acc__inner">{product.descricaoLonga}</div>
+                </div>
+              </div>
+
+              <div class="acc__item">
+                <h2>
+                  <button class="acc__trigger" type="button" aria-expanded="false" aria-controls="acc-ficha">
+                    Ficha técnica
+                    <span class="acc__sign" aria-hidden="true"></span>
+                  </button>
+                </h2>
+                <div class="acc__panel" id="acc-ficha" hidden>
+                  <div class="acc__inner">
+                    <dl class="spec">
+                      {
+                        product.ficha.map((linha) => (
+                          <div class="spec__row">
+                            <dt>{linha.rotulo}</dt>
+                            <dd>{linha.valor}</dd>
+                          </div>
+                        ))
+                      }
+                    </dl>
+                  </div>
+                </div>
+              </div>
+
+              <div class="acc__item">
+                <h2>
+                  <button class="acc__trigger" type="button" aria-expanded="false" aria-controls="acc-cuidados">
+                    Cuidados e uso
+                    <span class="acc__sign" aria-hidden="true"></span>
+                  </button>
+                </h2>
+                <div class="acc__panel" id="acc-cuidados" hidden>
+                  <div class="acc__inner">
+                    <ul class="pdp__list">
+                      {product.cuidados.map((item) => <li>{item}</li>)}
+                    </ul>
+                  </div>
+                </div>
+              </div>
+
+              <div class="acc__item">
+                <h2>
+                  <button class="acc__trigger" type="button" aria-expanded="false" aria-controls="acc-envio">
+                    Envio e devolução
+                    <span class="acc__sign" aria-hidden="true"></span>
+                  </button>
+                </h2>
+                <div class="acc__panel" id="acc-envio" hidden>
+                  <div class="acc__inner">
+                    Envio para todo o Brasil em até 2 dias úteis após a confirmação do pagamento.
+                    Frete grátis para pedidos acima de {formatPrice(shop.freteGratisAcima)}. Trocas e
+                    devoluções em até 30 dias, com a embalagem original lacrada.
+                    <a class="link-underline" href="/ajuda#trocas">Ver política completa</a>.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Você também pode gostar -->
+  <section class="section related">
+    <div class="container-wide">
+      <header class="related__head">
+        <h2 class="h-md">Combina com</h2>
+        <a class="link-arrow" href={colecao.path}>
+          <span>Ver {colecao.titulo}</span>
+          <span class="arrow" aria-hidden="true">↗</span>
+        </a>
+      </header>
+      <div class="pgrid" data-cols="4" data-reveal-group>
+        {similares.map((item, i) => <ProductCard product={item} index={i} />)}
+      </div>
+    </div>
+  </section>
+
+  <!-- Barra fixa de compra (mobile) -->
+  <div class="buybar" data-buybar>
+    <div class="buybar__info">
+      <span class="buybar__name">{product.nome}</span>
+      <span class="buybar__price" data-buybar-price>{formatPrice(preco)}</span>
+    </div>
+    <button
+      class="btn btn--primary buybar__btn"
+      type="button"
+      data-add-sku={primeiraDisponivel.sku}
+      data-add-name={product.nome}
+      data-add-qty="1"
+      data-add-open
+      data-pdp-add
+      disabled={esgotado}
+    >
+      <span>{esgotado ? 'Indisponível' : 'Adicionar'}</span>
+    </button>
+  </div>
+</BaseLayout>
+
+<script>
+  const radios = Array.from(document.querySelectorAll<HTMLInputElement>('[data-variant]'));
+  const addBtns = Array.from(document.querySelectorAll<HTMLElement>('[data-pdp-add]'));
+  const precoEl = document.querySelector<HTMLElement>('[data-price]');
+  const unitEl = document.querySelector<HTMLElement>('[data-unit]');
+  const parcelaEl = document.querySelector<HTMLElement>('[data-installment]');
+  const buybarPreco = document.querySelector<HTMLElement>('[data-buybar-price]');
+  const estoqueEl = document.querySelector<HTMLElement>('[data-variant-stock]');
+
+  const qtyValue = document.querySelector<HTMLElement>('[data-qty-value]');
+  const qtyDec = document.querySelector<HTMLButtonElement>('[data-qty-dec]');
+  const qtyInc = document.querySelector<HTMLButtonElement>('[data-qty-inc]');
+
+  const PARCELAS = 6;
+  const moeda = (valor: number) =>
+    valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+
+  let quantidade = 1;
+
+  const variante = () => radios.find((radio) => radio.checked) ?? radios[0];
+
+  const sincronizar = () => {
+    const atual = variante();
+    if (!atual) return;
+
+    const preco = Number(atual.dataset.preco ?? '0');
+    const unidades = Number(atual.dataset.unidades ?? '1');
+    const estoque = Number(atual.dataset.estoque ?? '0');
+
+    // Nunca deixa a quantidade passar do estoque da variante escolhida
+    quantidade = Math.min(Math.max(1, quantidade), Math.max(1, estoque));
+
+    if (precoEl) precoEl.textContent = moeda(preco * quantidade);
+    if (unitEl) unitEl.textContent = `${moeda(preco / unidades)} por unidade`;
+    if (parcelaEl)
+      parcelaEl.textContent = `Em até ${PARCELAS}× de ${moeda((preco * quantidade) / PARCELAS)} sem juros`;
+    if (buybarPreco) buybarPreco.textContent = moeda(preco * quantidade);
+    if (estoqueEl)
+      estoqueEl.textContent = estoque > 0 && estoque <= 20 ? `· últimas ${estoque} caixas` : '';
+    if (qtyValue) qtyValue.textContent = String(quantidade);
+    if (qtyDec) qtyDec.disabled = quantidade <= 1;
+    if (qtyInc) qtyInc.disabled = quantidade >= estoque;
+
+    addBtns.forEach((btn) => {
+      btn.dataset.addSku = atual.value;
+      btn.dataset.addQty = String(quantidade);
+    });
+  };
+
+  radios.forEach((radio) =>
+    radio.addEventListener('change', () => {
+      quantidade = 1;
+      sincronizar();
+    }),
+  );
+
+  qtyDec?.addEventListener('click', () => {
+    quantidade = Math.max(1, quantidade - 1);
+    sincronizar();
+  });
+
+  qtyInc?.addEventListener('click', () => {
+    quantidade += 1;
+    sincronizar();
+  });
+
+  sincronizar();
+
+  // A barra fixa só aparece depois que o painel de compra sai da tela
+  const painel = document.querySelector('[data-qty]');
+  const buybar = document.querySelector<HTMLElement>('[data-buybar]');
+  if (painel && buybar) {
+    const observer = new IntersectionObserver(
+      ([entry]) => buybar.classList.toggle('is-visible', !entry.isIntersecting),
+      { threshold: 0 },
+    );
+    observer.observe(painel);
+  }
+</script>
+
+<style>
+  .pdp {
+    padding-bottom: clamp(2rem, 5vw, 4rem);
+  }
+
+  .pdp__crumbs {
+    margin-bottom: clamp(1.25rem, 3vw, 2rem);
+  }
+
+  .pdp__grid {
+    display: grid;
+    gap: 2.5rem;
+  }
+
+  /* Galeria */
+  .pdp__gallery {
+    display: grid;
+    gap: var(--gutter-col);
+  }
+
+  .pdp__shot {
+    position: relative;
+    margin: 0;
+    aspect-ratio: 4 / 5;
+    background: var(--ink-2);
+    overflow: hidden;
+  }
+
+  .pdp__shot img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    padding: 6%;
+    mix-blend-mode: multiply;
+  }
+
+  .pdp__badge {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+  }
+
+  /* Painel */
+  .pdp__sticky {
+    display: grid;
+    gap: 0.9rem;
+    align-content: start;
+  }
+
+  .pdp__title {
+    font-family: var(--font-display);
+    font-size: clamp(1.6rem, 3.5vw, 2.1rem);
+    font-weight: 400;
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+  }
+
+  .pdp__price {
+    display: flex;
+    align-items: baseline;
+    gap: 0.9rem;
+    flex-wrap: wrap;
+    margin-top: 0.3rem;
+  }
+
+  .pdp__price-value {
+    font-size: 1.35rem;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .pdp__price-unit {
+    font-size: var(--step--1);
+    color: var(--muted);
+  }
+
+  .pdp__installment {
+    margin-top: -0.6rem;
+    font-size: var(--step--1);
+  }
+
+  .pdp__desc {
+    font-size: var(--step--1);
+    line-height: 1.65;
+    color: var(--muted);
+    max-width: 46ch;
+  }
+
+  /* Variantes */
+  .pdp__variants {
+    border: 0;
+    padding: 0;
+    margin: 0.6rem 0 0;
+  }
+
+  .pdp__variants-legend {
+    display: flex;
+    gap: 0.5rem;
+    color: var(--bone);
+    padding: 0;
+    margin-bottom: 0.7rem;
+  }
+
+  .pdp__variant-list {
+    display: grid;
+    gap: 0;
+  }
+
+  .vopt {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    padding: 0.9rem 1rem;
+    border: 1px solid var(--line);
+    cursor: pointer;
+    transition: border-color var(--duration) var(--ease), background-color var(--duration) var(--ease);
+  }
+
+  .vopt + .vopt {
+    margin-top: -1px;
+  }
+
+  .vopt:hover {
+    background: var(--ink-2);
+  }
+
+  .vopt input {
+    width: 16px;
+    height: 16px;
+    accent-color: var(--forest);
+    margin: 0;
+  }
+
+  .vopt__label {
+    flex: 1;
+    font-size: var(--step--1);
+  }
+
+  .vopt__price {
+    font-size: var(--step--1);
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .vopt:has(input:checked) {
+    border-color: var(--bone);
+    background: var(--ink-2);
+    position: relative;
+    z-index: 1;
+  }
+
+  .vopt.is-out {
+    opacity: 0.45;
+    cursor: not-allowed;
+    text-decoration: line-through;
+  }
+
+  /* Ações */
+  .pdp__actions {
+    display: flex;
+    gap: 0.6rem;
+    margin-top: 0.8rem;
+  }
+
+  .pdp__add {
+    flex: 1;
+  }
+
+  .pdp__wish {
+    width: 48px;
+    flex-shrink: 0;
+    display: grid;
+    place-items: center;
+    border: 1px solid var(--line-strong);
+    background: transparent;
+    color: var(--bone);
+    transition: border-color var(--duration) var(--ease), color var(--duration) var(--ease);
+  }
+
+  .pdp__wish:hover {
+    border-color: var(--bone);
+  }
+
+  .pdp__wish[aria-pressed='true'] {
+    color: var(--accent-ink);
+    border-color: var(--accent-ink);
+  }
+
+  .pdp__wish[aria-pressed='true'] path {
+    fill: currentColor;
+  }
+
+  .pdp__perks {
+    list-style: none;
+    margin: 0.6rem 0 0.4rem;
+    padding: 0;
+    display: grid;
+    gap: 0.45rem;
+    font-size: var(--step--1);
+    color: var(--muted);
+  }
+
+  .pdp__perks li {
+    display: flex;
+    align-items: baseline;
+    gap: 0.6rem;
+  }
+
+  .pdp__perks li::before {
+    content: '';
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--forest);
+    flex-shrink: 0;
+  }
+
+  .pdp__acc {
+    margin-top: 1.4rem;
+  }
+
+  .pdp__list {
+    margin: 0;
+    padding-left: 1.1rem;
+    display: grid;
+    gap: 0.4rem;
+  }
+
+  .spec {
+    margin: 0;
+    display: grid;
+    gap: 0;
+  }
+
+  .spec__row {
+    display: grid;
+    grid-template-columns: 1fr 1.4fr;
+    gap: 1rem;
+    padding: 0.6rem 0;
+    border-bottom: 1px solid var(--line-soft);
+  }
+
+  .spec__row:last-child {
+    border-bottom: 0;
+  }
+
+  .spec dt {
+    font-size: 0.6875rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .spec dd {
+    margin: 0;
+    font-size: var(--step--1);
+    color: var(--bone);
+  }
+
+  @media (min-width: 960px) {
+    .pdp__grid {
+      grid-template-columns: 1.35fr 1fr;
+      gap: clamp(2.5rem, 5vw, 5rem);
+      align-items: start;
+    }
+
+    .pdp__gallery {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    /* Foto única: ocupa as duas colunas, num quadro mais alto */
+    .pdp__gallery--single {
+      grid-template-columns: 1fr;
+    }
+
+    .pdp__gallery--single .pdp__shot {
+      aspect-ratio: 4 / 4.2;
+    }
+
+    .pdp__sticky {
+      position: sticky;
+      top: calc(var(--header-h) + 2rem);
+      max-width: 30rem;
+    }
+  }
+
+  /* Relacionados */
+  .related__head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    margin-bottom: 2rem;
+  }
+
+  /* Barra fixa de compra */
+  .buybar {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 90;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.7rem var(--gutter);
+    background: color-mix(in srgb, var(--cream) 94%, transparent);
+    backdrop-filter: blur(12px);
+    border-top: 1px solid var(--line);
+    transform: translateY(100%);
+    transition: transform var(--duration-slow) var(--ease);
+  }
+
+  .buybar.is-visible {
+    transform: translateY(0);
+  }
+
+  .buybar__info {
+    flex: 1;
+    min-width: 0;
+    display: grid;
+  }
+
+  .buybar__name {
+    font-size: var(--step--1);
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .buybar__price {
+    font-size: 0.6875rem;
+    color: var(--muted);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .buybar__btn {
+    flex-shrink: 0;
+    min-height: 44px;
+    padding-inline: 1.5rem;
+  }
+
+  @media (min-width: 960px) {
+    .buybar {
+      display: none;
+    }
+  }
+</style>

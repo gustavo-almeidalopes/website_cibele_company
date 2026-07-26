@@ -1,0 +1,1053 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { shop, formatPrice } from '../data/catalog';
+
+const etapas = [
+  { id: 'identificacao', titulo: 'Identificação' },
+  { id: 'entrega', titulo: 'Entrega' },
+  { id: 'pagamento', titulo: 'Pagamento' },
+  { id: 'revisao', titulo: 'Revisão' },
+];
+
+const estados = [
+  'AC', 'AL', 'AP', 'AM', 'BA', 'CE', 'DF', 'ES', 'GO', 'MA', 'MT', 'MS', 'MG', 'PA', 'PB', 'PR',
+  'PE', 'PI', 'RJ', 'RN', 'RS', 'RO', 'RR', 'SC', 'SP', 'SE', 'TO',
+];
+---
+
+<BaseLayout
+  active="checkout"
+  title="Finalizar compra — Cibele Plastic"
+  description="Finalize seu pedido de embalagens em bioplástico: identificação, entrega e pagamento em poucos passos."
+>
+  <section class="ck page-top section-sm">
+    <div class="container">
+      <header class="ck__head">
+        <h1 class="h-lg">Finalizar compra</h1>
+        <a class="link-arrow link-arrow--muted" href="/carrinho">
+          <span>Voltar à cesta</span>
+        </a>
+      </header>
+
+      <!-- Passos -->
+      <ol class="steps" data-steps>
+        {
+          etapas.map((etapa, i) => (
+            <li class:list={['step', { 'is-active': i === 0 }]} data-step-nav={etapa.id}>
+              <span class="step__num">{String(i + 1).padStart(2, '0')}</span>
+              <span class="step__label">{etapa.titulo}</span>
+            </li>
+          ))
+        }
+      </ol>
+
+      <div class="ck__layout" data-ck-layout hidden>
+        <div class="ck__main">
+          <!-- 01 · Identificação -->
+          <section class="panel is-current" data-panel="identificacao" aria-label="Identificação">
+            <form class="panel__form" data-form-identificacao novalidate>
+              <label class="field">
+                <input class="field__input" type="text" name="nome" placeholder=" " autocomplete="name" required />
+                <span class="field__label">Nome completo</span>
+                <span class="field__error">Informe seu nome completo.</span>
+              </label>
+
+              <label class="field">
+                <input class="field__input" type="email" name="email" placeholder=" " autocomplete="email" required />
+                <span class="field__label">E-mail</span>
+                <span class="field__error">Informe um e-mail válido.</span>
+              </label>
+
+              <div class="field-row field-row--2">
+                <label class="field">
+                  <input class="field__input" type="tel" name="telefone" placeholder=" " autocomplete="tel" required />
+                  <span class="field__label">Telefone</span>
+                  <span class="field__error">Informe um telefone com DDD.</span>
+                </label>
+
+                <label class="field">
+                  <input class="field__input" type="text" name="documento" placeholder=" " required />
+                  <span class="field__label">CPF ou CNPJ</span>
+                  <span class="field__error">Informe um CPF (11 dígitos) ou CNPJ (14 dígitos).</span>
+                </label>
+              </div>
+
+              <label class="check panel__check">
+                <input type="checkbox" name="novidades" />
+                <span>Quero receber novidades e condições para volume por e-mail.</span>
+              </label>
+
+              <button class="btn btn--primary btn--block panel__next" type="submit">Continuar para entrega</button>
+            </form>
+          </section>
+
+          <!-- 02 · Entrega -->
+          <section class="panel" data-panel="entrega" aria-label="Entrega" hidden>
+            <form class="panel__form" data-form-entrega novalidate>
+              <div class="ck__address" data-address>
+              <div class="field-row field-row--cep">
+                <label class="field">
+                  <input
+                    class="field__input"
+                    type="text"
+                    name="cep"
+                    placeholder=" "
+                    inputmode="numeric"
+                    maxlength="9"
+                    autocomplete="postal-code"
+                    required
+                  />
+                  <span class="field__label">CEP</span>
+                  <span class="field__error">Informe um CEP com 8 dígitos.</span>
+                </label>
+                <p class="ck__cep-note text-muted">
+                  Preenchemos o endereço automaticamente sempre que possível.
+                </p>
+              </div>
+
+              <label class="field">
+                <input class="field__input" type="text" name="logradouro" placeholder=" " autocomplete="address-line1" required />
+                <span class="field__label">Endereço</span>
+                <span class="field__error">Informe o endereço.</span>
+              </label>
+
+              <div class="field-row field-row--2">
+                <label class="field">
+                  <input class="field__input" type="text" name="numero" placeholder=" " required />
+                  <span class="field__label">Número</span>
+                  <span class="field__error">Informe o número.</span>
+                </label>
+                <label class="field">
+                  <input class="field__input" type="text" name="complemento" placeholder=" " />
+                  <span class="field__label">Complemento (opcional)</span>
+                </label>
+              </div>
+
+              <div class="field-row field-row--3">
+                <label class="field">
+                  <input class="field__input" type="text" name="bairro" placeholder=" " required />
+                  <span class="field__label">Bairro</span>
+                  <span class="field__error">Informe o bairro.</span>
+                </label>
+                <label class="field">
+                  <input class="field__input" type="text" name="cidade" placeholder=" " required />
+                  <span class="field__label">Cidade</span>
+                  <span class="field__error">Informe a cidade.</span>
+                </label>
+                <label class="field">
+                  <select class="field__select" name="uf" required>
+                    <option value="" selected disabled></option>
+                    {estados.map((uf) => <option value={uf}>{uf}</option>)}
+                  </select>
+                  <span class="field__label">UF</span>
+                  <span class="field__error">Selecione o estado.</span>
+                </label>
+              </div>
+              </div>
+
+              <fieldset class="panel__fieldset">
+                <legend class="ui panel__legend">Modo de entrega</legend>
+
+                <label class="option">
+                  <input type="radio" name="frete" value="padrao" checked />
+                  <span class="option__body">
+                    <span class="option__title">
+                      <span>Entrega padrão</span>
+                      <span data-frete-padrao>—</span>
+                    </span>
+                    <span class="option__desc">4 a 7 dias úteis · frete grátis acima de {formatPrice(shop.freteGratisAcima)}</span>
+                  </span>
+                </label>
+
+                <label class="option">
+                  <input type="radio" name="frete" value="expresso" />
+                  <span class="option__body">
+                    <span class="option__title">
+                      <span>Entrega expressa</span>
+                      <span>{formatPrice(shop.freteExpresso)}</span>
+                    </span>
+                    <span class="option__desc">1 a 2 dias úteis para capitais</span>
+                  </span>
+                </label>
+
+                <label class="option">
+                  <input type="radio" name="frete" value="retirada" />
+                  <span class="option__body">
+                    <span class="option__title">
+                      <span>Retirar no centro de distribuição</span>
+                      <span>Grátis</span>
+                    </span>
+                    <span class="option__desc">Pronto em 24 h · Guarulhos/SP, dias úteis das 9h às 17h</span>
+                  </span>
+                </label>
+              </fieldset>
+
+              <div class="panel__nav">
+                <button class="btn btn--ghost" type="button" data-back="identificacao">Voltar</button>
+                <button class="btn btn--primary panel__next" type="submit">Continuar para pagamento</button>
+              </div>
+            </form>
+          </section>
+
+          <!-- 03 · Pagamento -->
+          <section class="panel" data-panel="pagamento" aria-label="Pagamento" hidden>
+            <form class="panel__form" data-form-pagamento novalidate>
+              <fieldset class="panel__fieldset">
+                <legend class="ui panel__legend">Forma de pagamento</legend>
+
+                <label class="option">
+                  <input type="radio" name="pagamento" value="pix" checked />
+                  <span class="option__body">
+                    <span class="option__title"><span>Pix</span><span>5% de desconto</span></span>
+                    <span class="option__desc">O código é gerado ao confirmar o pedido</span>
+                  </span>
+                </label>
+
+                <label class="option">
+                  <input type="radio" name="pagamento" value="cartao" />
+                  <span class="option__body">
+                    <span class="option__title"><span>Cartão de crédito</span><span>Até {shop.parcelas}×</span></span>
+                    <span class="option__desc">Visa, Mastercard, Elo e Amex</span>
+                  </span>
+                </label>
+
+                <label class="option">
+                  <input type="radio" name="pagamento" value="boleto" />
+                  <span class="option__body">
+                    <span class="option__title"><span>Boleto bancário</span><span>À vista</span></span>
+                    <span class="option__desc">Compensação em até 3 dias úteis</span>
+                  </span>
+                </label>
+
+                <label class="option">
+                  <input type="radio" name="pagamento" value="faturado" />
+                  <span class="option__body">
+                    <span class="option__title"><span>Faturado (empresas)</span><span>30 dias</span></span>
+                    <span class="option__desc">Sujeito à análise de crédito · exige CNPJ</span>
+                  </span>
+                </label>
+              </fieldset>
+
+              <!-- Dados do cartão -->
+              <div class="card-fields" data-card-fields hidden>
+                <label class="field">
+                  <input
+                    class="field__input"
+                    type="text"
+                    name="cartaoNumero"
+                    placeholder=" "
+                    inputmode="numeric"
+                    maxlength="19"
+                    autocomplete="cc-number"
+                  />
+                  <span class="field__label">Número do cartão</span>
+                  <span class="field__error">Informe os 16 dígitos do cartão.</span>
+                </label>
+
+                <label class="field">
+                  <input class="field__input" type="text" name="cartaoNome" placeholder=" " autocomplete="cc-name" />
+                  <span class="field__label">Nome impresso no cartão</span>
+                  <span class="field__error">Informe o nome como está no cartão.</span>
+                </label>
+
+                <div class="field-row field-row--3">
+                  <label class="field">
+                    <input
+                      class="field__input"
+                      type="text"
+                      name="cartaoValidade"
+                      placeholder=" "
+                      inputmode="numeric"
+                      maxlength="5"
+                      autocomplete="cc-exp"
+                    />
+                    <span class="field__label">Validade (MM/AA)</span>
+                    <span class="field__error">Data inválida.</span>
+                  </label>
+
+                  <label class="field">
+                    <input
+                      class="field__input"
+                      type="text"
+                      name="cartaoCvv"
+                      placeholder=" "
+                      inputmode="numeric"
+                      maxlength="4"
+                      autocomplete="cc-csc"
+                    />
+                    <span class="field__label">CVV</span>
+                    <span class="field__error">Código inválido.</span>
+                  </label>
+
+                  <label class="field">
+                    <select class="field__select" name="parcelas" data-parcelas></select>
+                    <span class="field__label">Parcelas</span>
+                  </label>
+                </div>
+              </div>
+
+              <p class="ck__secure text-muted">
+                Ambiente de demonstração: nenhum dado de pagamento é transmitido ou armazenado em
+                servidor. Tudo permanece no seu navegador.
+              </p>
+
+              <div class="panel__nav">
+                <button class="btn btn--ghost" type="button" data-back="entrega">Voltar</button>
+                <button class="btn btn--primary panel__next" type="submit">Revisar pedido</button>
+              </div>
+            </form>
+          </section>
+
+          <!-- 04 · Revisão -->
+          <section class="panel" data-panel="revisao" aria-label="Revisão do pedido" hidden>
+            <div class="review" data-review></div>
+
+            <label class="check panel__check">
+              <input type="checkbox" data-termos />
+              <span>
+                Li e aceito os <a class="link-underline" href="/termos">Termos de Uso</a> e a
+                <a class="link-underline" href="/privacidade">Política de Privacidade</a>.
+              </span>
+            </label>
+            <p class="ck__erro" data-termos-erro hidden>É preciso aceitar os termos para concluir.</p>
+
+            <div class="panel__nav">
+              <button class="btn btn--ghost" type="button" data-back="pagamento">Voltar</button>
+              <button class="btn btn--primary" type="button" data-confirmar>Concluir pedido</button>
+            </div>
+          </section>
+        </div>
+
+        <!-- Resumo -->
+        <aside class="ck__aside" aria-label="Resumo do pedido">
+          <div class="ck__box">
+            <h2 class="ui ck__box-title">Seu pedido</h2>
+            <div class="ck__items" data-ck-items></div>
+
+            <div class="summary__row">
+              <span>Subtotal</span>
+              <strong data-ck-subtotal>—</strong>
+            </div>
+            <div class="summary__row" data-ck-discount-row hidden>
+              <span>Desconto</span>
+              <strong data-ck-discount>—</strong>
+            </div>
+            <div class="summary__row">
+              <span>Frete</span>
+              <strong data-ck-shipping>—</strong>
+            </div>
+            <div class="summary__total">
+              <span>Total</span>
+              <span data-ck-total>—</span>
+            </div>
+            <p class="ck__installment text-muted" data-ck-installment></p>
+          </div>
+        </aside>
+      </div>
+
+      <!-- Sem itens -->
+      <div class="empty" data-ck-empty hidden>
+        <h2 class="h-md">Não há nada para finalizar</h2>
+        <p class="text-muted" style="max-width: 40ch;">
+          Sua cesta está vazia. Escolha suas embalagens e volte para concluir o pedido.
+        </p>
+        <a class="btn btn--primary" href="/embalagens">Ver catálogo</a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<script>
+  import {
+    cartItems,
+    formatPrice,
+    getShipping,
+    getUser,
+    parcelar,
+    placeOrder,
+    saveShipping,
+    saveUser,
+    shop,
+    totals,
+  } from '../scripts/store';
+
+  type Metodo = 'padrao' | 'expresso' | 'retirada';
+
+  const layout = document.querySelector<HTMLElement>('[data-ck-layout]');
+  const vazio = document.querySelector<HTMLElement>('[data-ck-empty]');
+  const passos = Array.from(document.querySelectorAll<HTMLElement>('[data-step-nav]'));
+  const paineis = Array.from(document.querySelectorAll<HTMLElement>('[data-panel]'));
+
+  const dados: Record<string, string> = {};
+  let metodoFrete: Metodo = 'padrao';
+  let metodoPagamento = 'pix';
+
+  /* ---------- navegação entre etapas ---------- */
+  function irPara(id: string) {
+    paineis.forEach((painel) => {
+      const ativo = painel.dataset.panel === id;
+      painel.hidden = !ativo;
+      painel.classList.toggle('is-current', ativo);
+    });
+
+    const indice = passos.findIndex((p) => p.dataset.stepNav === id);
+    passos.forEach((passo, i) => {
+      passo.classList.toggle('is-active', i === indice);
+      passo.classList.toggle('is-done', i < indice);
+    });
+
+    if (id === 'revisao') montarRevisao();
+
+    const topo = document.querySelector<HTMLElement>('.ck__head');
+    topo?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  /* ---------- validação ---------- */
+  const soDigitos = (valor: string) => valor.replace(/\D/g, '');
+
+  function marcar(campo: HTMLInputElement | HTMLSelectElement, valido: boolean) {
+    campo.closest('.field')?.classList.toggle('is-invalid', !valido);
+    return valido;
+  }
+
+  function validarCampo(campo: HTMLInputElement | HTMLSelectElement): boolean {
+    const nome = campo.name;
+    const valor = campo.value.trim();
+
+    if (!campo.hasAttribute('required') && valor === '') return marcar(campo, true);
+
+    switch (nome) {
+      case 'nome':
+        return marcar(campo, valor.length >= 3 && valor.includes(' '));
+      case 'email':
+        return marcar(campo, /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(valor));
+      case 'telefone':
+        return marcar(campo, soDigitos(valor).length >= 10);
+      case 'documento': {
+        const digitos = soDigitos(valor).length;
+        return marcar(campo, digitos === 11 || digitos === 14);
+      }
+      case 'cep':
+        return marcar(campo, soDigitos(valor).length === 8);
+      case 'cartaoNumero':
+        return marcar(campo, soDigitos(valor).length >= 15);
+      case 'cartaoValidade': {
+        const partes = valor.split('/');
+        const mes = Number(partes[0]);
+        return marcar(campo, partes.length === 2 && mes >= 1 && mes <= 12 && partes[1].length === 2);
+      }
+      case 'cartaoCvv':
+        return marcar(campo, soDigitos(valor).length >= 3);
+      default:
+        return marcar(campo, valor.length > 0);
+    }
+  }
+
+  function validarForm(form: HTMLFormElement): boolean {
+    const campos = Array.from(
+      form.querySelectorAll<HTMLInputElement | HTMLSelectElement>('input[required], select[required]'),
+    ).filter((campo) => !campo.closest('[hidden]'));
+
+    let ok = true;
+    for (const campo of campos) {
+      if (!validarCampo(campo)) {
+        if (ok) campo.focus();
+        ok = false;
+      }
+    }
+    return ok;
+  }
+
+  function guardar(form: HTMLFormElement) {
+    new FormData(form).forEach((valor, chave) => {
+      dados[chave] = String(valor);
+    });
+  }
+
+  /* ---------- máscaras ---------- */
+  function mascarar(seletor: string, fn: (valor: string) => string) {
+    const campo = document.querySelector<HTMLInputElement>(seletor);
+    campo?.addEventListener('input', () => {
+      const posicaoFinal = campo.selectionStart === campo.value.length;
+      campo.value = fn(campo.value);
+      if (posicaoFinal) campo.setSelectionRange(campo.value.length, campo.value.length);
+    });
+  }
+
+  mascarar('input[name="cep"]', (v) => {
+    const d = soDigitos(v).slice(0, 8);
+    return d.length > 5 ? `${d.slice(0, 5)}-${d.slice(5)}` : d;
+  });
+
+  mascarar('input[name="telefone"]', (v) => {
+    const d = soDigitos(v).slice(0, 11);
+    if (d.length <= 2) return d;
+    if (d.length <= 6) return `(${d.slice(0, 2)}) ${d.slice(2)}`;
+    if (d.length <= 10) return `(${d.slice(0, 2)}) ${d.slice(2, 6)}-${d.slice(6)}`;
+    return `(${d.slice(0, 2)}) ${d.slice(2, 7)}-${d.slice(7)}`;
+  });
+
+  mascarar('input[name="documento"]', (v) => {
+    const d = soDigitos(v).slice(0, 14);
+    if (d.length <= 11) {
+      return d
+        .replace(/(\d{3})(\d)/, '$1.$2')
+        .replace(/(\d{3})\.(\d{3})(\d)/, '$1.$2.$3')
+        .replace(/(\d{3})\.(\d{3})\.(\d{3})(\d)/, '$1.$2.$3-$4');
+    }
+    return d
+      .replace(/(\d{2})(\d)/, '$1.$2')
+      .replace(/(\d{2})\.(\d{3})(\d)/, '$1.$2.$3')
+      .replace(/(\d{2})\.(\d{3})\.(\d{3})(\d)/, '$1.$2.$3/$4')
+      .replace(/(\d{4})(\d{1,2})$/, '$1-$2');
+  });
+
+  mascarar('input[name="cartaoNumero"]', (v) =>
+    soDigitos(v).slice(0, 16).replace(/(\d{4})(?=\d)/g, '$1 '),
+  );
+
+  mascarar('input[name="cartaoValidade"]', (v) => {
+    const d = soDigitos(v).slice(0, 4);
+    return d.length > 2 ? `${d.slice(0, 2)}/${d.slice(2)}` : d;
+  });
+
+  mascarar('input[name="cartaoCvv"]', (v) => soDigitos(v).slice(0, 4));
+
+  // Consulta de CEP — best-effort; a falha nunca bloqueia o pedido.
+  const campoCep = document.querySelector<HTMLInputElement>('input[name="cep"]');
+  campoCep?.addEventListener('blur', async () => {
+    const cep = soDigitos(campoCep.value);
+    if (cep.length !== 8) return;
+
+    try {
+      const resposta = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
+      const json = await resposta.json();
+      if (json.erro) return;
+
+      const preencher = (nome: string, valor: string) => {
+        const campo = document.querySelector<HTMLInputElement | HTMLSelectElement>(`[name="${nome}"]`);
+        if (campo && valor && !campo.value) campo.value = valor;
+      };
+      preencher('logradouro', json.logradouro);
+      preencher('bairro', json.bairro);
+      preencher('cidade', json.localidade);
+      preencher('uf', json.uf);
+      document.querySelector<HTMLInputElement>('input[name="numero"]')?.focus();
+    } catch {
+      /* offline ou serviço fora do ar — o cliente digita à mão */
+    }
+  });
+
+  /* ---------- resumo lateral ---------- */
+  function renderResumo() {
+    const itens = cartItems();
+    const t = totals(metodoFrete);
+
+    const lista = document.querySelector<HTMLElement>('[data-ck-items]');
+    if (lista) {
+      lista.innerHTML = itens
+        .map(
+          (item) => `
+        <div class="ckitem">
+          <span class="ckitem__media"><img src="${item.imagem}" alt="" loading="lazy" /><span class="ckitem__qty">${item.qty}</span></span>
+          <span class="ckitem__body">
+            <span class="ckitem__name">${item.nome}</span>
+            <span class="ckitem__meta">${item.variante}</span>
+          </span>
+          <span class="ckitem__price">${formatPrice(item.total)}</span>
+        </div>`,
+        )
+        .join('');
+    }
+
+    const texto = (seletor: string, valor: string) => {
+      const el = document.querySelector<HTMLElement>(seletor);
+      if (el) el.textContent = valor;
+    };
+
+    texto('[data-ck-subtotal]', formatPrice(t.subtotal));
+    texto('[data-ck-shipping]', t.frete === 0 ? 'Grátis' : formatPrice(t.frete));
+    texto('[data-ck-total]', formatPrice(t.total));
+    texto('[data-ck-installment]', parcelar(t.total));
+    texto('[data-frete-padrao]', t.freteGratis ? 'Grátis' : formatPrice(shop.freteFixo));
+
+    const linha = document.querySelector<HTMLElement>('[data-ck-discount-row]');
+    if (linha) {
+      linha.hidden = t.desconto === 0;
+      texto('[data-ck-discount]', `− ${formatPrice(t.desconto)}`);
+    }
+
+    // Parcelas do cartão acompanham o total
+    const select = document.querySelector<HTMLSelectElement>('[data-parcelas]');
+    if (select) {
+      const escolhida = select.value;
+      select.innerHTML = Array.from({ length: shop.parcelas }, (_, i) => {
+        const n = i + 1;
+        return `<option value="${n}">${n}× de ${formatPrice(t.total / n)} sem juros</option>`;
+      }).join('');
+      if (escolhida) select.value = escolhida;
+    }
+  }
+
+  /* ---------- revisão ---------- */
+  const rotulosFrete: Record<Metodo, string> = {
+    padrao: 'Entrega padrão · 4 a 7 dias úteis',
+    expresso: 'Entrega expressa · 1 a 2 dias úteis',
+    retirada: 'Retirada no CD · pronto em 24 h',
+  };
+
+  const rotulosPagamento: Record<string, string> = {
+    pix: 'Pix',
+    cartao: 'Cartão de crédito',
+    boleto: 'Boleto bancário',
+    faturado: 'Faturado em 30 dias',
+  };
+
+  function montarRevisao() {
+    const alvo = document.querySelector<HTMLElement>('[data-review]');
+    if (!alvo) return;
+
+    const t = totals(metodoFrete);
+    const cartao = dados.cartaoNumero ? `•••• ${soDigitos(dados.cartaoNumero).slice(-4)}` : '';
+    const endereco = [
+      `${dados.logradouro ?? ''}, ${dados.numero ?? ''}`,
+      dados.complemento,
+      `${dados.bairro ?? ''} — ${dados.cidade ?? ''}/${dados.uf ?? ''}`,
+      `CEP ${dados.cep ?? ''}`,
+    ]
+      .filter(Boolean)
+      .join('<br />');
+
+    alvo.innerHTML = `
+      <div class="rbox">
+        <div class="rbox__head">
+          <h2 class="ui">Contato</h2>
+          <button class="rbox__edit" type="button" data-back="identificacao">Editar</button>
+        </div>
+        <p>${dados.nome ?? ''}<br />${dados.email ?? ''}<br />${dados.telefone ?? ''}<br />${dados.documento ?? ''}</p>
+      </div>
+
+      <div class="rbox">
+        <div class="rbox__head">
+          <h2 class="ui">Entrega</h2>
+          <button class="rbox__edit" type="button" data-back="entrega">Editar</button>
+        </div>
+        <p>${metodoFrete === 'retirada' ? 'Retirada no centro de distribuição<br />Guarulhos/SP' : endereco}</p>
+        <p class="rbox__extra">${rotulosFrete[metodoFrete]} · ${t.frete === 0 ? 'Grátis' : formatPrice(t.frete)}</p>
+      </div>
+
+      <div class="rbox">
+        <div class="rbox__head">
+          <h2 class="ui">Pagamento</h2>
+          <button class="rbox__edit" type="button" data-back="pagamento">Editar</button>
+        </div>
+        <p>${rotulosPagamento[metodoPagamento]}${cartao ? `<br />${cartao}` : ''}</p>
+        ${
+          metodoPagamento === 'cartao' && dados.parcelas
+            ? `<p class="rbox__extra">${dados.parcelas}× de ${formatPrice(t.total / Number(dados.parcelas))} sem juros</p>`
+            : ''
+        }
+      </div>`;
+  }
+
+  /* ---------- formulários ---------- */
+  const formId = document.querySelector<HTMLFormElement>('[data-form-identificacao]');
+  formId?.addEventListener('submit', (event) => {
+    event.preventDefault();
+    if (!validarForm(formId)) return;
+    guardar(formId);
+    saveUser({ nome: dados.nome, email: dados.email });
+    irPara('entrega');
+  });
+
+  const formEntrega = document.querySelector<HTMLFormElement>('[data-form-entrega]');
+  formEntrega?.addEventListener('submit', (event) => {
+    event.preventDefault();
+    // Na retirada o bloco de endereço está oculto — validarForm o ignora.
+    if (!validarForm(formEntrega)) return;
+
+    guardar(formEntrega);
+    saveShipping(dados);
+    irPara('pagamento');
+  });
+
+  const blocoEndereco = document.querySelector<HTMLElement>('[data-address]');
+  formEntrega?.addEventListener('change', (event) => {
+    const alvo = event.target as HTMLInputElement;
+    if (alvo.name !== 'frete') return;
+    metodoFrete = alvo.value as Metodo;
+    if (blocoEndereco) blocoEndereco.hidden = metodoFrete === 'retirada';
+    renderResumo();
+  });
+
+  const formPagamento = document.querySelector<HTMLFormElement>('[data-form-pagamento]');
+  const camposCartao = document.querySelector<HTMLElement>('[data-card-fields]');
+
+  formPagamento?.addEventListener('change', (event) => {
+    const alvo = event.target as HTMLInputElement;
+    if (alvo.name !== 'pagamento') return;
+    metodoPagamento = alvo.value;
+
+    if (camposCartao) {
+      camposCartao.hidden = metodoPagamento !== 'cartao';
+      camposCartao
+        .querySelectorAll<HTMLInputElement>('input[name^="cartao"]')
+        .forEach((campo) => campo.toggleAttribute('required', metodoPagamento === 'cartao'));
+    }
+  });
+
+  formPagamento?.addEventListener('submit', (event) => {
+    event.preventDefault();
+    if (!validarForm(formPagamento)) return;
+    guardar(formPagamento);
+    irPara('revisao');
+  });
+
+  // Revalida enquanto a pessoa digita, depois que o campo já errou uma vez.
+  // Corrigir no `input` (e não no `blur`) evita que a mensagem de erro suma
+  // no meio do clique — o layout subiria e o botão fugiria do dedo.
+  ['input', 'change'].forEach((evento) => {
+    document.addEventListener(evento, (event) => {
+      const campo = event.target as HTMLInputElement | HTMLSelectElement;
+      if (!campo.closest?.('.field.is-invalid')) return;
+      validarCampo(campo);
+    });
+  });
+
+  /* ---------- voltar ---------- */
+  document.addEventListener('click', (event) => {
+    const btn = (event.target as HTMLElement).closest<HTMLElement>('[data-back]');
+    if (btn) irPara(btn.dataset.back ?? 'identificacao');
+  });
+
+  /* ---------- concluir ---------- */
+  document.querySelector('[data-confirmar]')?.addEventListener('click', () => {
+    const termos = document.querySelector<HTMLInputElement>('[data-termos]');
+    const erro = document.querySelector<HTMLElement>('[data-termos-erro]');
+    if (!termos?.checked) {
+      if (erro) erro.hidden = false;
+      return;
+    }
+    if (erro) erro.hidden = true;
+
+    const pedido = placeOrder({
+      totais: totals(metodoFrete),
+      entrega: {
+        nome: dados.nome ?? '',
+        email: dados.email ?? '',
+        endereco: {
+          cep: dados.cep ?? '',
+          logradouro: dados.logradouro ?? '',
+          numero: dados.numero ?? '',
+          complemento: dados.complemento ?? '',
+          bairro: dados.bairro ?? '',
+          cidade: dados.cidade ?? '',
+          uf: dados.uf ?? '',
+        },
+        metodo: rotulosFrete[metodoFrete],
+        prazo: metodoFrete === 'expresso' ? '1 a 2 dias úteis' : metodoFrete === 'retirada' ? '24 horas' : '4 a 7 dias úteis',
+      },
+      pagamento: rotulosPagamento[metodoPagamento],
+    });
+
+    window.location.href = `/pedido?n=${encodeURIComponent(pedido.numero)}`;
+  });
+
+  /* ---------- início ---------- */
+  const temItens = cartItems().length > 0;
+  if (layout) layout.hidden = !temItens;
+  if (vazio) vazio.hidden = temItens;
+
+  if (temItens) {
+    // Recupera o que o cliente já preencheu em visitas anteriores
+    const salvo = { ...getShipping() };
+    const usuario = getUser();
+    if (usuario) {
+      salvo.nome = salvo.nome || usuario.nome;
+      salvo.email = salvo.email || usuario.email;
+    }
+    Object.entries(salvo).forEach(([chave, valor]) => {
+      const campo = document.querySelector<HTMLInputElement>(`[name="${chave}"]`);
+      if (campo && valor && !campo.value) campo.value = String(valor);
+    });
+
+    renderResumo();
+  }
+</script>
+
+<style>
+  .ck__head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    margin-bottom: 2rem;
+    scroll-margin-top: calc(var(--header-h) + 1rem);
+  }
+
+  /* Passos */
+  .steps {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.75rem;
+    list-style: none;
+    margin: 0 0 2.5rem;
+    padding: 0 0 1rem;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .step {
+    display: flex;
+    align-items: baseline;
+    gap: 0.55rem;
+    font-size: 0.6875rem;
+    letter-spacing: var(--track);
+    text-transform: uppercase;
+    color: var(--muted-dark);
+  }
+
+  .step__num {
+    font-weight: 600;
+  }
+
+  .step.is-active {
+    color: var(--bone);
+  }
+
+  .step.is-done {
+    color: var(--forest);
+  }
+
+  .step.is-done .step__num::after {
+    content: ' ✓';
+  }
+
+  .ck__layout {
+    display: grid;
+    gap: 3rem;
+    align-items: start;
+  }
+
+  .ck__layout[hidden] {
+    display: none;
+  }
+
+  /* Painéis */
+  .panel[hidden] {
+    display: none;
+  }
+
+  .panel__form {
+    display: grid;
+    gap: 1rem;
+  }
+
+  .panel__fieldset {
+    border: 0;
+    padding: 0;
+    margin: 0.8rem 0 0;
+  }
+
+  .panel__legend {
+    padding: 0;
+    margin-bottom: 0.9rem;
+  }
+
+  .panel__check {
+    margin-top: 0.4rem;
+  }
+
+  .panel__next {
+    margin-top: 1rem;
+  }
+
+  .panel__nav {
+    display: flex;
+    gap: 0.8rem;
+    margin-top: 1.6rem;
+  }
+
+  .panel__nav .btn--primary {
+    flex: 1;
+  }
+
+  /* Na retirada, o bloco inteiro de endereço sai de cena */
+  .ck__address {
+    display: grid;
+    gap: 1rem;
+  }
+
+  .ck__address[hidden] {
+    display: none;
+  }
+
+  .ck__cep-note {
+    font-size: var(--step--1);
+    align-self: center;
+  }
+
+  .ck__secure {
+    font-size: 0.6875rem;
+    line-height: 1.6;
+    margin-top: 0.8rem;
+  }
+
+  .ck__erro {
+    margin-top: 0.5rem;
+    font-size: var(--step--1);
+    color: var(--color-error);
+  }
+
+  .card-fields {
+    display: grid;
+    gap: 1rem;
+    margin-top: 1.2rem;
+    padding-top: 1.2rem;
+    border-top: 1px solid var(--line);
+  }
+
+  .card-fields[hidden] {
+    display: none;
+  }
+
+  /* Revisão */
+  .ck :global(.rbox) {
+    border: 1px solid var(--line);
+    padding: 1.25rem;
+    margin-bottom: 1rem;
+  }
+
+  .ck :global(.rbox__head) {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 0.7rem;
+  }
+
+  .ck :global(.rbox__edit) {
+    border: 0;
+    background: transparent;
+    padding: 0;
+    font-size: 0.625rem;
+    letter-spacing: var(--track);
+    text-transform: uppercase;
+    color: var(--muted);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .ck :global(.rbox__edit:hover) {
+    color: var(--bone);
+  }
+
+  .ck :global(.rbox p) {
+    font-size: var(--step--1);
+    line-height: 1.7;
+    color: var(--muted);
+  }
+
+  .ck :global(.rbox__extra) {
+    margin-top: 0.5rem;
+    color: var(--bone) !important;
+  }
+
+  /* Resumo lateral */
+  .ck__box {
+    border: 1px solid var(--line);
+    background: var(--ink-2);
+    padding: clamp(1.4rem, 3vw, 1.9rem);
+  }
+
+  .ck__box-title {
+    margin-bottom: 1.2rem;
+  }
+
+  .ck__items {
+    display: grid;
+    gap: 1rem;
+    margin-bottom: 1.4rem;
+    padding-bottom: 1.2rem;
+    border-bottom: 1px solid var(--line);
+    max-height: 320px;
+    overflow-y: auto;
+  }
+
+  .ck :global(.ckitem) {
+    display: grid;
+    grid-template-columns: 56px 1fr auto;
+    gap: 0.9rem;
+    align-items: center;
+  }
+
+  .ck :global(.ckitem__media) {
+    position: relative;
+    display: block;
+    aspect-ratio: 4 / 5;
+    background: var(--cream);
+    overflow: hidden;
+  }
+
+  .ck :global(.ckitem__media img) {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    padding: 8%;
+    mix-blend-mode: multiply;
+  }
+
+  .ck :global(.ckitem__qty) {
+    position: absolute;
+    top: -6px;
+    right: -6px;
+    min-width: 18px;
+    height: 18px;
+    display: grid;
+    place-items: center;
+    border-radius: 999px;
+    background: var(--forest);
+    color: var(--cream);
+    font-size: 0.5625rem;
+    font-weight: 700;
+  }
+
+  .ck :global(.ckitem__name) {
+    display: block;
+    font-size: var(--step--1);
+    font-weight: 500;
+    line-height: 1.3;
+  }
+
+  .ck :global(.ckitem__meta) {
+    display: block;
+    font-size: 0.625rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .ck :global(.ckitem__price) {
+    font-size: var(--step--1);
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .ck__installment {
+    margin-top: 0.5rem;
+    font-size: 0.6875rem;
+    text-align: right;
+  }
+
+  @media (min-width: 1000px) {
+    .ck__layout {
+      grid-template-columns: 1fr 380px;
+      gap: 4rem;
+    }
+
+    .ck__aside {
+      position: sticky;
+      top: calc(var(--header-h) + 2rem);
+    }
+  }
+</style>

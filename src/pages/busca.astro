@@ -1,0 +1,339 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { collections } from '../data/catalog';
+
+const sugestoes = ['Marmita', 'Copo', 'Talheres', 'Sacola', 'Canudo', 'Guardanapo', 'Bandeja', 'Pote'];
+---
+
+<BaseLayout
+  active="busca"
+  title="Busca — Cibele Plastic"
+  description="Encontre embalagens em bioplástico por nome, formato ou aplicação."
+>
+  <section class="sp page-top section-sm">
+    <div class="container-wide">
+      <nav aria-label="Trilha de navegação">
+        <ol class="crumbs">
+          <li><a href="/">Início</a></li>
+          <li><span aria-current="page">Busca</span></li>
+        </ol>
+      </nav>
+
+      <form class="sp__form" role="search" action="/busca" method="get">
+        <label class="visually-hidden" for="q">Buscar produtos</label>
+        <svg class="sp__icon" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true">
+          <circle cx="11" cy="11" r="6.5" fill="none" stroke="currentColor" stroke-width="1.4"></circle>
+          <path d="m16 16 4.5 4.5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"></path>
+        </svg>
+        <input
+          class="sp__input"
+          id="q"
+          type="search"
+          name="q"
+          placeholder="O que você procura?"
+          autocomplete="off"
+          data-page-search
+        />
+      </form>
+
+      <p class="sp__status ui-sm text-muted" data-page-status>Digite para buscar no catálogo</p>
+
+      <div class="pgrid" data-cols="4" data-page-results></div>
+
+      <div class="sp__hints" data-page-hints>
+        <div>
+          <p class="ui-sm text-muted">Sugestões de busca</p>
+          <ul class="sp__chips">
+            {
+              sugestoes.map((termo) => (
+                <li>
+                  <button type="button" data-page-suggest={termo}>
+                    {termo}
+                  </button>
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+
+        <div>
+          <p class="ui-sm text-muted">Ou navegue por coleção</p>
+          <ul class="sp__cols">
+            {
+              collections.map((col) => (
+                <li>
+                  <a href={col.path}>
+                    <span class="sp__col-media">
+                      <img src={col.capa} alt="" loading="lazy" decoding="async" width="300" height="375" />
+                    </span>
+                    <span class="sp__col-title">{col.titulo}</span>
+                  </a>
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<script>
+  import { formatPrice } from '../scripts/store';
+
+  interface Entrada {
+    slug: string;
+    nome: string;
+    colecaoLabel: string;
+    preco: number;
+    imagem: string;
+    termos: string;
+  }
+
+  const input = document.querySelector<HTMLInputElement>('[data-page-search]');
+  const saida = document.querySelector<HTMLElement>('[data-page-results]');
+  const status = document.querySelector<HTMLElement>('[data-page-status]');
+  const dicas = document.querySelector<HTMLElement>('[data-page-hints]');
+
+  // O índice já vem embutido pela camada de busca do site
+  let indice: Entrada[] = [];
+  try {
+    indice = JSON.parse(document.getElementById('search-index')?.textContent ?? '[]');
+  } catch {
+    indice = [];
+  }
+
+  function buscar(termo: string, atualizarURL = true) {
+    if (!saida || !status) return;
+
+    const q = termo.trim();
+    if (q.length < 2) {
+      saida.innerHTML = '';
+      status.textContent = 'Digite para buscar no catálogo';
+      if (dicas) dicas.hidden = false;
+      return;
+    }
+
+    const palavras = q.toLowerCase().split(/\s+/);
+    const achados = indice.filter((item) => palavras.every((p) => item.termos.includes(p)));
+
+    status.textContent = achados.length
+      ? `${achados.length} ${achados.length === 1 ? 'resultado' : 'resultados'} para "${q}"`
+      : `Nada encontrado para "${q}" — tente outro termo ou navegue pelas coleções`;
+
+    if (dicas) dicas.hidden = achados.length > 0;
+
+    saida.innerHTML = achados
+      .map(
+        (item) => `
+        <a class="sres" href="/produto/${item.slug}">
+          <span class="sres__media"><img src="${item.imagem}" alt="${item.nome}" loading="lazy" decoding="async" /></span>
+          <span class="sres__name">${item.nome}</span>
+          <span class="sres__meta">${item.colecaoLabel}</span>
+          <span class="sres__price">${formatPrice(item.preco)}</span>
+        </a>`,
+      )
+      .join('');
+
+    if (atualizarURL) {
+      const url = new URL(window.location.href);
+      url.searchParams.set('q', q);
+      window.history.replaceState({}, '', url);
+    }
+  }
+
+  let debounce = 0;
+  input?.addEventListener('input', () => {
+    window.clearTimeout(debounce);
+    debounce = window.setTimeout(() => buscar(input.value), 140);
+  });
+
+  document.addEventListener('click', (event) => {
+    const btn = (event.target as HTMLElement).closest<HTMLElement>('[data-page-suggest]');
+    if (!btn || !input) return;
+    input.value = btn.dataset.pageSuggest ?? '';
+    buscar(input.value);
+    input.focus();
+  });
+
+  // Termo vindo da URL (busca do cabeçalho e links externos)
+  const inicial = new URLSearchParams(window.location.search).get('q');
+  if (inicial && input) {
+    input.value = inicial;
+    buscar(inicial, false);
+  }
+  input?.focus();
+</script>
+
+<style>
+  .sp__form {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin: clamp(1.25rem, 3vw, 2rem) 0 1.2rem;
+    border-bottom: 1px solid var(--bone);
+  }
+
+  .sp__icon {
+    color: var(--muted);
+    flex-shrink: 0;
+  }
+
+  .sp__input {
+    flex: 1;
+    min-width: 0;
+    border: 0;
+    background: transparent;
+    font-family: var(--font-display);
+    font-size: clamp(1.5rem, 5vw, 2.75rem);
+    font-weight: 300;
+    letter-spacing: -0.03em;
+    color: var(--bone);
+    padding: 0.7rem 0;
+  }
+
+  .sp__input:focus {
+    outline: none;
+  }
+
+  .sp__input::placeholder {
+    color: var(--muted-dark);
+  }
+
+  .sp__input::-webkit-search-cancel-button {
+    appearance: none;
+  }
+
+  .sp__status {
+    margin-bottom: 2.5rem;
+  }
+
+  /* Resultados */
+  .sp :global(.sres) {
+    display: block;
+  }
+
+  .sp :global(.sres__media) {
+    display: block;
+    aspect-ratio: 4 / 5;
+    background: var(--ink-2);
+    overflow: hidden;
+  }
+
+  .sp :global(.sres__media img) {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    padding: 12%;
+    mix-blend-mode: multiply;
+    transition: transform var(--duration-slow) var(--ease);
+  }
+
+  .sp :global(.sres:hover img) {
+    transform: scale(1.04);
+  }
+
+  .sp :global(.sres__name) {
+    display: block;
+    margin-top: 0.8rem;
+    font-size: var(--step--1);
+    font-weight: 500;
+  }
+
+  .sp :global(.sres__meta) {
+    display: block;
+    margin-top: 0.15rem;
+    font-size: 0.6875rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .sp :global(.sres__price) {
+    display: block;
+    margin-top: 0.3rem;
+    font-size: var(--step--1);
+    font-weight: 600;
+  }
+
+  /* Dicas */
+  .sp__hints {
+    display: grid;
+    gap: 3rem;
+    padding-top: 1rem;
+  }
+
+  .sp__hints[hidden] {
+    display: none;
+  }
+
+  .sp__chips {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin: 1rem 0 0;
+    padding: 0;
+  }
+
+  .sp__chips button {
+    padding: 0.55rem 1rem;
+    border: 1px solid var(--line-strong);
+    background: transparent;
+    font-size: 0.6875rem;
+    letter-spacing: var(--track);
+    text-transform: uppercase;
+    color: var(--bone);
+    transition: background-color var(--duration) var(--ease), color var(--duration) var(--ease),
+      border-color var(--duration) var(--ease);
+  }
+
+  .sp__chips button:hover {
+    background: var(--forest);
+    border-color: var(--forest);
+    color: var(--cream);
+  }
+
+  .sp__cols {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--gutter-col);
+    margin: 1rem 0 0;
+    padding: 0;
+  }
+
+  .sp__col-media {
+    display: block;
+    aspect-ratio: 4 / 5;
+    background: var(--ink-2);
+    overflow: hidden;
+  }
+
+  .sp__col-media img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    padding: 14%;
+    mix-blend-mode: multiply;
+    transition: transform var(--duration-slow) var(--ease);
+  }
+
+  .sp__cols a:hover img {
+    transform: scale(1.05);
+  }
+
+  .sp__col-title {
+    display: block;
+    margin-top: 0.7rem;
+    font-size: var(--step--1);
+    font-weight: 500;
+  }
+
+  @media (min-width: 860px) {
+    .sp__hints {
+      grid-template-columns: 1fr 1.4fr;
+      gap: 4rem;
+    }
+  }
+</style>

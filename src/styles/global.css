@@ -1,82 +1,90 @@
 /* ============================================================
    Cibele Plastic — Design System
-   Editorial, minimalist, high-end consulting aesthetic.
-   Single light theme — one deliberate palette, no variants.
+   Editorial de moda aplicado ao e-commerce: arestas retas,
+   caixa-alta espaçada, pesos leves e muito respiro.
+   Tema claro único — uma paleta deliberada, sem variantes.
    ============================================================ */
 
 :root {
-  /* Color — exact palette from the design system spec.
-     Primary green stays under ~20% of the interface; neutrals
-     (background/text/border) carry ~70%; accents stay under 10%. */
-  --forest: #123c32; /* Primary */
-  --secondary: #29584a; /* Secondary */
-  --analogous: #8fb8a8; /* Analogous — sage, used as muted text on dark surfaces */
-  --accent: #a65f46; /* Accent — terracotta, decorative/large text/borders */
-  --accent-ink: #8b4a35; /* Accent, darkened for AA-safe small text/links */
-  --accent-premium: #c8b38a; /* Premium accent — gold, used sparingly on dark surfaces */
+  /* Cor — paleta da casa. O verde primário fica abaixo de ~20%
+     da interface; os neutros carregam ~70%; acentos abaixo de 10%. */
+  --forest: #123c32; /* Primária */
+  --secondary: #29584a; /* Secundária */
+  --analogous: #8fb8a8; /* Análoga — sálvia, texto suave sobre escuro */
+  --accent: #a65f46; /* Acento — terracota, decorativo */
+  --accent-ink: #8b4a35; /* Acento escurecido — links e texto pequeno (AA) */
+  --accent-premium: #c8b38a; /* Acento premium — dourado, uso pontual no escuro */
 
-  --cream: #f7f6f2; /* Background */
-  --ink: var(--cream); /* page background */
-  --ink-2: #eceae4; /* Secondary background — card / surface fill */
-  --ink-3: color-mix(in srgb, var(--ink-2) 88%, var(--forest) 12%); /* hover surface */
-  --paper: var(--forest); /* contrast section (dark) */
-  --paper-2: #0f2e26; /* solid surface on contrast sections */
+  --cream: #f7f6f2; /* Fundo */
+  --ink: var(--cream);
+  --ink-2: #eceae4; /* Superfície secundária */
+  --ink-3: color-mix(in srgb, var(--ink-2) 88%, var(--forest) 12%);
+  --paper: var(--forest);
+  --paper-2: #0f2e26;
 
-  --bone: #181a19; /* Primary text */
-  --muted: #5c615f; /* Secondary text */
-  --muted-dark: color-mix(in srgb, var(--muted) 65%, var(--cream) 35%); /* tertiary / placeholder */
-  --muted-light: var(--analogous); /* secondary text on dark surfaces */
+  --bone: #181a19; /* Texto primário */
+  --muted: #5c615f; /* Texto secundário */
+  --muted-dark: color-mix(in srgb, var(--muted) 65%, var(--cream) 35%);
+  --muted-light: var(--analogous);
 
-  --line: #d9d7d0; /* Border — decorative hairlines */
-  --line-dark: rgba(143, 184, 168, 0.28); /* hairlines on dark surfaces */
-  --line-strong: color-mix(in srgb, var(--muted) 75%, var(--cream) 25%); /* functional borders (inputs, outline buttons) — meets 3:1 */
+  --line: #dddbd4; /* Fio decorativo */
+  --line-soft: #e6e4dd; /* Fio quase invisível — grades de vitrine */
+  --line-dark: rgba(143, 184, 168, 0.28);
+  --line-strong: color-mix(in srgb, var(--muted) 75%, var(--cream) 25%);
 
-  --accent-inverse: var(--accent-premium); /* accent text on dark surfaces */
+  --accent-inverse: var(--accent-premium);
+  --color-error: #b3261e;
+  --color-success: #2f6f4f;
 
   color-scheme: light;
 
-  /* Typography — Manrope for headings, Inter for body. Two families only. */
+  /* Tipografia — Manrope (títulos) e Inter (texto). Só duas famílias. */
   --font: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
   --font-display: 'Manrope', system-ui, -apple-system, 'Segoe UI', sans-serif;
 
-  /* Scale — capped at the spec values (Hero 72 / H1 56 / H2 42 / H3 32 / H4 24 / body 18-16-14) */
-  --step--1: 0.875rem; /* 14 — small text */
-  --step-0: 1rem; /* 16 — body */
-  --step-1: clamp(1.05rem, 1rem + 0.25vw, 1.125rem); /* 18 — lead */
-  --step-2: clamp(1.5rem, 1.3rem + 0.9vw, 2rem); /* 32 — H3 */
-  --step-3: clamp(1.9rem, 1.5rem + 1.8vw, 2.625rem); /* 42 — H2 */
-  --step-4: clamp(2.25rem, 1.8rem + 2.2vw, 3.5rem); /* 56 — H1 */
-  --step-5: clamp(2.75rem, 2rem + 3.5vw, 4.5rem); /* 72 — Hero */
-  --step-h4: clamp(1.25rem, 1.15rem + 0.4vw, 1.5rem); /* 24 — H4 */
+  --step--2: 0.75rem; /* 12 — rótulos de interface */
+  --step--1: 0.8125rem; /* 13 */
+  --step-0: 0.9375rem; /* 15 — corpo */
+  --step-1: clamp(1rem, 0.95rem + 0.25vw, 1.125rem); /* 18 — lead */
+  --step-2: clamp(1.4rem, 1.2rem + 0.9vw, 1.9rem);
+  --step-3: clamp(1.8rem, 1.4rem + 1.8vw, 2.5rem);
+  --step-4: clamp(2.1rem, 1.6rem + 2.4vw, 3.4rem);
+  --step-5: clamp(2.6rem, 1.8rem + 4vw, 5rem);
+  --step-h4: clamp(1.15rem, 1.05rem + 0.4vw, 1.4rem);
 
-  /* Layout — 1440px container, 12-column grid, editorial rhythm */
-  --container: 1440px;
-  --container-narrow: 860px;
-  --gutter: clamp(1.25rem, 4vw, 3rem);
-  --gutter-col: clamp(1rem, 2vw, 1.75rem);
+  /* Layout */
+  --container: 1560px;
+  --container-narrow: 820px;
+  --gutter: clamp(1.1rem, 3.5vw, 2.75rem);
+  --gutter-col: clamp(0.5rem, 1.2vw, 1rem);
 
-  --space-32: 2rem; /* heading → paragraph */
-  --space-96: clamp(3.5rem, 7vw, 6rem); /* between sections */
-  --space-128: clamp(4rem, 10vw, 8rem); /* between major sections */
+  --header-h: 74px;
 
-  --radius: 20px; /* card radius */
-  --radius-lg: 24px;
-  --radius-sm: 12px; /* inputs */
-  --radius-btn: 10px; /* buttons */
+  --space-32: 2rem;
+  --space-96: clamp(3.5rem, 7vw, 6rem);
+  --space-128: clamp(4rem, 10vw, 8rem);
+
+  /* Geometria — a loja é reta; o raio existe só onde é funcional. */
+  --radius: 0px;
+  --radius-lg: 0px;
+  --radius-sm: 0px;
+  --radius-btn: 0px;
   --radius-pill: 999px;
 
-  /* Motion — restrained: fade / opacity / translateY / subtle scale only */
+  /* Movimento — contido: fade, translate e escala sutil. */
   --duration: 220ms;
-  --duration-fast: 180ms;
-  --duration-slow: 260ms;
+  --duration-fast: 160ms;
+  --duration-slow: 320ms;
   --ease: cubic-bezier(0.22, 1, 0.36, 1);
   --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
 
   --shadow-sm: 0 1px 2px rgba(24, 26, 25, 0.05);
-  --shadow-md: 0 12px 32px -16px rgba(18, 60, 50, 0.16);
+  --shadow-md: 0 18px 44px -24px rgba(18, 60, 50, 0.28);
+  --shadow-lg: 0 30px 80px -40px rgba(18, 60, 50, 0.45);
 
-  /* Estado funcional — erro de formulário (única cor fora da paleta, por necessidade de acessibilidade) */
-  --color-error: #b3261e;
+  /* Rastro de caixa-alta usado em toda a interface da loja */
+  --track: 0.14em;
+  --track-wide: 0.22em;
 }
 
 /* Reset ---------------------------------------------------- */
@@ -109,6 +117,13 @@ body {
   overflow-x: hidden;
 }
 
+/* `hidden` precisa vencer qualquer `display` de classe — várias peças da
+   loja (estado vazio, linha de desconto, cupom) são mostradas e escondidas
+   por este atributo. */
+[hidden] {
+  display: none !important;
+}
+
 img,
 picture,
 svg {
@@ -132,7 +147,7 @@ h3,
 h4 {
   margin: 0;
   font-family: var(--font-display);
-  font-weight: 700;
+  font-weight: 600;
   line-height: 1.1;
   letter-spacing: -0.02em;
 }
@@ -147,35 +162,37 @@ p {
   color: var(--cream);
 }
 
-/* Tipografia utilitária ----------------------------------- */
+/* Tipografia utilitária ------------------------------------ */
 .display {
   font-family: var(--font-display);
   font-size: var(--step-5);
-  font-weight: 700;
-  line-height: 1.02;
-  letter-spacing: -0.025em;
+  font-weight: 300;
+  line-height: 1;
+  letter-spacing: -0.035em;
 }
 
 .h-xl {
   font-family: var(--font-display);
   font-size: var(--step-4);
-  font-weight: 700;
-  letter-spacing: -0.02em;
-  line-height: 1.06;
+  font-weight: 300;
+  letter-spacing: -0.03em;
+  line-height: 1.04;
 }
 
 .h-lg {
   font-family: var(--font-display);
   font-size: var(--step-3);
-  font-weight: 700;
+  font-weight: 400;
+  letter-spacing: -0.025em;
   line-height: 1.08;
 }
 
 .h-md {
   font-family: var(--font-display);
   font-size: var(--step-2);
-  font-weight: 700;
-  line-height: 1.1;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  line-height: 1.12;
 }
 
 .h-sm {
@@ -183,6 +200,21 @@ p {
   font-size: var(--step-h4);
   font-weight: 600;
   line-height: 1.2;
+}
+
+/* Rótulo de interface — a voz da loja */
+.ui {
+  font-size: var(--step--2);
+  font-weight: 500;
+  letter-spacing: var(--track);
+  text-transform: uppercase;
+}
+
+.ui-sm {
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: var(--track-wide);
+  text-transform: uppercase;
 }
 
 .text-accent {
@@ -196,28 +228,32 @@ p {
 .eyebrow {
   display: inline-flex;
   align-items: center;
-  gap: 0.6em;
-  font-size: 0.78rem;
-  font-weight: 600;
-  letter-spacing: 0.16em;
+  gap: 0.7em;
+  font-size: var(--step--2);
+  font-weight: 500;
+  letter-spacing: var(--track-wide);
   text-transform: uppercase;
   color: var(--muted);
 }
 
 .eyebrow::before {
   content: '';
-  width: 1.6em;
+  width: 1.8em;
   height: 1px;
   background: currentColor;
-  opacity: 0.6;
+  opacity: 0.55;
+}
+
+.eyebrow--bare::before {
+  display: none;
 }
 
 .lead {
   font-size: var(--step-1);
-  line-height: 1.55;
+  line-height: 1.6;
   font-weight: 400;
   color: var(--bone);
-  max-width: 60ch;
+  max-width: 58ch;
 }
 
 .text-muted {
@@ -235,10 +271,9 @@ p {
   margin-inline: auto;
 }
 
-.grid-12 {
-  display: grid;
-  grid-template-columns: repeat(12, 1fr);
-  gap: var(--gutter-col);
+.container-wide {
+  width: min(100% - var(--gutter) * 2, 2400px);
+  margin-inline: auto;
 }
 
 .section {
@@ -261,10 +296,7 @@ p {
   color: var(--cream);
 }
 
-.paper .text-muted {
-  color: var(--muted-light);
-}
-
+.paper .text-muted,
 .paper .eyebrow {
   color: var(--muted-light);
 }
@@ -277,26 +309,32 @@ p {
   background: var(--line-dark);
 }
 
+/* Respiro inicial das páginas internas (o cabeçalho é sticky,
+   então não há necessidade de compensar altura). */
+.page-top {
+  padding-top: clamp(1.5rem, 4vw, 2.75rem);
+}
+
 /* Botões ----------------------------------------------------
-   Um único sistema: preenchido (primário), contornado
-   (secundário) e link editorial com seta (terciário).
-   Sem caixa alta gritante — peso médio, rastro discreto.
+   Retângulos secos, caixa-alta espaçada. Preenchido (primário),
+   contornado (secundário) e link editorial com seta.
    ------------------------------------------------------------ */
 .btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 0.6em;
-  min-height: 44px;
-  padding: 0.85rem 1.6rem;
+  gap: 0.7em;
+  min-height: 48px;
+  padding: 0.95rem 2rem;
   border-radius: var(--radius-btn);
   border: 1px solid transparent;
   font-family: var(--font);
-  font-weight: 600;
-  font-size: 0.95rem;
-  letter-spacing: -0.01em;
+  font-size: var(--step--2);
+  font-weight: 500;
+  letter-spacing: var(--track);
+  text-transform: uppercase;
   transition: background-color var(--duration) var(--ease), color var(--duration) var(--ease),
-    border-color var(--duration) var(--ease), transform var(--duration) var(--ease);
+    border-color var(--duration) var(--ease), opacity var(--duration) var(--ease);
 }
 
 .btn--primary {
@@ -306,19 +344,39 @@ p {
 
 .btn--primary:hover,
 .btn--primary:focus-visible {
-  background: var(--secondary);
+  background: var(--bone);
 }
 
 .btn--secondary {
   background: transparent;
-  border-color: var(--line-strong);
+  border-color: var(--bone);
   color: var(--bone);
 }
 
 .btn--secondary:hover,
 .btn--secondary:focus-visible {
-  border-color: var(--forest);
-  color: var(--forest);
+  background: var(--bone);
+  color: var(--cream);
+}
+
+.btn--ghost {
+  background: transparent;
+  border-color: var(--line-strong);
+  color: var(--bone);
+}
+
+.btn--ghost:hover {
+  border-color: var(--bone);
+}
+
+.btn--block {
+  width: 100%;
+}
+
+.btn[disabled],
+.btn[aria-disabled='true'] {
+  opacity: 0.45;
+  pointer-events: none;
 }
 
 .paper .btn--secondary {
@@ -328,8 +386,9 @@ p {
 
 .paper .btn--secondary:hover,
 .paper .btn--secondary:focus-visible {
-  border-color: var(--accent-premium);
-  color: var(--accent-premium);
+  background: var(--cream);
+  border-color: var(--cream);
+  color: var(--forest);
 }
 
 .btn .arrow {
@@ -337,19 +396,20 @@ p {
 }
 
 .btn:hover .arrow {
-  transform: translate(0.2em, -0.2em);
+  transform: translate(0.25em, -0.25em);
 }
 
-/* Link editorial — texto com fio fino e seta ---------------- */
+/* Link editorial ------------------------------------------- */
 .link-arrow {
   position: relative;
   display: inline-flex;
   align-items: center;
-  gap: 0.55em;
-  padding-bottom: 0.4em;
-  font-size: 0.92rem;
-  font-weight: 600;
-  letter-spacing: -0.005em;
+  gap: 0.6em;
+  padding-bottom: 0.45em;
+  font-size: var(--step--2);
+  font-weight: 500;
+  letter-spacing: var(--track);
+  text-transform: uppercase;
   color: var(--bone);
 }
 
@@ -361,7 +421,7 @@ p {
   bottom: 0;
   height: 1px;
   background: currentColor;
-  opacity: 0.3;
+  opacity: 0.35;
 }
 
 .link-arrow::before {
@@ -406,14 +466,608 @@ p {
   background: var(--accent-premium);
 }
 
-/* Reveal (JS + IntersectionObserver) — fade + subtle translateY, 200-250ms ---- */
+/* Sublinhado discreto para links em texto corrido */
+.link-underline {
+  background: linear-gradient(currentColor, currentColor) no-repeat left bottom / 100% 1px;
+  padding-bottom: 1px;
+  transition: background-size var(--duration) var(--ease);
+}
+
+.link-underline:hover {
+  background-size: 0 1px;
+}
+
+/* ============================================================
+   Formulários — inputs retos com rótulo flutuante
+   ============================================================ */
+.field {
+  position: relative;
+  display: block;
+}
+
+.field + .field {
+  margin-top: 1rem;
+}
+
+.field__input,
+.field__select,
+.field__textarea {
+  width: 100%;
+  min-height: 54px;
+  padding: 1.35rem 1rem 0.5rem;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--bone);
+  font-family: var(--font);
+  font-size: var(--step-0);
+  transition: border-color var(--duration) var(--ease);
+  appearance: none;
+}
+
+.field__textarea {
+  min-height: 140px;
+  resize: vertical;
+  line-height: 1.6;
+}
+
+.field__select {
+  padding-right: 2.5rem;
+  background-image: linear-gradient(45deg, transparent 50%, currentColor 50%),
+    linear-gradient(135deg, currentColor 50%, transparent 50%);
+  background-position: calc(100% - 20px) 55%, calc(100% - 14px) 55%;
+  background-size: 6px 6px, 6px 6px;
+  background-repeat: no-repeat;
+}
+
+.field__label {
+  position: absolute;
+  left: 1rem;
+  top: 1rem;
+  font-size: var(--step-0);
+  color: var(--muted);
+  pointer-events: none;
+  transform-origin: left top;
+  transition: transform var(--duration) var(--ease), color var(--duration) var(--ease);
+}
+
+.field__input:focus,
+.field__select:focus,
+.field__textarea:focus {
+  border-color: var(--forest);
+  outline: none;
+}
+
+.field__input:focus + .field__label,
+.field__input:not(:placeholder-shown) + .field__label,
+.field__textarea:focus + .field__label,
+.field__textarea:not(:placeholder-shown) + .field__label,
+.field__select:focus + .field__label,
+.field__select:valid + .field__label {
+  transform: translateY(-0.7rem) scale(0.72);
+  color: var(--muted);
+}
+
+.field__hint {
+  display: block;
+  margin-top: 0.4rem;
+  font-size: var(--step--1);
+  color: var(--muted);
+}
+
+.field__error {
+  display: none;
+  margin-top: 0.4rem;
+  font-size: var(--step--1);
+  color: var(--color-error);
+}
+
+.field.is-invalid .field__input,
+.field.is-invalid .field__select,
+.field.is-invalid .field__textarea {
+  border-color: var(--color-error);
+}
+
+.field.is-invalid .field__error {
+  display: block;
+}
+
+.field-row {
+  display: grid;
+  gap: 1rem;
+}
+
+.field-row .field + .field {
+  margin-top: 0;
+}
+
+@media (min-width: 640px) {
+  .field-row--2 {
+    grid-template-columns: 1fr 1fr;
+  }
+  .field-row--3 {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+  .field-row--cep {
+    grid-template-columns: 200px 1fr;
+  }
+}
+
+/* Caixa de opção (frete, pagamento) ------------------------- */
+.option {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.9rem;
+  padding: 1.1rem 1.2rem;
+  border: 1px solid var(--line-strong);
+  cursor: pointer;
+  transition: border-color var(--duration) var(--ease), background-color var(--duration) var(--ease);
+}
+
+.option + .option {
+  margin-top: -1px;
+}
+
+.option:hover {
+  background: var(--ink-2);
+}
+
+.option input {
+  margin: 0.25rem 0 0;
+  accent-color: var(--forest);
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+
+.option__body {
+  flex: 1;
+  min-width: 0;
+}
+
+.option__title {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  font-size: var(--step-0);
+  font-weight: 500;
+}
+
+.option__desc {
+  margin-top: 0.2rem;
+  font-size: var(--step--1);
+  color: var(--muted);
+}
+
+.option:has(input:checked) {
+  border-color: var(--forest);
+  background: var(--ink-2);
+  position: relative;
+  z-index: 1;
+}
+
+/* Checkbox de linha ---------------------------------------- */
+.check {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.7rem;
+  font-size: var(--step--1);
+  color: var(--muted);
+  cursor: pointer;
+}
+
+.check input {
+  margin: 0.15rem 0 0;
+  width: 16px;
+  height: 16px;
+  accent-color: var(--forest);
+  flex-shrink: 0;
+}
+
+/* ============================================================
+   Vitrine — grade e cartão de produto
+   ============================================================ */
+.pgrid {
+  display: grid;
+  gap: clamp(1.5rem, 2.5vw, 2.6rem) var(--gutter-col);
+  grid-template-columns: repeat(2, 1fr);
+}
+
+@media (min-width: 900px) {
+  .pgrid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .pgrid[data-cols='2'] {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .pgrid[data-cols='4'] {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+@media (max-width: 899.98px) {
+  .pgrid[data-cols='1'] {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ============================================================
+   Quantidade
+   ============================================================ */
+.qty {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid var(--line-strong);
+  height: 44px;
+}
+
+.qty__btn {
+  width: 40px;
+  height: 100%;
+  display: grid;
+  place-items: center;
+  border: 0;
+  background: transparent;
+  color: var(--bone);
+  font-size: 1rem;
+  line-height: 1;
+  transition: background-color var(--duration) var(--ease);
+}
+
+.qty__btn:hover {
+  background: var(--ink-2);
+}
+
+.qty__btn[disabled] {
+  opacity: 0.3;
+  pointer-events: none;
+}
+
+.qty__value {
+  min-width: 36px;
+  text-align: center;
+  font-size: var(--step--1);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ============================================================
+   Selo de produto
+   ============================================================ */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.3rem 0.6rem;
+  font-size: 0.625rem;
+  font-weight: 600;
+  letter-spacing: var(--track);
+  text-transform: uppercase;
+  background: var(--forest);
+  color: var(--cream);
+}
+
+.badge--eco {
+  background: transparent;
+  border: 1px solid var(--forest);
+  color: var(--forest);
+}
+
+.badge--novo {
+  background: var(--accent-ink);
+}
+
+/* ============================================================
+   Painel deslizante (carrinho, filtros)
+   ============================================================ */
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 140;
+  background: rgba(24, 26, 25, 0.42);
+  backdrop-filter: blur(2px);
+  opacity: 0;
+  transition: opacity var(--duration) var(--ease);
+}
+
+.overlay.is-visible {
+  opacity: 1;
+}
+
+.overlay[hidden] {
+  display: none;
+}
+
+.drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 150;
+  width: min(440px, 100vw);
+  display: flex;
+  flex-direction: column;
+  background: var(--cream);
+  border-left: 1px solid var(--line);
+  transform: translateX(100%);
+  transition: transform var(--duration-slow) var(--ease);
+  box-shadow: var(--shadow-lg);
+}
+
+.drawer.is-open {
+  transform: translateX(0);
+}
+
+.drawer[hidden] {
+  display: none;
+}
+
+.drawer__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.4rem var(--gutter);
+  border-bottom: 1px solid var(--line);
+}
+
+.drawer__body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1.2rem var(--gutter);
+}
+
+.drawer__foot {
+  border-top: 1px solid var(--line);
+  padding: 1.3rem var(--gutter) 1.6rem;
+  display: grid;
+  gap: 0.9rem;
+  background: var(--ink-2);
+}
+
+.icon-btn {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  transition: opacity var(--duration) var(--ease);
+}
+
+.icon-btn:hover {
+  opacity: 0.6;
+}
+
+/* ============================================================
+   Resumo de valores (carrinho, checkout, pedido)
+   ============================================================ */
+.summary__row {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.55rem 0;
+  font-size: var(--step--1);
+  color: var(--muted);
+}
+
+.summary__row strong {
+  color: var(--bone);
+  font-weight: 500;
+}
+
+.summary__total {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+  margin-top: 0.6rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--line);
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+/* ============================================================
+   Estado vazio
+   ============================================================ */
+.empty {
+  display: grid;
+  justify-items: center;
+  text-align: center;
+  gap: 1.2rem;
+  padding: clamp(3rem, 10vw, 6rem) 0;
+}
+
+.empty__icon {
+  width: 56px;
+  height: 56px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--line-strong);
+  border-radius: 50%;
+  color: var(--muted);
+}
+
+/* ============================================================
+   Trilha de navegação
+   ============================================================ */
+.crumbs {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  font-size: var(--step--2);
+  letter-spacing: var(--track);
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.crumbs li {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.crumbs li + li::before {
+  content: '/';
+  opacity: 0.5;
+}
+
+.crumbs a:hover {
+  color: var(--bone);
+}
+
+.crumbs [aria-current='page'] {
+  color: var(--bone);
+}
+
+/* ============================================================
+   Acordeão (ficha técnica, FAQ)
+   ============================================================ */
+.acc {
+  border-top: 1px solid var(--line);
+}
+
+.acc__item {
+  border-bottom: 1px solid var(--line);
+}
+
+.acc__trigger {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.15rem 0;
+  border: 0;
+  background: transparent;
+  text-align: left;
+  color: inherit;
+  font-size: var(--step--2);
+  font-weight: 500;
+  letter-spacing: var(--track);
+  text-transform: uppercase;
+}
+
+.acc__sign {
+  position: relative;
+  width: 12px;
+  height: 12px;
+  flex-shrink: 0;
+}
+
+.acc__sign::before,
+.acc__sign::after {
+  content: '';
+  position: absolute;
+  background: currentColor;
+  transition: transform var(--duration) var(--ease), opacity var(--duration) var(--ease);
+}
+
+.acc__sign::before {
+  top: 50%;
+  left: 0;
+  width: 12px;
+  height: 1px;
+  transform: translateY(-50%);
+}
+
+.acc__sign::after {
+  left: 50%;
+  top: 0;
+  width: 1px;
+  height: 12px;
+  transform: translateX(-50%);
+}
+
+.acc__trigger[aria-expanded='true'] .acc__sign::after {
+  transform: translateX(-50%) rotate(90deg);
+  opacity: 0;
+}
+
+.acc__panel {
+  overflow: hidden;
+}
+
+.acc__panel[hidden] {
+  display: none;
+}
+
+.acc__inner {
+  padding-bottom: 1.4rem;
+  font-size: var(--step--1);
+  line-height: 1.7;
+  color: var(--muted);
+}
+
+/* ============================================================
+   Marquee editorial (faixa de avisos)
+   ============================================================ */
+.ticker {
+  overflow: hidden;
+  background: var(--forest);
+  color: var(--cream);
+}
+
+.ticker__track {
+  display: flex;
+  width: max-content;
+  animation: ticker 38s linear infinite;
+}
+
+.ticker__group {
+  display: flex;
+  align-items: center;
+  gap: 3.5rem;
+  padding: 0.6rem 1.75rem 0.6rem 0;
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: var(--track-wide);
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.ticker__group span {
+  display: inline-flex;
+  align-items: center;
+  gap: 3.5rem;
+}
+
+.ticker__group span::after {
+  content: '';
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--accent-premium);
+}
+
+@keyframes ticker {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ticker__track {
+    animation: none;
+  }
+}
+
+/* ============================================================
+   Reveal (JS + IntersectionObserver)
+   ============================================================ */
 .is-animate [data-reveal] {
   opacity: 0;
   will-change: transform, opacity;
 }
 
 .is-animate [data-reveal='up'] {
-  transform: translateY(16px);
+  transform: translateY(18px);
 }
 
 .is-animate [data-reveal='fade'] {
@@ -427,11 +1081,10 @@ p {
 
 .is-animate [data-reveal-item] {
   opacity: 0;
-  transform: translateY(16px);
+  transform: translateY(18px);
   will-change: transform, opacity;
 }
 
-/* Split de linhas para títulos */
 .is-animate .line-mask {
   display: block;
   overflow: hidden;
@@ -472,7 +1125,6 @@ p {
   padding: 0.7rem 1.1rem;
   background: var(--forest);
   color: var(--cream);
-  border-radius: var(--radius-sm);
   font-weight: 600;
   transition: top var(--duration) var(--ease);
 }
@@ -497,22 +1149,24 @@ p {
   bottom: 2rem;
   z-index: 250;
   transform: translate(-50%, 150%);
-  padding: 0.9rem 1.5rem;
-  border-radius: var(--radius-pill);
-  background: var(--forest);
+  padding: 0.95rem 1.6rem;
+  background: var(--bone);
   color: var(--cream);
-  font-size: 0.85rem;
-  font-weight: 500;
+  font-size: var(--step--1);
+  font-weight: 400;
   box-shadow: var(--shadow-md);
   opacity: 0;
   transition: transform var(--duration-slow) var(--ease), opacity var(--duration) var(--ease);
   pointer-events: none;
-  max-width: min(90vw, 420px);
+  max-width: min(90vw, 460px);
 }
 
 .toast strong {
-  font-weight: 700;
-  margin-right: 0.35rem;
+  font-weight: 600;
+  letter-spacing: var(--track);
+  text-transform: uppercase;
+  font-size: var(--step--2);
+  margin-right: 0.5rem;
 }
 
 .toast.is-visible {
@@ -521,8 +1175,8 @@ p {
 }
 
 /* ============================================================
-   Placeholder de imagem — enquanto as fotos definitivas não
-   são inseridas, ocupa o espaço com um bloco elegante da casa.
+   Superfície de imagem — enquanto as fotos definitivas não
+   chegam, o bloco ocupa o espaço com elegância.
    ============================================================ */
 .media-ph {
   position: absolute;
@@ -538,9 +1192,9 @@ p {
   display: inline-flex;
   align-items: center;
   gap: 0.55em;
-  font-size: 0.7rem;
+  font-size: 0.6875rem;
   font-weight: 500;
-  letter-spacing: 0.18em;
+  letter-spacing: var(--track-wide);
   text-transform: uppercase;
   color: var(--muted);
 }
@@ -567,8 +1221,7 @@ p {
   pointer-events: none;
   background: var(--cream);
   color: var(--bone);
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
+  border: 1px solid var(--bone);
   padding: clamp(1.4rem, 3vw, 1.9rem);
   box-shadow: var(--shadow-md);
   transition: transform var(--duration-slow) var(--ease), opacity var(--duration) var(--ease);
@@ -582,15 +1235,16 @@ p {
 
 .consent__title {
   font-family: var(--font-display);
-  font-size: 1.05rem;
-  font-weight: 700;
-  letter-spacing: -0.01em;
-  margin-bottom: 0.6rem;
+  font-size: var(--step--2);
+  font-weight: 600;
+  letter-spacing: var(--track);
+  text-transform: uppercase;
+  margin-bottom: 0.7rem;
 }
 
 .consent__text {
-  font-size: 0.88rem;
-  line-height: 1.6;
+  font-size: var(--step--1);
+  line-height: 1.65;
   color: var(--muted);
   margin-bottom: 1.2rem;
 }
@@ -609,11 +1263,12 @@ p {
 
 .consent__btn {
   flex: 1 1 auto;
-  min-height: 44px;
-  padding: 0.7rem 1.2rem;
-  border-radius: var(--radius-btn);
-  font-size: 0.82rem;
-  font-weight: 600;
+  min-height: 46px;
+  padding: 0.7rem 1.4rem;
+  font-size: var(--step--2);
+  font-weight: 500;
+  letter-spacing: var(--track);
+  text-transform: uppercase;
   border: 1px solid var(--line-strong);
   background: transparent;
   color: var(--bone);
@@ -622,7 +1277,7 @@ p {
 }
 
 .consent__btn:hover {
-  border-color: var(--forest);
+  border-color: var(--bone);
 }
 
 .consent__btn--primary {
@@ -632,8 +1287,8 @@ p {
 }
 
 .consent__btn--primary:hover {
-  background: var(--secondary);
-  border-color: var(--secondary);
+  background: var(--bone);
+  border-color: var(--bone);
 }
 
 @media (min-width: 560px) {

@@ -61,7 +61,9 @@ function initReveals() {
         }
       }
     },
-    { threshold: 0.12, rootMargin: '0px 0px -8% 0px' },
+    // threshold 0: uma grade alta pode nunca exibir 12% de si mesma em telas
+    // baixas — e o conteúdo ficaria invisível. Basta encostar na viewport.
+    { threshold: 0, rootMargin: '0px 0px -8% 0px' },
   );
 
   document
@@ -136,18 +138,9 @@ function initHero() {
 function initHeader() {
   const header = document.querySelector<HTMLElement>('[data-header]');
   if (!header) return;
-  let lastY = window.scrollY;
 
-  const onScroll = () => {
-    const y = window.scrollY;
-    header.classList.toggle('is-scrolled', y > 40);
-    if (y > lastY && y > 320) {
-      header.classList.add('is-hidden');
-    } else {
-      header.classList.remove('is-hidden');
-    }
-    lastY = y;
-  };
+  // O cabeçalho é sticky: basta ganhar o fio inferior ao descolar do topo.
+  const onScroll = () => header.classList.toggle('is-scrolled', window.scrollY > 8);
   window.addEventListener('scroll', onScroll, { passive: true });
   onScroll();
 }
@@ -278,50 +271,6 @@ function initMobileMenu() {
 }
 
 /* --------------------------------------------------------
-   Feedback de "Adicionar ao carrinho" (front-end apenas).
--------------------------------------------------------- */
-function initAddButtons() {
-  const buttons = document.querySelectorAll<HTMLButtonElement>('[data-add]');
-  if (!buttons.length) return;
-
-  let toast: HTMLElement | null = null;
-  let toastTimer = 0;
-
-  const notify = (name: string) => {
-    if (!toast) {
-      toast = document.createElement('div');
-      toast.className = 'toast';
-      document.body.appendChild(toast);
-    }
-    toast.innerHTML = `<strong>Adicionado</strong> ${name}`;
-    toast.classList.add('is-visible');
-    window.clearTimeout(toastTimer);
-    toastTimer = window.setTimeout(() => toast?.classList.remove('is-visible'), 2200);
-  };
-
-  buttons.forEach((button) => {
-    const label = button.querySelector('.card__add-label');
-    const original = label?.textContent ?? 'Adicionar';
-    button.addEventListener('click', () => {
-      button.classList.add('is-added');
-      if (label) label.textContent = 'Adicionado';
-      notify(button.dataset.name ?? 'Produto');
-      if (!reduceMotion) {
-        animate(button, {
-          scale: [1, 0.97, 1],
-          duration: DURATION,
-          ease: 'outQuad',
-        });
-      }
-      window.setTimeout(() => {
-        button.classList.remove('is-added');
-        if (label) label.textContent = original;
-      }, 1600);
-    });
-  });
-}
-
-/* --------------------------------------------------------
    Consentimento de cookies (LGPD).
 -------------------------------------------------------- */
 function initCookieConsent() {
@@ -345,9 +294,18 @@ function initCookieConsent() {
     }
   };
 
+  // O banner é fixo no rodapé: sem esta folga ele cobre o que estiver
+  // no fim da página — inclusive o botão de avançar do checkout.
+  const reservarEspaco = () => {
+    document.body.style.paddingBottom = banner.hidden ? '' : `${banner.offsetHeight + 32}px`;
+  };
+
   const hide = () => {
     banner.classList.remove('is-visible');
-    window.setTimeout(() => (banner.hidden = true), 300);
+    window.setTimeout(() => {
+      banner.hidden = true;
+      reservarEspaco();
+    }, 300);
   };
 
   // "manage" (link) não fecha nem grava — leva à página de privacidade.
@@ -362,6 +320,8 @@ function initCookieConsent() {
 
   if (!choice) {
     banner.hidden = false;
+    reservarEspaco();
+    window.addEventListener('resize', reservarEspaco);
     // força reflow para a transição de entrada rodar
     requestAnimationFrame(() =>
       requestAnimationFrame(() => banner.classList.add('is-visible')),
@@ -377,7 +337,6 @@ function boot() {
   initHeader();
   initMegaMenu();
   initMobileMenu();
-  initAddButtons();
 
   if (reduceMotion) {
     showEverything();

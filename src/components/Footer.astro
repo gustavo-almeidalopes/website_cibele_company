@@ -4,40 +4,48 @@ const year = new Date().getFullYear();
 // Navegação ampla, no formato de "mapa do site" (estilo Apple).
 const columns = [
   {
-    title: 'Coleções',
+    title: 'Comprar',
     links: [
-      { label: 'Mesa & Servir', href: '/embalagens#mesa' },
-      { label: 'Copos & Bebidas', href: '/embalagens#bebidas' },
-      { label: 'Delivery & Viagem', href: '/embalagens#delivery' },
+      { label: 'Mesa & Servir', href: '/colecoes/mesa' },
+      { label: 'Copos & Bebidas', href: '/colecoes/bebidas' },
+      { label: 'Delivery & Viagem', href: '/colecoes/delivery' },
+      { label: 'Novidades', href: '/embalagens?filtro=novidades' },
       { label: 'Catálogo completo', href: '/embalagens' },
     ],
   },
   {
-    title: 'A empresa',
+    title: 'Minha conta',
     links: [
-      { label: 'Sobre nós', href: '/sobre' },
-      { label: 'Nossa história', href: '/sobre' },
-      { label: 'Sustentabilidade', href: '/sobre' },
+      { label: 'Entrar ou cadastrar', href: '/conta' },
+      { label: 'Meus pedidos', href: '/conta' },
+      { label: 'Favoritos', href: '/favoritos' },
+      { label: 'Cesta', href: '/carrinho' },
+      { label: 'Buscar produtos', href: '/busca' },
     ],
   },
   {
     title: 'Atendimento',
     links: [
+      { label: 'Envios e prazos', href: '/ajuda#envios' },
+      { label: 'Trocas e devoluções', href: '/ajuda#trocas' },
+      { label: 'Formas de pagamento', href: '/ajuda#pagamento' },
+      { label: 'Orçamento para empresas', href: '/contato' },
       { label: 'Fale conosco', href: '/contato' },
-      { label: 'Solicitar orçamento', href: '/contato' },
-      { label: 'Perguntas frequentes', href: '/contato' },
     ],
   },
   {
-    title: 'Privacidade & Termos',
+    title: 'A empresa',
     links: [
+      { label: 'Sobre a Cibele', href: '/sobre' },
+      { label: 'Sustentabilidade', href: '/sobre' },
       { label: 'Política de Privacidade', href: '/privacidade' },
       { label: 'Política de Cookies', href: '/privacidade#cookies' },
       { label: 'Termos de Uso', href: '/termos' },
-      { label: 'Seus direitos (LGPD)', href: '/privacidade#lgpd' },
     ],
   },
 ];
+
+const pagamentos = ['Pix', 'Visa', 'Mastercard', 'Elo', 'Amex', 'Boleto', 'Faturado'];
 
 const legalLinks = [
   { label: 'Política de Privacidade', href: '/privacidade' },
@@ -53,7 +61,8 @@ const legalLinks = [
       <p class="eyebrow">Vamos conversar</p>
       <a class="footer__mail" href="mailto:contato@cibeleplastic.com">contato@cibeleplastic.com</a>
       <p class="text-muted footer__lead-text">
-        Bioplástico sustentável para embalagens, construção e saúde. Respondemos em até um dia útil.
+        Embalagens em bioplástico para food service, eventos e delivery. Respondemos em até um dia
+        útil.
       </p>
     </div>
 
@@ -73,6 +82,16 @@ const legalLinks = [
         ))
       }
     </nav>
+  </div>
+
+  <!-- Meios de pagamento -->
+  <div class="footer__pay">
+    <div class="container footer__pay-inner">
+      <p class="ui-sm text-muted">Formas de pagamento</p>
+      <ul class="footer__pay-list">
+        {pagamentos.map((meio) => <li>{meio}</li>)}
+      </ul>
+    </div>
   </div>
 
   <!-- Rodapé legal (pós-footer) — dados da empresa e conformidade LGPD -->
@@ -177,6 +196,37 @@ const legalLinks = [
 
   .footer__col a:hover {
     color: var(--accent-ink);
+  }
+
+  /* Meios de pagamento */
+  .footer__pay {
+    border-top: 1px solid var(--line);
+  }
+
+  .footer__pay-inner {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1rem 1.5rem;
+    padding-block: 1.4rem;
+  }
+
+  .footer__pay-list {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin: 0;
+    padding: 0;
+  }
+
+  .footer__pay-list li {
+    padding: 0.35rem 0.7rem;
+    border: 1px solid var(--line-strong);
+    font-size: 0.625rem;
+    letter-spacing: var(--track);
+    text-transform: uppercase;
+    color: var(--muted);
   }
 
   /* Rodapé legal / LGPD */

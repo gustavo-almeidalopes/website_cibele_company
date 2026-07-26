@@ -1,287 +1,387 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import ProductCard from '../components/ProductCard.astro';
-import { collections, getProductsByCollection, formatPrice, products } from '../data/catalog';
+import Newsletter from '../components/Newsletter.astro';
+import { collections, products, precoBase, formatPrice } from '../data/catalog';
 
-const prices = products.map((p) => p.preco);
-const priceRange = `${formatPrice(Math.min(...prices))} – ${formatPrice(Math.max(...prices))}`;
+const precos = products.map(precoBase);
+const faixa = `${formatPrice(Math.min(...precos))} – ${formatPrice(Math.max(...precos))}`;
 ---
 
 <BaseLayout
   active="embalagens"
-  title="Embalagens sustentáveis — Cibele Plastic"
-  description="Catálogo de embalagens em bioplástico da Cibele Plastic: mesa, bebidas e delivery. O desempenho do plástico convencional, sem a herança fóssil."
+  title="Catálogo de embalagens — Cibele Plastic"
+  description="Todas as embalagens em bioplástico da Cibele Plastic: mesa, bebidas e delivery. Filtre por coleção, ordene por preço e compre em poucos cliques."
 >
-  <!-- HERO do catálogo -->
-  <section class="chero" data-hero>
-    <div class="container">
-      <p class="eyebrow" data-hero-item>Catálogo · Bioplástico</p>
-      <h1 class="display chero__title">
-        <span class="line-mask"><span class="line-inner">Embalagens</span></span>
-        <span class="line-mask"><span class="line-inner">que <span class="text-accent">voltam</span></span></span>
-        <span class="line-mask"><span class="line-inner">à terra.</span></span>
-      </h1>
-      <div class="chero__meta">
-        <p class="lead chero__desc" data-hero-item>
-          Uma linha completa de embalagens descartáveis feitas de fontes renováveis — para food
-          service, eventos, cafeterias e delivery.
+  <!-- Cabeçalho da vitrine -->
+  <section class="shop-head page-top">
+    <div class="container-wide">
+      <nav aria-label="Trilha de navegação">
+        <ol class="crumbs">
+          <li><a href="/">Início</a></li>
+          <li><span aria-current="page">Catálogo</span></li>
+        </ol>
+      </nav>
+
+      <div class="shop-head__grid">
+        <h1 class="h-xl shop-head__title" data-reveal="fade">Todas as embalagens</h1>
+        <p class="shop-head__desc text-muted" data-reveal="fade">
+          {products.length} referências em bioplástico, de {faixa}. Compostáveis, com desempenho de
+          plástico convencional e prontas para envio.
         </p>
-        <dl class="chero__facts" data-hero-item>
-          <div>
-            <dt>Itens</dt>
-            <dd>{String(products.length).padStart(2, '0')}</dd>
-          </div>
-          <div>
-            <dt>Coleções</dt>
-            <dd>{String(collections.length).padStart(2, '0')}</dd>
-          </div>
-          <div>
-            <dt>Faixa de preço</dt>
-            <dd>{priceRange}</dd>
-          </div>
-        </dl>
       </div>
     </div>
   </section>
 
-  <!-- Navegação por coleção (sticky) -->
-  <nav class="colnav" aria-label="Coleções">
-    <div class="container colnav__inner">
-      <span class="colnav__label">Coleções</span>
-      <ul class="colnav__list">
+  <!-- Barra de filtros (sticky) -->
+  <div class="toolbar" data-toolbar>
+    <div class="container-wide toolbar__inner">
+      <div class="toolbar__filters" role="group" aria-label="Filtrar por coleção">
+        <button class="chip is-active" type="button" data-filter="todos">Tudo</button>
         {
           collections.map((col) => (
-            <li>
-              <a href={`#${col.slug}`}>
-                <span class="colnav__idx">{col.indice}</span>
-                {col.titulo}
-              </a>
-            </li>
+            <button class="chip" type="button" data-filter={col.slug}>
+              {col.titulo}
+            </button>
           ))
         }
-      </ul>
+        <button class="chip" type="button" data-filter="novidades">Novidades</button>
+        <button class="chip" type="button" data-filter="mais-vendidos">Mais vendidos</button>
+      </div>
+
+      <div class="toolbar__right">
+        <p class="toolbar__count ui-sm text-muted" data-count-label>{products.length} itens</p>
+
+        <label class="toolbar__sort">
+          <span class="visually-hidden">Ordenar por</span>
+          <select data-sort aria-label="Ordenar por">
+            <option value="destaque">Ordenar: destaque</option>
+            <option value="preco-asc">Menor preço</option>
+            <option value="preco-desc">Maior preço</option>
+            <option value="nome">Nome (A–Z)</option>
+          </select>
+        </label>
+
+        <div class="toolbar__cols" role="group" aria-label="Densidade da grade">
+          <button class="colbtn" type="button" data-cols="2" aria-label="Ver em 2 colunas">
+            <svg viewBox="0 0 16 16" width="15" height="15" aria-hidden="true">
+              <rect x="1" y="1" width="6" height="14" fill="currentColor"></rect>
+              <rect x="9" y="1" width="6" height="14" fill="currentColor"></rect>
+            </svg>
+          </button>
+          <button class="colbtn is-active" type="button" data-cols="3" aria-label="Ver em 3 colunas">
+            <svg viewBox="0 0 16 16" width="15" height="15" aria-hidden="true">
+              <rect x="0.5" y="1" width="4" height="14" fill="currentColor"></rect>
+              <rect x="6" y="1" width="4" height="14" fill="currentColor"></rect>
+              <rect x="11.5" y="1" width="4" height="14" fill="currentColor"></rect>
+            </svg>
+          </button>
+          <button class="colbtn" type="button" data-cols="4" aria-label="Ver em 4 colunas">
+            <svg viewBox="0 0 16 16" width="15" height="15" aria-hidden="true">
+              <rect x="0.5" y="1" width="3" height="14" fill="currentColor"></rect>
+              <rect x="4.8" y="1" width="3" height="14" fill="currentColor"></rect>
+              <rect x="9.1" y="1" width="3" height="14" fill="currentColor"></rect>
+              <rect x="13.4" y="1" width="3" height="14" fill="currentColor"></rect>
+            </svg>
+          </button>
+        </div>
+      </div>
     </div>
-  </nav>
+  </div>
 
-  <!-- Coleções -->
-  {
-    collections.map((col) => {
-      const items = getProductsByCollection(col.slug);
-      return (
-        <section class="colsec" id={col.slug}>
-          <div class="container">
-            <header class="colsec__head">
-              <div class="colsec__heading">
-                <span class="colsec__idx">{col.indice}</span>
-                <h2 class="colsec__title" data-reveal="fade">
-                  {col.titulo}
-                </h2>
-              </div>
-              <p class="colsec__desc text-muted" data-reveal="fade">
-                {col.descricao}
-              </p>
-            </header>
-            <div class="colsec__grid" data-reveal-group>
-              {items.map((product, i) => (
-                <ProductCard product={product} index={i} />
-              ))}
+  <!-- Vitrine -->
+  <section class="shop">
+    <div class="container-wide">
+      <div class="pgrid" data-cols="3" data-grid data-reveal-group>
+        {
+          products.map((product, i) => (
+            <div
+              class="shop__cell"
+              data-cell
+              data-colecao={product.colecao}
+              data-badge={product.badge ?? ''}
+              data-preco={precoBase(product)}
+              data-nome={product.nome}
+              data-ordem={i}
+            >
+              <ProductCard product={product} index={i} eager={i < 4} />
             </div>
-          </div>
-        </section>
-      );
-    })
-  }
+          ))
+        }
+      </div>
 
-  <!-- CTA -->
-  <section class="section-lg paper cta2">
-    <div class="container cta2__inner">
-      <p class="eyebrow" data-reveal="fade">Para empresas</p>
-      <h2 class="h-xl cta2__title" data-lines>
-        <span class="line-mask"><span class="line-inner">Um orçamento sob</span></span>
-        <span class="line-mask"><span class="line-inner">medida para o seu <span class="text-accent">negócio</span>.</span></span>
-      </h2>
-      <a class="btn btn--primary" href="/contato" data-reveal="fade">
-        <span>Solicitar orçamento</span>
-        <svg class="arrow" viewBox="0 0 24 24" width="15" height="15" aria-hidden="true">
-          <path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
-        </svg>
-      </a>
+      <p class="shop__empty" data-empty hidden>
+        Nenhum item corresponde a esse filtro.
+        <button class="link-underline" type="button" data-filter="todos">Ver tudo</button>
+      </p>
     </div>
   </section>
+
+  <Newsletter />
 </BaseLayout>
 
+<script>
+  const grid = document.querySelector<HTMLElement>('[data-grid]');
+  const cells = Array.from(document.querySelectorAll<HTMLElement>('[data-cell]'));
+  const chips = Array.from(document.querySelectorAll<HTMLElement>('[data-filter]'));
+  const sort = document.querySelector<HTMLSelectElement>('[data-sort]');
+  const colBtns = Array.from(document.querySelectorAll<HTMLElement>('[data-cols]'));
+  const contador = document.querySelector<HTMLElement>('[data-count-label]');
+  const vazio = document.querySelector<HTMLElement>('[data-empty]');
+
+  if (grid && cells.length) {
+    let filtroAtual = 'todos';
+
+    const combina = (cell: HTMLElement, filtro: string) => {
+      if (filtro === 'todos') return true;
+      if (filtro === 'novidades') return cell.dataset.badge === 'novo';
+      if (filtro === 'mais-vendidos') return cell.dataset.badge === 'best';
+      return cell.dataset.colecao === filtro;
+    };
+
+    const aplicar = () => {
+      let visiveis = 0;
+      for (const cell of cells) {
+        const mostrar = combina(cell, filtroAtual);
+        cell.hidden = !mostrar;
+        if (mostrar) visiveis += 1;
+      }
+
+      const criterio = sort?.value ?? 'destaque';
+      const ordenadas = [...cells].sort((a, b) => {
+        const pa = Number(a.dataset.preco ?? '0');
+        const pb = Number(b.dataset.preco ?? '0');
+        if (criterio === 'preco-asc') return pa - pb;
+        if (criterio === 'preco-desc') return pb - pa;
+        if (criterio === 'nome') return (a.dataset.nome ?? '').localeCompare(b.dataset.nome ?? '', 'pt-BR');
+        return Number(a.dataset.ordem ?? '0') - Number(b.dataset.ordem ?? '0');
+      });
+      ordenadas.forEach((cell, i) => (cell.style.order = String(i)));
+
+      if (contador) contador.textContent = `${visiveis} ${visiveis === 1 ? 'item' : 'itens'}`;
+      if (vazio) vazio.hidden = visiveis > 0;
+
+      // O filtro ativo vive na URL — o link é compartilhável e o botão
+      // voltar do navegador continua fazendo sentido.
+      const url = new URL(window.location.href);
+      if (filtroAtual === 'todos') url.searchParams.delete('filtro');
+      else url.searchParams.set('filtro', filtroAtual);
+      if (criterio === 'destaque') url.searchParams.delete('ordem');
+      else url.searchParams.set('ordem', criterio);
+      window.history.replaceState({}, '', url);
+    };
+
+    const marcarChip = (filtro: string) => {
+      chips.forEach((chip) => chip.classList.toggle('is-active', chip.dataset.filter === filtro));
+    };
+
+    chips.forEach((chip) => {
+      chip.addEventListener('click', () => {
+        filtroAtual = chip.dataset.filter ?? 'todos';
+        marcarChip(filtroAtual);
+        aplicar();
+      });
+    });
+
+    sort?.addEventListener('change', aplicar);
+
+    colBtns.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        colBtns.forEach((b) => b.classList.toggle('is-active', b === btn));
+        grid.dataset.cols = btn.dataset.cols ?? '3';
+        try {
+          localStorage.setItem('cibele:cols', grid.dataset.cols);
+        } catch {
+          /* sem persistência */
+        }
+      });
+    });
+
+    // Estado inicial vindo da URL (links do menu) e da preferência salva
+    const params = new URLSearchParams(window.location.search);
+    const filtroURL = params.get('filtro');
+    if (filtroURL && chips.some((c) => c.dataset.filter === filtroURL)) {
+      filtroAtual = filtroURL;
+      marcarChip(filtroAtual);
+    }
+    const ordemURL = params.get('ordem');
+    if (sort && ordemURL && [...sort.options].some((o) => o.value === ordemURL)) sort.value = ordemURL;
+
+    try {
+      const cols = localStorage.getItem('cibele:cols');
+      if (cols) {
+        grid.dataset.cols = cols;
+        colBtns.forEach((b) => b.classList.toggle('is-active', b.dataset.cols === cols));
+      }
+    } catch {
+      /* sem persistência */
+    }
+
+    aplicar();
+  }
+</script>
+
 <style>
-  .chero {
-    padding-block: clamp(8rem, 14vw, 11rem) clamp(2.5rem, 5vw, 4rem);
+  .shop-head {
+    padding-bottom: clamp(1.5rem, 3vw, 2.5rem);
   }
 
-  .chero .eyebrow {
-    margin-bottom: 1.5rem;
-  }
-
-  .chero__title {
-    font-size: clamp(2.6rem, 9vw, 4.5rem);
-    line-height: 1.02;
-    margin-bottom: var(--space-32);
-  }
-
-  .chero__meta {
+  .shop-head__grid {
     display: grid;
-    gap: 2rem;
+    gap: 1rem;
     align-items: end;
+    margin-top: clamp(1.25rem, 3vw, 2rem);
   }
 
-  .chero__desc {
-    max-width: 50ch;
-    color: var(--muted);
+  .shop-head__title {
+    text-transform: none;
   }
 
-  .chero__facts {
+  .shop-head__desc {
+    font-size: var(--step--1);
+    max-width: 46ch;
+  }
+
+  @media (min-width: 900px) {
+    .shop-head__grid {
+      grid-template-columns: 1fr auto;
+      gap: 3rem;
+    }
+    .shop-head__desc {
+      text-align: right;
+    }
+  }
+
+  /* Barra de ferramentas */
+  .toolbar {
+    position: sticky;
+    top: var(--header-h);
+    z-index: 60;
+    background: color-mix(in srgb, var(--cream) 92%, transparent);
+    backdrop-filter: blur(12px);
+    border-block: 1px solid var(--line);
+  }
+
+  .toolbar__inner {
     display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem 1.5rem;
     flex-wrap: wrap;
-    gap: 2.5rem;
-    margin: 0;
+    padding-block: 0.7rem;
   }
 
-  .chero__facts dt {
-    font-size: 0.7rem;
-    letter-spacing: 0.14em;
+  .toolbar__filters {
+    display: flex;
+    gap: 0.4rem;
+    overflow-x: auto;
+    scrollbar-width: none;
+    margin-inline: calc(var(--gutter) * -1);
+    padding-inline: var(--gutter);
+  }
+
+  .toolbar__filters::-webkit-scrollbar {
+    display: none;
+  }
+
+  .chip {
+    flex-shrink: 0;
+    min-height: 38px;
+    padding: 0.5rem 1rem;
+    border: 1px solid transparent;
+    background: transparent;
+    font-size: 0.6875rem;
+    font-weight: 500;
+    letter-spacing: var(--track);
     text-transform: uppercase;
     color: var(--muted);
-    margin-bottom: 0.4rem;
+    white-space: nowrap;
+    transition: color var(--duration) var(--ease), border-color var(--duration) var(--ease),
+      background-color var(--duration) var(--ease);
   }
 
-  .chero__facts dd {
-    margin: 0;
-    font-size: 1.15rem;
-    font-weight: 700;
+  .chip:hover {
+    color: var(--bone);
+  }
+
+  .chip.is-active {
+    background: var(--bone);
+    border-color: var(--bone);
+    color: var(--cream);
+  }
+
+  .toolbar__right {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-left: auto;
+  }
+
+  .toolbar__count {
+    white-space: nowrap;
+  }
+
+  .toolbar__sort select {
+    border: 0;
+    background: transparent;
+    font-family: var(--font);
+    font-size: 0.6875rem;
+    font-weight: 500;
+    letter-spacing: var(--track);
+    text-transform: uppercase;
+    color: var(--bone);
+    padding: 0.5rem 0;
+    cursor: pointer;
+  }
+
+  .toolbar__cols {
+    display: none;
+    gap: 0.15rem;
+  }
+
+  .colbtn {
+    width: 34px;
+    height: 34px;
+    display: grid;
+    place-items: center;
+    border: 0;
+    background: transparent;
+    color: var(--muted-dark);
+    transition: color var(--duration) var(--ease);
+  }
+
+  .colbtn:hover,
+  .colbtn.is-active {
     color: var(--bone);
   }
 
   @media (min-width: 900px) {
-    .chero__meta {
-      grid-template-columns: 1fr auto;
+    .toolbar__cols {
+      display: flex;
     }
   }
 
-  /* NAV de coleções (sticky) */
-  .colnav {
-    position: sticky;
-    top: 72px;
-    z-index: 50;
-    background: color-mix(in srgb, var(--ink) 92%, transparent);
-    backdrop-filter: blur(12px);
-    border-bottom: 1px solid var(--line);
+  /* Vitrine */
+  .shop {
+    padding-block: clamp(2rem, 4vw, 3.5rem) clamp(3rem, 7vw, 6rem);
   }
 
-  .colnav__inner {
-    display: flex;
-    align-items: center;
-    gap: 1.5rem 2rem;
-    flex-wrap: wrap;
-    padding-block: 1rem;
+  .shop__cell[hidden] {
+    display: none;
   }
 
-  .colnav__label {
-    font-size: 0.68rem;
-    font-weight: 600;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: var(--muted);
-  }
-
-  .colnav__list {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem 1.8rem;
-    list-style: none;
-    margin: 0;
-    padding: 0;
-  }
-
-  .colnav__list a {
-    display: inline-flex;
-    align-items: baseline;
-    gap: 0.5rem;
-    font-size: 0.86rem;
-    font-weight: 500;
-    color: var(--muted);
-    transition: color var(--duration) var(--ease);
-  }
-
-  .colnav__list a:hover {
-    color: var(--accent-ink);
-  }
-
-  .colnav__idx {
-    font-size: 0.66rem;
-    font-weight: 600;
-    color: var(--muted-dark);
-  }
-
-  /* Seções de coleção */
-  .colsec {
-    padding-block: clamp(3rem, 7vw, 5.5rem);
-    scroll-margin-top: 5rem;
-    border-bottom: 1px solid var(--line);
-  }
-
-  .colsec__head {
-    display: grid;
-    gap: 1rem;
-    margin-bottom: 2.6rem;
-  }
-
-  .colsec__heading {
-    display: flex;
-    align-items: baseline;
-    gap: 1rem;
-  }
-
-  .colsec__idx {
-    font-size: 0.85rem;
-    font-weight: 700;
-    color: var(--accent-ink);
-  }
-
-  .colsec__title {
-    font-family: var(--font-display);
-    font-size: var(--step-3);
-    font-weight: 700;
-    letter-spacing: -0.02em;
-    line-height: 1.05;
-  }
-
-  .colsec__desc {
-    max-width: 60ch;
-    font-size: 0.98rem;
-  }
-
-  .colsec__grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-    gap: 1.4rem;
-  }
-
-  @media (min-width: 900px) {
-    .colsec__head {
-      grid-template-columns: 1fr 1fr;
-      align-items: end;
-    }
-  }
-
-  /* CTA */
-  .cta2 {
+  .shop__empty {
+    padding: 4rem 0;
     text-align: center;
+    color: var(--muted);
+    font-size: var(--step--1);
   }
 
-  .cta2__inner {
-    display: grid;
-    justify-items: center;
-    gap: 1.6rem;
-  }
-
-  .cta2__title {
-    max-width: 18ch;
+  .shop__empty button {
+    border: 0;
+    background: transparent;
+    color: var(--bone);
+    font: inherit;
+    padding: 0;
   }
 </style>

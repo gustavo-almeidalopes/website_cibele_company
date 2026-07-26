@@ -1,0 +1,245 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { shop, formatPrice } from '../data/catalog';
+
+const secoes = [
+  {
+    id: 'envios',
+    titulo: 'Envios e prazos',
+    perguntas: [
+      {
+        p: 'Qual o prazo de entrega?',
+        r: 'A entrega padrão leva de 4 a 7 dias úteis após a confirmação do pagamento. A expressa chega em 1 a 2 dias úteis nas capitais. Pedidos aprovados até as 14h saem do centro de distribuição no mesmo dia.',
+      },
+      {
+        p: 'Quando o frete é grátis?',
+        r: `Pedidos acima de ${formatPrice(shop.freteGratisAcima)} têm frete padrão grátis para todo o Brasil. O valor considerado é o subtotal já com descontos aplicados.`,
+      },
+      {
+        p: 'Posso retirar no local?',
+        r: 'Sim. A retirada é gratuita no centro de distribuição em Guarulhos/SP, de segunda a sexta, das 9h às 17h. O pedido fica pronto em até 24 horas e avisamos por e-mail.',
+      },
+      {
+        p: 'Vocês entregam em todo o Brasil?',
+        r: 'Entregamos em todos os estados. Para regiões remotas o prazo pode ter dois dias úteis a mais — o cálculo exato aparece no checkout depois do CEP.',
+      },
+    ],
+  },
+  {
+    id: 'trocas',
+    titulo: 'Trocas e devoluções',
+    perguntas: [
+      {
+        p: 'Qual o prazo para devolver?',
+        r: 'Você tem 7 dias corridos para arrependimento (Código de Defesa do Consumidor) e 30 dias para trocas de produtos com a embalagem original lacrada. O frete de devolução por arrependimento é por nossa conta.',
+      },
+      {
+        p: 'Recebi um item avariado. E agora?',
+        r: 'Fotografe a caixa e o produto e escreva para contato@cibeleplastic.com em até 72 horas do recebimento. Reenviamos o item ou estornamos o valor integral, sem custo para você.',
+      },
+      {
+        p: 'Como funciona o estorno?',
+        r: 'No Pix e no boleto, o valor volta em até 5 dias úteis para a conta informada. No cartão, o estorno aparece em até duas faturas, conforme o prazo da operadora.',
+      },
+    ],
+  },
+  {
+    id: 'pagamento',
+    titulo: 'Pagamento',
+    perguntas: [
+      {
+        p: 'Quais formas de pagamento vocês aceitam?',
+        r: `Pix (com 5% de desconto), cartão de crédito em até ${shop.parcelas}× sem juros, boleto bancário à vista e faturamento em 30 dias para empresas com cadastro aprovado.`,
+      },
+      {
+        p: 'Emitem nota fiscal?',
+        r: 'Sim, para todos os pedidos. A nota é enviada por e-mail junto com a confirmação de envio e fica disponível na sua conta.',
+      },
+      {
+        p: 'Como funciona a compra faturada?',
+        r: 'Empresas com CNPJ ativo podem solicitar faturamento em 30 dias. A análise leva até dois dias úteis e é feita uma única vez — depois disso, é só escolher a opção no checkout.',
+      },
+    ],
+  },
+  {
+    id: 'produtos',
+    titulo: 'Produtos e compostagem',
+    perguntas: [
+      {
+        p: 'O que significa "compostável em 180 dias"?',
+        r: 'Significa que, em condições de compostagem industrial, o material se decompõe em até 180 dias sem deixar microplásticos. Em compostagem doméstica o processo é mais lento e pode levar até o dobro do tempo.',
+      },
+      {
+        p: 'Posso levar ao micro-ondas?',
+        r: 'Os itens em fibra de cana (pratos, marmitas e bandejas) vão ao micro-ondas por até 3 minutos. Os itens em PLA — copos cristal, potes e canudos — não devem ser aquecidos.',
+      },
+      {
+        p: 'Qual a validade dos produtos?',
+        r: 'Dois anos a partir da fabricação, se armazenados em local seco, arejado e longe da luz direta do sol. A data está impressa na caixa.',
+      },
+      {
+        p: 'Vocês enviam amostras?',
+        r: 'Sim. Novos clientes corporativos recebem um kit de amostras gratuito com um item de cada coleção. Peça pelo formulário de contato informando o CNPJ.',
+      },
+    ],
+  },
+];
+---
+
+<BaseLayout
+  active="ajuda"
+  title="Ajuda — Cibele Plastic"
+  description="Prazos de entrega, trocas e devoluções, formas de pagamento e dúvidas sobre compostagem das embalagens Cibele Plastic."
+>
+  <section class="help page-top section-sm">
+    <div class="container">
+      <nav aria-label="Trilha de navegação">
+        <ol class="crumbs">
+          <li><a href="/">Início</a></li>
+          <li><span aria-current="page">Ajuda</span></li>
+        </ol>
+      </nav>
+
+      <header class="help__head">
+        <h1 class="h-xl">Como podemos ajudar?</h1>
+        <p class="text-muted help__desc">
+          Respostas rápidas sobre entrega, pagamento e uso das embalagens. Se faltar alguma coisa,
+          o atendimento responde em até um dia útil.
+        </p>
+      </header>
+
+      <div class="help__layout">
+        <!-- Índice lateral -->
+        <nav class="help__index" aria-label="Índice da ajuda">
+          <p class="ui-sm text-muted help__index-label">Tópicos</p>
+          <ul>
+            {
+              secoes.map((secao) => (
+                <li>
+                  <a href={`#${secao.id}`}>{secao.titulo}</a>
+                </li>
+              ))
+            }
+          </ul>
+
+          <div class="help__card">
+            <p class="ui-sm">Ainda com dúvida?</p>
+            <p class="help__card-text text-muted">
+              Fale com uma pessoa de verdade — respondemos em até um dia útil.
+            </p>
+            <a class="btn btn--primary btn--block" href="/contato">Falar conosco</a>
+          </div>
+        </nav>
+
+        <!-- Perguntas -->
+        <div class="help__content">
+          {
+            secoes.map((secao) => (
+              <section class="help__section" id={secao.id}>
+                <h2 class="h-md help__section-title">{secao.titulo}</h2>
+                <div class="acc">
+                  {secao.perguntas.map((item, i) => (
+                    <div class="acc__item">
+                      <h3>
+                        <button
+                          class="acc__trigger"
+                          type="button"
+                          aria-expanded="false"
+                          aria-controls={`${secao.id}-${i}`}
+                        >
+                          {item.p}
+                          <span class="acc__sign" aria-hidden="true" />
+                        </button>
+                      </h3>
+                      <div class="acc__panel" id={`${secao.id}-${i}`} hidden>
+                        <div class="acc__inner">{item.r}</div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </section>
+            ))
+          }
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .help__head {
+    margin: clamp(1.25rem, 3vw, 2rem) 0 3rem;
+    display: grid;
+    gap: 1rem;
+  }
+
+  .help__desc {
+    font-size: var(--step-1);
+    max-width: 52ch;
+  }
+
+  .help__layout {
+    display: grid;
+    gap: 3rem;
+    align-items: start;
+  }
+
+  .help__index-label {
+    margin-bottom: 1rem;
+  }
+
+  .help__index ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 0.8rem;
+  }
+
+  .help__index a {
+    font-size: var(--step--1);
+    color: var(--bone);
+    transition: color var(--duration) var(--ease);
+  }
+
+  .help__index a:hover {
+    color: var(--accent-ink);
+  }
+
+  .help__card {
+    margin-top: 2.5rem;
+    padding: 1.4rem;
+    border: 1px solid var(--line);
+    background: var(--ink-2);
+  }
+
+  .help__card-text {
+    margin: 0.7rem 0 1.2rem;
+    font-size: var(--step--1);
+    line-height: 1.6;
+  }
+
+  .help__section {
+    scroll-margin-top: calc(var(--header-h) + 2rem);
+  }
+
+  .help__section + .help__section {
+    margin-top: 3.5rem;
+  }
+
+  .help__section-title {
+    margin-bottom: 1.2rem;
+  }
+
+  @media (min-width: 900px) {
+    .help__layout {
+      grid-template-columns: 260px 1fr;
+      gap: 5rem;
+    }
+
+    .help__index {
+      position: sticky;
+      top: calc(var(--header-h) + 2rem);
+    }
+  }
+</style>

@@ -1,0 +1,533 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  active="conta"
+  title="Minha conta — Cibele Plastic"
+  description="Acesse sua conta Cibele Plastic para acompanhar pedidos, endereços e favoritos."
+>
+  <section class="acct page-top section-sm">
+    <div class="container">
+      <nav aria-label="Trilha de navegação">
+        <ol class="crumbs">
+          <li><a href="/">Início</a></li>
+          <li><span aria-current="page">Minha conta</span></li>
+        </ol>
+      </nav>
+
+      <!-- Visitante -->
+      <div class="acct__gate" data-acct-gate hidden>
+        <div class="acct__intro">
+          <h1 class="h-xl acct__title">Minha conta</h1>
+          <p class="text-muted acct__desc">
+            Acompanhe pedidos, guarde endereços e mantenha seus favoritos entre visitas.
+          </p>
+          <p class="acct__demo">
+            Esta é uma vitrine de demonstração: a conta é criada apenas neste navegador, sem
+            servidor e sem senha guardada em lugar nenhum.
+          </p>
+        </div>
+
+        <div class="acct__forms">
+          <div class="tabs" role="tablist" aria-label="Entrar ou criar conta">
+            <button class="tab is-active" type="button" role="tab" aria-selected="true" data-tab="entrar">
+              Entrar
+            </button>
+            <button class="tab" type="button" role="tab" aria-selected="false" data-tab="criar">
+              Criar conta
+            </button>
+          </div>
+
+          <form class="acct__form" data-tab-panel="entrar" novalidate>
+            <label class="field">
+              <input class="field__input" type="email" name="email" placeholder=" " autocomplete="email" required />
+              <span class="field__label">E-mail</span>
+              <span class="field__error">Informe um e-mail válido.</span>
+            </label>
+
+            <label class="field">
+              <input class="field__input" type="password" name="senha" placeholder=" " autocomplete="current-password" required />
+              <span class="field__label">Senha</span>
+              <span class="field__error">A senha precisa de ao menos 6 caracteres.</span>
+            </label>
+
+            <button class="btn btn--primary btn--block" type="submit">Entrar</button>
+            <p class="acct__aux text-muted">
+              Esqueceu a senha? <a class="link-underline" href="/contato">Fale com o atendimento</a>.
+            </p>
+          </form>
+
+          <form class="acct__form" data-tab-panel="criar" hidden novalidate>
+            <label class="field">
+              <input class="field__input" type="text" name="nome" placeholder=" " autocomplete="name" required />
+              <span class="field__label">Nome completo</span>
+              <span class="field__error">Informe nome e sobrenome.</span>
+            </label>
+
+            <label class="field">
+              <input class="field__input" type="email" name="email" placeholder=" " autocomplete="email" required />
+              <span class="field__label">E-mail</span>
+              <span class="field__error">Informe um e-mail válido.</span>
+            </label>
+
+            <label class="field">
+              <input class="field__input" type="password" name="senha" placeholder=" " autocomplete="new-password" required />
+              <span class="field__label">Senha</span>
+              <span class="field__error">A senha precisa de ao menos 6 caracteres.</span>
+            </label>
+
+            <label class="check acct__check">
+              <input type="checkbox" name="termos" required />
+              <span>
+                Li e aceito os <a class="link-underline" href="/termos">Termos de Uso</a> e a
+                <a class="link-underline" href="/privacidade">Política de Privacidade</a>.
+              </span>
+            </label>
+            <p class="acct__erro" data-criar-erro hidden>É preciso aceitar os termos.</p>
+
+            <button class="btn btn--primary btn--block" type="submit">Criar conta</button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Autenticado -->
+      <div class="acct__panel" data-acct-panel hidden>
+        <header class="acct__head">
+          <div>
+            <p class="eyebrow">Minha conta</p>
+            <h1 class="h-xl acct__title">Olá, <span data-acct-name>—</span></h1>
+            <p class="text-muted acct__email" data-acct-email>—</p>
+          </div>
+          <button class="btn btn--ghost" type="button" data-logout>Sair</button>
+        </header>
+
+        <div class="acct__grid">
+          <section class="acct__orders">
+            <h2 class="ui acct__label">Meus pedidos</h2>
+            <div data-acct-orders></div>
+            <p class="acct__none text-muted" data-acct-no-orders hidden>
+              Você ainda não fez pedidos neste navegador.
+              <a class="link-underline" href="/embalagens">Ver catálogo</a>.
+            </p>
+          </section>
+
+          <aside class="acct__side">
+            <div class="acct__box">
+              <h2 class="ui acct__label">Favoritos</h2>
+              <p class="acct__box-num" data-acct-wish>0</p>
+              <a class="link-arrow" href="/favoritos">
+                <span>Ver favoritos</span>
+                <span class="arrow" aria-hidden="true">↗</span>
+              </a>
+            </div>
+
+            <div class="acct__box">
+              <h2 class="ui acct__label">Endereço salvo</h2>
+              <p class="acct__text" data-acct-address>Nenhum endereço salvo ainda.</p>
+            </div>
+
+            <div class="acct__box">
+              <h2 class="ui acct__label">Atendimento</h2>
+              <p class="acct__text">
+                Dúvidas sobre um pedido, prazo ou nota fiscal? Respondemos em até um dia útil.
+              </p>
+              <a class="link-arrow" href="/contato">
+                <span>Falar conosco</span>
+                <span class="arrow" aria-hidden="true">↗</span>
+              </a>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<script>
+  import { formatPrice, getOrders, getShipping, getUser, getWishlist, saveUser } from '../scripts/store';
+
+  const gate = document.querySelector<HTMLElement>('[data-acct-gate]');
+  const painel = document.querySelector<HTMLElement>('[data-acct-panel]');
+
+  /* ---------- abas ---------- */
+  const abas = Array.from(document.querySelectorAll<HTMLElement>('[data-tab]'));
+  const paineis = Array.from(document.querySelectorAll<HTMLElement>('[data-tab-panel]'));
+
+  abas.forEach((aba) => {
+    aba.addEventListener('click', () => {
+      const alvo = aba.dataset.tab;
+      abas.forEach((a) => {
+        const ativo = a === aba;
+        a.classList.toggle('is-active', ativo);
+        a.setAttribute('aria-selected', String(ativo));
+      });
+      paineis.forEach((p) => (p.hidden = p.dataset.tabPanel !== alvo));
+    });
+  });
+
+  /* ---------- validação ---------- */
+  function marcar(campo: HTMLInputElement, valido: boolean) {
+    campo.closest('.field')?.classList.toggle('is-invalid', !valido);
+    return valido;
+  }
+
+  function validar(form: HTMLFormElement): boolean {
+    let ok = true;
+    form.querySelectorAll<HTMLInputElement>('input[required]').forEach((campo) => {
+      if (campo.type === 'checkbox') return;
+      const valor = campo.value.trim();
+      let valido = valor.length > 0;
+      if (campo.type === 'email') valido = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(valor);
+      if (campo.type === 'password') valido = valor.length >= 6;
+      if (campo.name === 'nome') valido = valor.length >= 3 && valor.includes(' ');
+      if (!marcar(campo, valido)) ok = false;
+    });
+    return ok;
+  }
+
+  // Limpa o erro enquanto a pessoa corrige, para o layout não pular sob o clique
+  document.addEventListener('input', (event) => {
+    const campo = event.target as HTMLInputElement;
+    const wrapper = campo.closest?.('.field.is-invalid');
+    if (!wrapper) return;
+
+    const valor = campo.value.trim();
+    let valido = valor.length > 0;
+    if (campo.type === 'email') valido = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(valor);
+    if (campo.type === 'password') valido = valor.length >= 6;
+    if (campo.name === 'nome') valido = valor.length >= 3 && valor.includes(' ');
+    wrapper.classList.toggle('is-invalid', !valido);
+  });
+
+  /* ---------- entrar ---------- */
+  const formEntrar = document.querySelector<HTMLFormElement>('[data-tab-panel="entrar"]');
+  formEntrar?.addEventListener('submit', (event) => {
+    event.preventDefault();
+    if (!validar(formEntrar)) return;
+
+    const email = String(new FormData(formEntrar).get('email') ?? '');
+    const anterior = getUser();
+    // Sem back-end: o nome vem do cadastro anterior ou do próprio e-mail.
+    saveUser({ nome: anterior?.nome || email.split('@')[0], email });
+    render();
+  });
+
+  /* ---------- criar conta ---------- */
+  const formCriar = document.querySelector<HTMLFormElement>('[data-tab-panel="criar"]');
+  formCriar?.addEventListener('submit', (event) => {
+    event.preventDefault();
+    if (!validar(formCriar)) return;
+
+    const dados = new FormData(formCriar);
+    const erro = document.querySelector<HTMLElement>('[data-criar-erro]');
+    if (!dados.get('termos')) {
+      if (erro) erro.hidden = false;
+      return;
+    }
+    if (erro) erro.hidden = true;
+
+    saveUser({ nome: String(dados.get('nome') ?? ''), email: String(dados.get('email') ?? '') });
+    render();
+  });
+
+  /* ---------- sair ---------- */
+  document.querySelector('[data-logout]')?.addEventListener('click', () => {
+    saveUser(null);
+    render();
+  });
+
+  /* ---------- render ---------- */
+  function render() {
+    const usuario = getUser();
+
+    if (gate) gate.hidden = !!usuario;
+    if (painel) painel.hidden = !usuario;
+    if (!usuario) return;
+
+    const texto = (seletor: string, valor: string) => {
+      const el = document.querySelector<HTMLElement>(seletor);
+      if (el) el.textContent = valor;
+    };
+
+    texto('[data-acct-name]', usuario.nome.split(' ')[0]);
+    texto('[data-acct-email]', usuario.email);
+    texto('[data-acct-wish]', String(getWishlist().length));
+
+    const endereco = getShipping();
+    const alvoEndereco = document.querySelector<HTMLElement>('[data-acct-address]');
+    if (alvoEndereco && endereco.logradouro) {
+      alvoEndereco.innerHTML = [
+        `${endereco.logradouro}, ${endereco.numero ?? ''}`,
+        endereco.complemento,
+        `${endereco.bairro ?? ''} — ${endereco.cidade ?? ''}/${endereco.uf ?? ''}`,
+        `CEP ${endereco.cep ?? ''}`,
+      ]
+        .filter(Boolean)
+        .join('<br />');
+    }
+
+    const pedidos = getOrders();
+    const lista = document.querySelector<HTMLElement>('[data-acct-orders]');
+    const semPedidos = document.querySelector<HTMLElement>('[data-acct-no-orders]');
+    if (semPedidos) semPedidos.hidden = pedidos.length > 0;
+
+    if (lista) {
+      lista.innerHTML = pedidos
+        .map((pedido) => {
+          const data = new Date(pedido.data).toLocaleDateString('pt-BR', {
+            day: '2-digit',
+            month: 'short',
+            year: 'numeric',
+          });
+          const total = pedido.itens.reduce((soma, item) => soma + item.qty, 0);
+          return `
+          <article class="ordrow">
+            <div class="ordrow__head">
+              <span class="ordrow__num">${pedido.numero}</span>
+              <span class="ordrow__date">${data}</span>
+            </div>
+            <div class="ordrow__thumbs">
+              ${pedido.itens
+                .slice(0, 4)
+                .map((item) => `<span><img src="${item.imagem}" alt="${item.nome}" loading="lazy" /></span>`)
+                .join('')}
+            </div>
+            <div class="ordrow__foot">
+              <span class="ordrow__meta">${total} ${total === 1 ? 'item' : 'itens'} · ${pedido.pagamento}</span>
+              <span class="ordrow__total">${formatPrice(pedido.totais.total)}</span>
+            </div>
+            <a class="ordrow__link" href="/pedido?n=${encodeURIComponent(pedido.numero)}">Ver detalhes</a>
+          </article>`;
+        })
+        .join('');
+    }
+  }
+
+  render();
+</script>
+
+<style>
+  .acct__title {
+    margin: 0.6rem 0 0.6rem;
+  }
+
+  .acct__gate {
+    display: grid;
+    gap: 3rem;
+    margin-top: clamp(1.25rem, 3vw, 2rem);
+    align-items: start;
+  }
+
+  .acct__gate[hidden],
+  .acct__panel[hidden] {
+    display: none;
+  }
+
+  .acct__desc {
+    font-size: var(--step--1);
+    max-width: 40ch;
+  }
+
+  .acct__demo {
+    margin-top: 1.4rem;
+    padding: 1rem 1.1rem;
+    border-left: 2px solid var(--forest);
+    background: var(--ink-2);
+    font-size: var(--step--1);
+    line-height: 1.65;
+    color: var(--muted);
+    max-width: 46ch;
+  }
+
+  /* Abas */
+  .tabs {
+    display: flex;
+    gap: 0;
+    border-bottom: 1px solid var(--line);
+    margin-bottom: 1.8rem;
+  }
+
+  .tab {
+    flex: 1;
+    min-height: 48px;
+    border: 0;
+    border-bottom: 1px solid transparent;
+    background: transparent;
+    font-size: var(--step--2);
+    font-weight: 500;
+    letter-spacing: var(--track);
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: -1px;
+    transition: color var(--duration) var(--ease), border-color var(--duration) var(--ease);
+  }
+
+  .tab.is-active {
+    color: var(--bone);
+    border-bottom-color: var(--bone);
+  }
+
+  .acct__form {
+    display: grid;
+    gap: 1rem;
+  }
+
+  .acct__form[hidden] {
+    display: none;
+  }
+
+  .acct__check {
+    margin-top: 0.2rem;
+  }
+
+  .acct__erro {
+    font-size: var(--step--1);
+    color: var(--color-error);
+  }
+
+  .acct__aux {
+    font-size: var(--step--1);
+    text-align: center;
+  }
+
+  /* Painel autenticado */
+  .acct__head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    margin: clamp(1.25rem, 3vw, 2rem) 0 2.5rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .acct__email {
+    font-size: var(--step--1);
+  }
+
+  .acct__grid {
+    display: grid;
+    gap: 3rem;
+    align-items: start;
+  }
+
+  .acct__label {
+    padding-bottom: 0.8rem;
+    margin-bottom: 1.2rem;
+    border-bottom: 1px solid var(--bone);
+  }
+
+  .acct__none {
+    font-size: var(--step--1);
+  }
+
+  .acct :global(.ordrow) {
+    display: grid;
+    gap: 0.9rem;
+    padding: 1.4rem;
+    border: 1px solid var(--line);
+    margin-bottom: 1rem;
+  }
+
+  .acct :global(.ordrow__head) {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    font-size: 0.6875rem;
+    letter-spacing: var(--track);
+    text-transform: uppercase;
+  }
+
+  .acct :global(.ordrow__num) {
+    font-weight: 600;
+  }
+
+  .acct :global(.ordrow__date) {
+    color: var(--muted);
+  }
+
+  .acct :global(.ordrow__thumbs) {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  .acct :global(.ordrow__thumbs span) {
+    width: 54px;
+    aspect-ratio: 4 / 5;
+    background: var(--ink-2);
+    overflow: hidden;
+  }
+
+  .acct :global(.ordrow__thumbs img) {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    padding: 10%;
+    mix-blend-mode: multiply;
+  }
+
+  .acct :global(.ordrow__foot) {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    align-items: baseline;
+    font-size: var(--step--1);
+  }
+
+  .acct :global(.ordrow__meta) {
+    color: var(--muted);
+  }
+
+  .acct :global(.ordrow__total) {
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .acct :global(.ordrow__link) {
+    justify-self: start;
+    font-size: 0.6875rem;
+    letter-spacing: var(--track);
+    text-transform: uppercase;
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+
+  .acct__side {
+    display: grid;
+    gap: 1.5rem;
+  }
+
+  .acct__box {
+    border: 1px solid var(--line);
+    background: var(--ink-2);
+    padding: 1.4rem;
+  }
+
+  .acct__box-num {
+    font-family: var(--font-display);
+    font-size: 2rem;
+    font-weight: 300;
+    line-height: 1;
+    margin-bottom: 0.8rem;
+  }
+
+  .acct__text {
+    font-size: var(--step--1);
+    line-height: 1.7;
+    color: var(--muted);
+    margin-bottom: 0.8rem;
+  }
+
+  @media (min-width: 900px) {
+    .acct__gate {
+      grid-template-columns: 1fr 420px;
+      gap: 5rem;
+    }
+    .acct__grid {
+      grid-template-columns: 1fr 320px;
+      gap: 4rem;
+    }
+  }
+</style>

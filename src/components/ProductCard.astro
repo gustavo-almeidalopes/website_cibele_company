@@ -1,179 +1,322 @@
 ---
-import { formatPrice, collectionLabels, type Product } from '../data/catalog';
+import {
+  formatPrice,
+  precoBase,
+  precoUnitario,
+  badges,
+  collectionLabels,
+  type Product,
+} from '../data/catalog';
 
 interface Props {
   product: Product;
   index?: number;
+  /** Carrega a imagem com prioridade (primeiras linhas da vitrine) */
+  eager?: boolean;
 }
 
-const { product, index = 0 } = Astro.props;
+const { product, index = 0, eager = false } = Astro.props;
+
+const href = `/produto/${product.slug}`;
+const preco = precoBase(product);
+const unitario = precoUnitario(product);
+const menorVariante = product.variantes.reduce((a, b) => (a.preco <= b.preco ? a : b));
+const esgotado = product.variantes.every((v) => v.estoque === 0);
 ---
 
-<article class="card" data-reveal-item>
-  <div class="card__media">
-    <span class="card__index">{String(index + 1).padStart(2, '0')}</span>
-    <span class="card__tag">{collectionLabels[product.colecao]}</span>
-    <div class="media-ph"><span class="media-ph__label">Imagem</span></div>
-  </div>
+<article class="pcard" data-reveal-item data-product={product.slug}>
+  <div class="pcard__frame">
+    <a class="pcard__link" href={href} aria-label={`${product.nome} — ver produto`}>
+      <div class="pcard__media">
+        <img
+          class="pcard__img"
+          src={product.imagens[0]}
+          alt={product.nome}
+          loading={eager ? 'eager' : 'lazy'}
+          decoding="async"
+          width="600"
+          height="750"
+        />
+        {
+          product.imagens[1] && (
+            <img
+              class="pcard__img pcard__img--alt"
+              src={product.imagens[1]}
+              alt=""
+              aria-hidden="true"
+              loading="lazy"
+              decoding="async"
+              width="600"
+              height="750"
+            />
+          )
+        }
 
-  <div class="card__body">
-    <div class="card__head">
-      <h3 class="card__name">{product.nome}</h3>
-      <span class="card__price">{formatPrice(product.preco)}</span>
-    </div>
-    <p class="card__desc">{product.descricao}</p>
-    <button class="card__add" type="button" data-add data-name={product.nome} aria-label={`Adicionar ${product.nome} ao carrinho`}>
-      <span class="card__add-label">Adicionar</span>
-      <span class="card__add-icon" aria-hidden="true">
-        <svg viewBox="0 0 24 24" width="16" height="16">
-          <path d="M12 5v14M5 12h14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path>
-        </svg>
-      </span>
+        {product.badge && <span class:list={['badge', `badge--${product.badge}`, 'pcard__badge']}>{badges[product.badge]}</span>}
+        {esgotado && <span class="pcard__sold ui-sm">Esgotado</span>}
+      </div>
+    </a>
+
+    <button
+      class="pcard__wish"
+      type="button"
+      data-wish={product.slug}
+      aria-pressed="false"
+      aria-label={`Adicionar ${product.nome} aos favoritos`}
+    >
+      <svg viewBox="0 0 24 24" width="17" height="17" aria-hidden="true">
+        <path
+          d="M12 20.5 4.3 13a4.6 4.6 0 0 1 6.5-6.5l1.2 1.2 1.2-1.2A4.6 4.6 0 0 1 19.7 13Z"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.4"
+          stroke-linejoin="round"></path>
+      </svg>
+    </button>
+
+    <button
+      class="pcard__add"
+      type="button"
+      data-add-sku={menorVariante.sku}
+      data-add-name={product.nome}
+      disabled={esgotado}
+    >
+      <span>{esgotado ? 'Indisponível' : 'Adicionar'}</span>
     </button>
   </div>
+
+  <div class="pcard__body">
+    <div class="pcard__info">
+      <h3 class="pcard__name">
+        <a href={href}>{product.nome}</a>
+      </h3>
+      <p class="pcard__meta">{collectionLabels[product.colecao]} · {menorVariante.rotulo}</p>
+    </div>
+    <div class="pcard__prices">
+      <span class="pcard__price">{formatPrice(preco)}</span>
+      <span class="pcard__unit">{formatPrice(unitario)} / un.</span>
+    </div>
+  </div>
+
+  <span class="visually-hidden">Posição {index + 1} na vitrine</span>
 </article>
 
 <style>
-  .card {
+  .pcard {
     position: relative;
     display: flex;
     flex-direction: column;
-    background: var(--ink-2);
-    border: 1px solid var(--line);
-    border-radius: var(--radius);
-    overflow: hidden;
-    transition: transform var(--duration-slow) var(--ease), border-color var(--duration-slow) var(--ease),
-      background-color var(--duration-slow) var(--ease);
   }
 
-  .card:hover {
-    transform: translateY(-4px);
-    border-color: var(--line-strong);
-    background: var(--ink-3);
-  }
-
-  .card__media {
+  /* O quadro tem exatamente a altura da imagem — é a âncora da
+     adição rápida e do botão de favoritos. */
+  .pcard__frame {
     position: relative;
-    aspect-ratio: 4 / 3;
-    background: var(--ink-3);
-    overflow: hidden;
   }
 
-  .card__media img {
+  .pcard__link {
+    display: block;
+  }
+
+  .pcard__media {
+    position: relative;
+    aspect-ratio: 4 / 5;
+    overflow: hidden;
+    background: var(--ink-2);
+  }
+
+  .pcard__img {
+    position: absolute;
+    inset: 0;
     width: 100%;
     height: 100%;
     object-fit: contain;
-    padding: 14%;
+    padding: 7%;
+    transition: opacity var(--duration-slow) var(--ease), transform 700ms var(--ease);
+    mix-blend-mode: multiply;
   }
 
-  .card__index {
+  .pcard__img--alt {
+    opacity: 0;
+  }
+
+  @media (hover: hover) {
+    .pcard:hover .pcard__img {
+      transform: scale(1.04);
+    }
+
+    .pcard:hover .pcard__img--alt {
+      opacity: 1;
+    }
+
+    .pcard:hover .pcard__img:not(.pcard__img--alt) {
+      opacity: 0;
+    }
+  }
+
+  .pcard__badge {
     position: absolute;
-    top: 1rem;
-    left: 1rem;
-    font-size: 0.72rem;
-    font-weight: 600;
-    letter-spacing: 0.1em;
+    top: 0.85rem;
+    left: 0.85rem;
+    z-index: 2;
+  }
+
+  .pcard__sold {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    z-index: 2;
+    padding: 0.45rem 0.85rem;
+    background: var(--cream);
     color: var(--muted);
-    z-index: 2;
   }
 
-  .card__tag {
+  .pcard__wish {
     position: absolute;
-    top: 1rem;
-    right: 1rem;
-    z-index: 2;
-    padding: 0.3rem 0.7rem;
-    border-radius: var(--radius-pill);
-    background: var(--forest);
-    font-size: 0.66rem;
-    font-weight: 600;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--cream);
+    top: 0.5rem;
+    right: 0.5rem;
+    z-index: 3;
+    width: 38px;
+    height: 38px;
+    display: grid;
+    place-items: center;
+    border: 0;
+    background: transparent;
+    color: var(--bone);
+    opacity: 0.55;
+    transition: opacity var(--duration) var(--ease), color var(--duration) var(--ease);
   }
 
-  .card__body {
-    display: flex;
-    flex-direction: column;
-    gap: 0.8rem;
-    padding: 24px;
-    flex: 1;
+  .pcard__wish:hover {
+    opacity: 1;
   }
 
-  .card__head {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    gap: 1rem;
-  }
-
-  .card__name {
-    font-size: 1.02rem;
-    font-weight: 700;
-    line-height: 1.15;
-    letter-spacing: -0.01em;
-  }
-
-  .card__price {
-    flex-shrink: 0;
-    font-size: 0.95rem;
-    font-weight: 700;
+  .pcard__wish[aria-pressed='true'] {
+    opacity: 1;
     color: var(--accent-ink);
   }
 
-  .card__desc {
-    font-size: 0.85rem;
+  .pcard__wish[aria-pressed='true'] path {
+    fill: currentColor;
+  }
+
+  /* Em telas estreitas o preço desce para baixo do nome — lado a lado, os
+     dois se espremem e quebram em três linhas cada. */
+  .pcard__body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    padding-top: 0.9rem;
+  }
+
+  @media (min-width: 620px) {
+    .pcard__body {
+      flex-direction: row;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+  }
+
+  .pcard__name {
+    font-family: var(--font);
+    font-size: var(--step--1);
+    font-weight: 500;
+    letter-spacing: 0.01em;
+    line-height: 1.35;
+  }
+
+  .pcard__name a::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+  }
+
+  .pcard__meta {
+    margin-top: 0.2rem;
+    font-size: 0.6875rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
     color: var(--muted);
-    line-height: 1.5;
-    flex: 1;
   }
 
-  .card__add {
-    display: inline-flex;
-    align-items: center;
-    justify-content: space-between;
+  .pcard__prices {
+    display: flex;
+    align-items: baseline;
     gap: 0.5rem;
-    min-height: 44px;
-    margin-top: 0.4rem;
-    padding: 0.6rem 0.6rem 0.6rem 1.1rem;
-    border-radius: var(--radius-pill);
-    border: 1px solid var(--line-strong);
-    background: transparent;
-    color: var(--bone);
-    font-size: 0.76rem;
+    flex-shrink: 0;
+  }
+
+  @media (min-width: 620px) {
+    .pcard__prices {
+      display: block;
+      text-align: right;
+    }
+  }
+
+  .pcard__price {
+    display: block;
+    font-size: var(--step--1);
     font-weight: 600;
-    letter-spacing: 0.02em;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .pcard__unit {
+    display: block;
+    margin-top: 0.15rem;
+    font-size: 0.6875rem;
+    color: var(--muted);
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Adição rápida — encostada na base da imagem. No toque fica
+     sempre visível; no ponteiro fino, surge no hover. */
+  .pcard__add {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 2;
+    min-height: 42px;
+    border: 0;
+    border-top: 1px solid var(--line);
+    background: color-mix(in srgb, var(--cream) 92%, transparent);
+    backdrop-filter: blur(6px);
+    color: var(--bone);
+    font-size: 0.6875rem;
+    font-weight: 500;
+    letter-spacing: var(--track);
+    text-transform: uppercase;
     transition: background-color var(--duration) var(--ease), color var(--duration) var(--ease),
-      border-color var(--duration) var(--ease);
+      opacity var(--duration) var(--ease), transform var(--duration) var(--ease);
   }
 
-  .card__add-icon {
-    display: grid;
-    place-items: center;
-    width: 28px;
-    height: 28px;
-    border-radius: 50%;
-    background: var(--forest);
-    color: var(--cream);
-    transition: transform var(--duration) var(--ease);
-  }
-
-  .card__add:hover {
-    border-color: var(--forest);
-  }
-
-  .card__add:hover .card__add-icon {
-    transform: rotate(90deg);
-  }
-
-  .card__add.is-added {
-    border-color: var(--forest);
+  .pcard__add:hover {
     background: var(--forest);
     color: var(--cream);
   }
 
-  .card__add.is-added .card__add-icon {
-    background: var(--cream);
-    color: var(--forest);
+  .pcard__add[disabled] {
+    opacity: 0.5;
+    pointer-events: none;
+  }
+
+  .pcard__add.is-added {
+    background: var(--forest);
+    color: var(--cream);
+  }
+
+  @media (hover: hover) {
+    .pcard__add {
+      opacity: 0;
+      transform: translateY(100%);
+    }
+
+    .pcard:hover .pcard__add,
+    .pcard:focus-within .pcard__add {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 </style>

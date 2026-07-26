@@ -1,0 +1,188 @@
+---
+// Cesta lateral — a estrutura vem estática; o conteúdo é escrito
+// pelo cliente a partir do estado da loja (shop-ui.ts).
+---
+
+<div class="overlay" data-cart-overlay hidden></div>
+
+<aside class="drawer" data-cart-drawer hidden aria-label="Cesta de compras" role="dialog" aria-modal="true">
+  <header class="drawer__head">
+    <p class="ui">Cesta <span data-cart-title-count class="text-muted"></span></p>
+    <button class="icon-btn" type="button" data-cart-close aria-label="Fechar cesta">
+      <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+        <path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"></path>
+      </svg>
+    </button>
+  </header>
+
+  <!-- Barra de progresso do frete grátis -->
+  <div class="freebar" data-freebar hidden>
+    <p class="freebar__text" data-freebar-text></p>
+    <div class="freebar__track"><span class="freebar__fill" data-freebar-fill></span></div>
+  </div>
+
+  <div class="drawer__body" data-cart-body>
+    <div class="empty">
+      <span class="empty__icon">
+        <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true">
+          <path
+            d="M5.5 7.5h13l-1.1 12a1.6 1.6 0 0 1-1.6 1.5H8.2a1.6 1.6 0 0 1-1.6-1.5Z"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.3"
+            stroke-linejoin="round"></path>
+          <path d="M9 9.5V7a3 3 0 0 1 6 0v2.5" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"></path>
+        </svg>
+      </span>
+      <p class="ui">Sua cesta está vazia</p>
+      <p class="text-muted" style="font-size: var(--step--1); max-width: 30ch;">
+        Explore as coleções e adicione as embalagens que combinam com a sua operação.
+      </p>
+      <a class="btn btn--primary" href="/embalagens" data-cart-close>Ver catálogo</a>
+    </div>
+  </div>
+
+  <footer class="drawer__foot" data-cart-foot hidden>
+    <div class="summary__row">
+      <span>Subtotal</span>
+      <strong data-cart-subtotal>—</strong>
+    </div>
+    <div class="summary__row" data-cart-discount-row hidden>
+      <span data-cart-discount-label>Desconto</span>
+      <strong data-cart-discount>—</strong>
+    </div>
+    <div class="summary__row">
+      <span>Frete</span>
+      <strong data-cart-shipping>—</strong>
+    </div>
+    <div class="summary__total">
+      <span>Total</span>
+      <span data-cart-total>—</span>
+    </div>
+    <p class="drawer__installment text-muted" data-cart-installment></p>
+    <a class="btn btn--primary btn--block" href="/checkout">Finalizar compra</a>
+    <a class="btn btn--secondary btn--block" href="/carrinho">Ver cesta completa</a>
+  </footer>
+</aside>
+
+<style>
+  .freebar {
+    padding: 0.95rem var(--gutter);
+    border-bottom: 1px solid var(--line);
+    background: var(--ink-2);
+  }
+
+  .freebar[hidden] {
+    display: none;
+  }
+
+  .freebar__text {
+    font-size: 0.6875rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 0.5rem;
+  }
+
+  .freebar__text strong {
+    color: var(--bone);
+    font-weight: 600;
+  }
+
+  .freebar__track {
+    height: 2px;
+    background: var(--line);
+    overflow: hidden;
+  }
+
+  .freebar__fill {
+    display: block;
+    height: 100%;
+    width: 0;
+    background: var(--forest);
+    transition: width var(--duration-slow) var(--ease);
+  }
+
+  .drawer__installment {
+    font-size: 0.6875rem;
+    letter-spacing: 0.04em;
+    text-align: right;
+    margin-top: -0.3rem;
+  }
+
+  /* Linha de item — escrita pelo cliente */
+  .drawer :global(.citem) {
+    display: grid;
+    grid-template-columns: 88px 1fr;
+    gap: 1rem;
+    padding: 1.1rem 0;
+    border-bottom: 1px solid var(--line-soft);
+  }
+
+  .drawer :global(.citem:first-child) {
+    padding-top: 0;
+  }
+
+  .drawer :global(.citem__media) {
+    aspect-ratio: 4 / 5;
+    background: var(--ink-2);
+    overflow: hidden;
+  }
+
+  .drawer :global(.citem__media img) {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    padding: 10%;
+    mix-blend-mode: multiply;
+  }
+
+  .drawer :global(.citem__body) {
+    display: grid;
+    align-content: start;
+    gap: 0.35rem;
+  }
+
+  .drawer :global(.citem__name) {
+    font-size: var(--step--1);
+    font-weight: 500;
+    line-height: 1.3;
+  }
+
+  .drawer :global(.citem__meta) {
+    font-size: 0.6875rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .drawer :global(.citem__foot) {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    margin-top: 0.4rem;
+  }
+
+  .drawer :global(.citem__price) {
+    font-size: var(--step--1);
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .drawer :global(.citem__remove) {
+    border: 0;
+    background: transparent;
+    padding: 0;
+    font-size: 0.6875rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .drawer :global(.citem__remove:hover) {
+    color: var(--color-error);
+  }
+</style>
