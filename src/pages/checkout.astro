@@ -332,6 +332,10 @@ const estados = [
               <span>Desconto</span>
               <strong data-ck-discount>—</strong>
             </div>
+            <div class="summary__row" data-ck-pix-row hidden>
+              <span>Desconto à vista (Pix)</span>
+              <strong data-ck-pix>—</strong>
+            </div>
             <div class="summary__row">
               <span>Frete</span>
               <strong data-ck-shipping>—</strong>
@@ -372,6 +376,7 @@ const estados = [
   } from '../scripts/store';
 
   type Metodo = 'padrao' | 'expresso' | 'retirada';
+  type Pagamento = 'pix' | 'cartao' | 'boleto' | 'faturado';
 
   const layout = document.querySelector<HTMLElement>('[data-ck-layout]');
   const vazio = document.querySelector<HTMLElement>('[data-ck-empty]');
@@ -380,7 +385,7 @@ const estados = [
 
   const dados: Record<string, string> = {};
   let metodoFrete: Metodo = 'padrao';
-  let metodoPagamento = 'pix';
+  let metodoPagamento: Pagamento = 'pix';
 
   /* ---------- navegação entre etapas ---------- */
   function irPara(id: string) {
@@ -541,7 +546,7 @@ const estados = [
   /* ---------- resumo lateral ---------- */
   function renderResumo() {
     const itens = cartItems();
-    const t = totals(metodoFrete);
+    const t = totals(metodoFrete, metodoPagamento);
 
     const lista = document.querySelector<HTMLElement>('[data-ck-items]');
     if (lista) {
@@ -577,6 +582,12 @@ const estados = [
       texto('[data-ck-discount]', `− ${formatPrice(t.desconto)}`);
     }
 
+    const linhaPix = document.querySelector<HTMLElement>('[data-ck-pix-row]');
+    if (linhaPix) {
+      linhaPix.hidden = t.descontoPagamento === 0;
+      texto('[data-ck-pix]', `− ${formatPrice(t.descontoPagamento)}`);
+    }
+
     // Parcelas do cartão acompanham o total
     const select = document.querySelector<HTMLSelectElement>('[data-parcelas]');
     if (select) {
@@ -607,7 +618,7 @@ const estados = [
     const alvo = document.querySelector<HTMLElement>('[data-review]');
     if (!alvo) return;
 
-    const t = totals(metodoFrete);
+    const t = totals(metodoFrete, metodoPagamento);
     const cartao = dados.cartaoNumero ? `•••• ${soDigitos(dados.cartaoNumero).slice(-4)}` : '';
     const endereco = [
       `${dados.logradouro ?? ''}, ${dados.numero ?? ''}`,
@@ -686,7 +697,8 @@ const estados = [
   formPagamento?.addEventListener('change', (event) => {
     const alvo = event.target as HTMLInputElement;
     if (alvo.name !== 'pagamento') return;
-    metodoPagamento = alvo.value;
+    metodoPagamento = alvo.value as Pagamento;
+    renderResumo();
 
     if (camposCartao) {
       camposCartao.hidden = metodoPagamento !== 'cartao';
@@ -731,7 +743,7 @@ const estados = [
     if (erro) erro.hidden = true;
 
     const pedido = placeOrder({
-      totais: totals(metodoFrete),
+      totais: totals(metodoFrete, metodoPagamento),
       entrega: {
         nome: dados.nome ?? '',
         email: dados.email ?? '',

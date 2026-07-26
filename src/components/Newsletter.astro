@@ -19,11 +19,14 @@
     <form class="news__form" data-newsletter novalidate data-reveal="fade">
       <div class="news__row">
         <label class="visually-hidden" for="news-email">Seu e-mail</label>
+        <!-- `size="1"` zera a largura intrínseca de ~20 caracteres do
+             campo; sem isso a linha não encolhe e estoura telas de 320 px. -->
         <input
           class="news__input"
           id="news-email"
           type="email"
           name="email"
+          size="1"
           placeholder="seu@email.com.br"
           autocomplete="email"
           required

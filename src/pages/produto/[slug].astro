@@ -415,6 +415,7 @@ const galeriaUnica = galeria.length === 1;
 
   .pdp__title {
     font-family: var(--font-display);
+    font-variant-numeric: lining-nums;
     font-size: clamp(1.6rem, 3.5vw, 2.1rem);
     font-weight: 400;
     letter-spacing: -0.03em;
@@ -522,14 +523,25 @@ const galeriaUnica = galeria.length === 1;
   }
 
   /* Ações */
+  /* Em telas estreitas os três controles não cabem lado a lado: o botão
+     desce para uma linha inteira em vez de esticar a página. */
   .pdp__actions {
     display: flex;
+    flex-wrap: wrap;
     gap: 0.6rem;
     margin-top: 0.8rem;
   }
 
   .pdp__add {
-    flex: 1;
+    flex: 1 1 100%;
+    order: 3;
+  }
+
+  @media (min-width: 420px) {
+    .pdp__add {
+      flex: 1 1 auto;
+      order: 0;
+    }
   }
 
   .pdp__wish {

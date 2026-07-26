@@ -496,6 +496,8 @@ export const shop = {
   freteExpresso: 79.9,
   /** Parcelamento sem juros */
   parcelas: 6,
+  /** Desconto à vista no Pix — anunciado no checkout e aplicado no total */
+  descontoPix: 0.05,
   /** Cupons aceitos no carrinho e no checkout (percentual sobre o subtotal) */
   cupons: [
     { codigo: 'CIBELE10', desconto: 0.1, rotulo: '10% na primeira compra' },

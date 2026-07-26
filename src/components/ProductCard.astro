@@ -161,6 +161,10 @@ const esgotado = product.variantes.every((v) => v.estoque === 0);
     top: 0.85rem;
     left: 0.85rem;
     z-index: 2;
+    /* Não pode correr por baixo do botão de favoritar quando o rótulo
+       é longo e o cartão, estreito. */
+    max-width: calc(100% - 3.5rem);
+    line-height: 1.3;
   }
 
   .pcard__sold {
@@ -226,6 +230,9 @@ const esgotado = product.variantes.every((v) => v.estoque === 0);
     font-weight: 500;
     letter-spacing: 0;
     line-height: 1.25;
+    /* A serifa usa algarismos antigos por padrão; em medidas como
+       "18 cm" ou "500 ml" eles atrapalham a leitura. */
+    font-variant-numeric: lining-nums;
   }
 
   /* Fio dourado que nasce sob o nome ao passar o mouse */

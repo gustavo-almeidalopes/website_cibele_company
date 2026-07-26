@@ -48,11 +48,14 @@ import { shop, formatPrice } from '../data/catalog';
 
             <form class="coupon" data-coupon-form>
               <label class="visually-hidden" for="coupon">Código do cupom</label>
+              <!-- `size="1"` zera a largura intrínseca do campo; sem isso o
+                   resumo não encolhe e estica a página em telas estreitas. -->
               <input
                 class="coupon__input"
                 id="coupon"
                 type="text"
                 name="codigo"
+                size="1"
                 placeholder="Cupom de desconto"
                 autocomplete="off"
               />

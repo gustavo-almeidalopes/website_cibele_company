@@ -45,11 +45,16 @@ export interface Totals {
   subtotal: number;
   desconto: number;
   cupom: string | null;
+  /** Abatimento à vista (Pix) — zero nas demais formas de pagamento */
+  descontoPagamento: number;
   frete: number;
   freteGratis: boolean;
   total: number;
   itens: number;
 }
+
+export type MetodoFrete = 'padrao' | 'expresso' | 'retirada';
+export type MetodoPagamento = 'pix' | 'cartao' | 'boleto' | 'faturado';
 
 const KEY_CART = 'cibele:cart:v1';
 const KEY_WISH = 'cibele:wish:v1';
@@ -181,7 +186,10 @@ export function removeCoupon() {
 /* ============================================================
    Totais
    ============================================================ */
-export function totals(metodoFrete: 'padrao' | 'expresso' | 'retirada' = 'padrao'): Totals {
+export function totals(
+  metodoFrete: MetodoFrete = 'padrao',
+  metodoPagamento?: MetodoPagamento,
+): Totals {
   const itens = cartItems();
   const subtotal = itens.reduce((soma, item) => soma + item.total, 0);
   const quantidade = itens.reduce((soma, item) => soma + item.qty, 0);
@@ -192,6 +200,9 @@ export function totals(metodoFrete: 'padrao' | 'expresso' | 'retirada' = 'padrao
   const desconto = valido ? subtotal * cupom!.desconto : 0;
 
   const base = subtotal - desconto;
+
+  // O frete grátis olha o valor das mercadorias antes do abatimento à
+  // vista: quem paga no Pix não deve perder o benefício por isso.
   const freteGratis = base >= shop.freteGratisAcima || quantidade === 0;
 
   let frete = 0;
@@ -200,13 +211,18 @@ export function totals(metodoFrete: 'padrao' | 'expresso' | 'retirada' = 'padrao
     else frete = freteGratis ? 0 : shop.freteFixo;
   }
 
+  // Pix é à vista: o desconto anunciado no checkout entra aqui, senão
+  // o cliente confirma um total que não corresponde à promessa.
+  const descontoPagamento = metodoPagamento === 'pix' ? base * shop.descontoPix : 0;
+
   return {
     subtotal,
     desconto,
     cupom: valido ? codigo : null,
+    descontoPagamento,
     frete,
     freteGratis: freteGratis && metodoFrete === 'padrao',
-    total: base + frete,
+    total: base - descontoPagamento + frete,
     itens: quantidade,
   };
 }

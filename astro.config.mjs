@@ -8,4 +8,9 @@ export default defineConfig({
   build: {
     inlineStylesheets: 'auto',
   },
+  // A sacola virou "cesta" em /carrinho. O endereço antigo continua
+  // publicado, então segue vivo como redirecionamento.
+  redirects: {
+    '/sacola': '/carrinho',
+  },
 });

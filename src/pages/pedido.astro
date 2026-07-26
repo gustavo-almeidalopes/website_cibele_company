@@ -37,6 +37,9 @@ import BaseLayout from '../layouts/BaseLayout.astro';
               <div class="summary__row" data-order-discount-row hidden>
                 <span>Desconto</span><strong data-order-discount>—</strong>
               </div>
+              <div class="summary__row" data-order-pix-row hidden>
+                <span>Desconto à vista (Pix)</span><strong data-order-pix>—</strong>
+              </div>
               <div class="summary__row"><span>Frete</span><strong data-order-shipping>—</strong></div>
               <div class="summary__total"><span>Total</span><span data-order-total>—</span></div>
             </div>
@@ -99,13 +102,27 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   const params = new URLSearchParams(window.location.search);
   const numero = params.get('n');
   const pedidos = getOrders();
-  const pedido = numero ? pedidos.find((p) => p.numero === numero) ?? pedidos[0] : pedidos[0];
+  // Com `n` na URL, ou é aquele pedido ou é "não encontrado" — cair no mais
+  // recente mostraria um pedido diferente do que o cliente pediu para ver.
+  const pedido = numero ? pedidos.find((p) => p.numero === numero) : pedidos[0];
 
   const encontrado = document.querySelector<HTMLElement>('[data-order-found]');
   const ausente = document.querySelector<HTMLElement>('[data-order-missing]');
 
   if (!pedido) {
-    if (ausente) ausente.hidden = false;
+    if (ausente) {
+      ausente.hidden = false;
+      // Quando o cliente pediu um pedido específico, dizer qual não foi
+      // encontrado é mais útil do que uma mensagem genérica.
+      if (numero) {
+        const titulo = ausente.querySelector('h1');
+        const texto = ausente.querySelector('p');
+        if (titulo) titulo.textContent = `Pedido ${numero} não encontrado`;
+        if (texto)
+          texto.textContent =
+            'Este número não consta neste navegador. Se a compra foi feita em outro dispositivo, consulte o e-mail de confirmação.';
+      }
+    }
   } else {
     if (encontrado) encontrado.hidden = false;
 
@@ -134,6 +151,13 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     if (linhaDesconto) {
       linhaDesconto.hidden = pedido.totais.desconto === 0;
       texto('[data-order-discount]', `− ${formatPrice(pedido.totais.desconto)}`);
+    }
+
+    const aVista = pedido.totais.descontoPagamento ?? 0;
+    const linhaPix = document.querySelector<HTMLElement>('[data-order-pix-row]');
+    if (linhaPix) {
+      linhaPix.hidden = aVista === 0;
+      texto('[data-order-pix]', `− ${formatPrice(aVista)}`);
     }
 
     const endereco = document.querySelector<HTMLElement>('[data-order-address]');
