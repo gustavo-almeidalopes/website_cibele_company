@@ -1,0 +1,396 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  active="pedido"
+  title="Pedido confirmado — Cibele Plastic"
+  description="Confirmação do seu pedido de embalagens em bioplástico na Cibele Plastic."
+>
+  <section class="order page-top section-sm">
+    <div class="container">
+      <!-- Pedido encontrado -->
+      <div data-order-found hidden>
+        <header class="order__head">
+          <span class="order__seal" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="26" height="26">
+              <path d="m5 12.5 4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+            </svg>
+          </span>
+          <p class="eyebrow" data-reveal="fade">Pedido confirmado</p>
+          <h1 class="h-xl order__title">Obrigado, <span data-order-name>—</span>.</h1>
+          <p class="text-muted order__sub">
+            Seu pedido <strong data-order-number>—</strong> foi registrado em
+            <span data-order-date>—</span>. Enviamos a confirmação para
+            <span data-order-email>—</span>.
+          </p>
+        </header>
+
+        <div class="order__grid">
+          <!-- Itens -->
+          <div class="order__items">
+            <h2 class="ui order__label">Itens do pedido</h2>
+            <div data-order-items></div>
+
+            <div class="order__totals">
+              <div class="summary__row"><span>Subtotal</span><strong data-order-subtotal>—</strong></div>
+              <div class="summary__row" data-order-discount-row hidden>
+                <span>Desconto</span><strong data-order-discount>—</strong>
+              </div>
+              <div class="summary__row" data-order-pix-row hidden>
+                <span>Desconto à vista (Pix)</span><strong data-order-pix>—</strong>
+              </div>
+              <div class="summary__row"><span>Frete</span><strong data-order-shipping>—</strong></div>
+              <div class="summary__total"><span>Total</span><span data-order-total>—</span></div>
+            </div>
+          </div>
+
+          <!-- Dados -->
+          <aside class="order__aside">
+            <div class="order__box">
+              <h2 class="ui order__label">Entrega</h2>
+              <p class="order__text" data-order-address>—</p>
+              <p class="order__text order__text--strong" data-order-method>—</p>
+            </div>
+
+            <div class="order__box">
+              <h2 class="ui order__label">Pagamento</h2>
+              <p class="order__text" data-order-payment>—</p>
+            </div>
+
+            <div class="order__box">
+              <h2 class="ui order__label">Acompanhamento</h2>
+              <ol class="track">
+                <li class="track__step is-done"><span>Pedido recebido</span></li>
+                <li class="track__step"><span>Pagamento confirmado</span></li>
+                <li class="track__step"><span>Em separação</span></li>
+                <li class="track__step"><span>A caminho</span></li>
+                <li class="track__step"><span>Entregue</span></li>
+              </ol>
+              <p class="order__note text-muted">
+                Você receberá o código de rastreio assim que o pedido sair do centro de distribuição.
+              </p>
+            </div>
+          </aside>
+        </div>
+
+        <div class="order__actions">
+          <a class="btn btn--primary" href="/embalagens">Continuar comprando</a>
+          <a class="btn btn--secondary" href="/conta">Ver meus pedidos</a>
+        </div>
+      </div>
+
+      <!-- Nenhum pedido -->
+      <div class="empty" data-order-missing hidden>
+        <h1 class="h-md">Nenhum pedido para mostrar</h1>
+        <p class="text-muted" style="max-width: 42ch;">
+          Não encontramos um pedido recente neste navegador. Se você acabou de comprar em outro
+          dispositivo, consulte o e-mail de confirmação.
+        </p>
+        <div class="empty__actions">
+          <a class="btn btn--primary" href="/embalagens">Ver catálogo</a>
+          <a class="btn btn--secondary" href="/contato">Falar com o atendimento</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<script>
+  import { formatPrice, getOrders } from '../scripts/store';
+
+  const params = new URLSearchParams(window.location.search);
+  const numero = params.get('n');
+  const pedidos = getOrders();
+  // Com `n` na URL, ou é aquele pedido ou é "não encontrado" — cair no mais
+  // recente mostraria um pedido diferente do que o cliente pediu para ver.
+  const pedido = numero ? pedidos.find((p) => p.numero === numero) : pedidos[0];
+
+  const encontrado = document.querySelector<HTMLElement>('[data-order-found]');
+  const ausente = document.querySelector<HTMLElement>('[data-order-missing]');
+
+  if (!pedido) {
+    if (ausente) {
+      ausente.hidden = false;
+      // Quando o cliente pediu um pedido específico, dizer qual não foi
+      // encontrado é mais útil do que uma mensagem genérica.
+      if (numero) {
+        const titulo = ausente.querySelector('h1');
+        const texto = ausente.querySelector('p');
+        if (titulo) titulo.textContent = `Pedido ${numero} não encontrado`;
+        if (texto)
+          texto.textContent =
+            'Este número não consta neste navegador. Se a compra foi feita em outro dispositivo, consulte o e-mail de confirmação.';
+      }
+    }
+  } else {
+    if (encontrado) encontrado.hidden = false;
+
+    const texto = (seletor: string, valor: string) => {
+      const el = document.querySelector<HTMLElement>(seletor);
+      if (el) el.textContent = valor;
+    };
+
+    const data = new Date(pedido.data);
+    const primeiroNome = pedido.entrega.nome.split(' ')[0] || 'você';
+
+    texto('[data-order-name]', primeiroNome);
+    texto('[data-order-number]', pedido.numero);
+    texto(
+      '[data-order-date]',
+      data.toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' }),
+    );
+    texto('[data-order-email]', pedido.entrega.email);
+    texto('[data-order-subtotal]', formatPrice(pedido.totais.subtotal));
+    texto('[data-order-shipping]', pedido.totais.frete === 0 ? 'Grátis' : formatPrice(pedido.totais.frete));
+    texto('[data-order-total]', formatPrice(pedido.totais.total));
+    texto('[data-order-method]', `${pedido.entrega.metodo} · prazo de ${pedido.entrega.prazo}`);
+    texto('[data-order-payment]', pedido.pagamento);
+
+    const linhaDesconto = document.querySelector<HTMLElement>('[data-order-discount-row]');
+    if (linhaDesconto) {
+      linhaDesconto.hidden = pedido.totais.desconto === 0;
+      texto('[data-order-discount]', `− ${formatPrice(pedido.totais.desconto)}`);
+    }
+
+    const aVista = pedido.totais.descontoPagamento ?? 0;
+    const linhaPix = document.querySelector<HTMLElement>('[data-order-pix-row]');
+    if (linhaPix) {
+      linhaPix.hidden = aVista === 0;
+      texto('[data-order-pix]', `− ${formatPrice(aVista)}`);
+    }
+
+    const endereco = document.querySelector<HTMLElement>('[data-order-address]');
+    if (endereco) {
+      const e = pedido.entrega.endereco;
+      endereco.innerHTML = e.logradouro
+        ? [
+            `${e.logradouro}, ${e.numero}`,
+            e.complemento,
+            `${e.bairro} — ${e.cidade}/${e.uf}`,
+            `CEP ${e.cep}`,
+          ]
+            .filter(Boolean)
+            .join('<br />')
+        : 'Retirada no centro de distribuição<br />Guarulhos/SP';
+    }
+
+    const itens = document.querySelector<HTMLElement>('[data-order-items]');
+    if (itens) {
+      itens.innerHTML = pedido.itens
+        .map(
+          (item) => `
+        <div class="oitem">
+          <span class="oitem__media"><img src="${item.imagem}" alt="" loading="lazy" /></span>
+          <span class="oitem__body">
+            <span class="oitem__name">${item.nome}</span>
+            <span class="oitem__meta">${item.variante} · ${item.qty} ${item.qty === 1 ? 'unidade' : 'unidades'}</span>
+          </span>
+          <span class="oitem__price">${formatPrice(item.total)}</span>
+        </div>`,
+        )
+        .join('');
+    }
+  }
+</script>
+
+<style>
+  .order__head {
+    display: grid;
+    justify-items: start;
+    gap: 0.9rem;
+    padding-bottom: 2.5rem;
+    margin-bottom: 2.5rem;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .order__seal {
+    display: grid;
+    place-items: center;
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background: var(--forest);
+    color: var(--cream);
+    margin-bottom: 0.5rem;
+  }
+
+  .order__title {
+    max-width: 18ch;
+  }
+
+  .order__sub {
+    font-size: var(--step--1);
+    max-width: 52ch;
+  }
+
+  .order__sub strong {
+    color: var(--bone);
+    font-weight: 600;
+  }
+
+  .order__grid {
+    display: grid;
+    gap: 3rem;
+    align-items: start;
+  }
+
+  .order__label {
+    padding-bottom: 0.9rem;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid var(--bone);
+  }
+
+  .order :global(.oitem) {
+    display: grid;
+    grid-template-columns: 72px 1fr auto;
+    gap: 1rem;
+    align-items: center;
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--line-soft);
+  }
+
+  .order :global(.oitem__media) {
+    display: block;
+    aspect-ratio: 4 / 5;
+    background: var(--ink-2);
+    overflow: hidden;
+  }
+
+  .order :global(.oitem__media img) {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    padding: 10%;
+    mix-blend-mode: multiply;
+  }
+
+  .order :global(.oitem__name) {
+    display: block;
+    font-size: var(--step--1);
+    font-weight: 500;
+  }
+
+  .order :global(.oitem__meta) {
+    display: block;
+    margin-top: 0.15rem;
+    font-size: 0.6875rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .order :global(.oitem__price) {
+    font-size: var(--step--1);
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .order__totals {
+    margin-top: 1.5rem;
+  }
+
+  .order__aside {
+    display: grid;
+    gap: 1.5rem;
+  }
+
+  .order__box {
+    border: 1px solid var(--line);
+    background: var(--ink-2);
+    padding: 1.4rem;
+  }
+
+  .order__text {
+    font-size: var(--step--1);
+    line-height: 1.7;
+    color: var(--muted);
+  }
+
+  .order__text--strong {
+    margin-top: 0.6rem;
+    color: var(--bone);
+  }
+
+  .order__note {
+    margin-top: 1rem;
+    font-size: 0.6875rem;
+    line-height: 1.6;
+  }
+
+  /* Linha do tempo */
+  .track {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 0;
+  }
+
+  .track__step {
+    position: relative;
+    padding: 0 0 1.1rem 1.6rem;
+    font-size: var(--step--1);
+    color: var(--muted-dark);
+  }
+
+  .track__step::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.4rem;
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    border: 1px solid var(--line-strong);
+    background: var(--ink-2);
+    z-index: 1;
+  }
+
+  .track__step::after {
+    content: '';
+    position: absolute;
+    left: 4px;
+    top: 0.9rem;
+    bottom: -0.2rem;
+    width: 1px;
+    background: var(--line-strong);
+  }
+
+  .track__step:last-child::after {
+    display: none;
+  }
+
+  .track__step.is-done {
+    color: var(--bone);
+    font-weight: 500;
+  }
+
+  .track__step.is-done::before {
+    background: var(--forest);
+    border-color: var(--forest);
+  }
+
+  .order__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.8rem;
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--line);
+  }
+
+  .empty__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.8rem;
+    justify-content: center;
+  }
+
+  @media (min-width: 900px) {
+    .order__grid {
+      grid-template-columns: 1fr 340px;
+      gap: 4rem;
+    }
+  }
+</style>

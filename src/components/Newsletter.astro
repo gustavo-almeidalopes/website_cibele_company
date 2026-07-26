@@ -1,0 +1,171 @@
+---
+// Faixa de captura de e-mail — sem back-end: valida no cliente e
+// registra a inscrição localmente, com aviso honesto de LGPD.
+---
+
+<section class="news paper">
+  <div class="container news__inner">
+    <div class="news__lead">
+      <p class="eyebrow" data-reveal="fade">Lista Cibele</p>
+      <h2 class="h-lg news__title" data-reveal="fade">
+        Novas coleções, antes de todo mundo.
+      </h2>
+      <p class="text-muted news__desc" data-reveal="fade">
+        Lançamentos, condições para volume e conteúdo sobre embalagem sustentável. Um e-mail por mês,
+        no máximo.
+      </p>
+    </div>
+
+    <form class="news__form" data-newsletter novalidate data-reveal="fade">
+      <div class="news__row">
+        <label class="visually-hidden" for="news-email">Seu e-mail</label>
+        <!-- `size="1"` zera a largura intrínseca de ~20 caracteres do
+             campo; sem isso a linha não encolhe e estoura telas de 320 px. -->
+        <input
+          class="news__input"
+          id="news-email"
+          type="email"
+          name="email"
+          size="1"
+          placeholder="seu@email.com.br"
+          autocomplete="email"
+          required
+        />
+        <button class="news__submit" type="submit">Inscrever</button>
+      </div>
+      <p class="news__error" data-newsletter-error hidden>Informe um e-mail válido.</p>
+      <label class="check news__check">
+        <input type="checkbox" name="consent" required />
+        <span>
+          Autorizo o contato por e-mail e li a
+          <a href="/privacidade" class="link-underline">Política de Privacidade</a>.
+        </span>
+      </label>
+    </form>
+  </div>
+</section>
+
+<script>
+  const form = document.querySelector<HTMLFormElement>('[data-newsletter]');
+  const erro = document.querySelector<HTMLElement>('[data-newsletter-error]');
+
+  form?.addEventListener('submit', (event) => {
+    event.preventDefault();
+    const dados = new FormData(form);
+    const email = String(dados.get('email') ?? '').trim();
+    const consent = dados.get('consent');
+    const valido = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email);
+
+    if (!valido || !consent) {
+      if (erro) {
+        erro.hidden = false;
+        erro.textContent = !valido
+          ? 'Informe um e-mail válido.'
+          : 'É preciso autorizar o contato para se inscrever.';
+      }
+      return;
+    }
+
+    if (erro) erro.hidden = true;
+    try {
+      localStorage.setItem('cibele:newsletter', email);
+    } catch {
+      /* sem persistência */
+    }
+
+    form.innerHTML =
+      '<p class="news__ok">Inscrição confirmada. Bem-vindo à lista Cibele — o primeiro e-mail chega em breve.</p>';
+  });
+</script>
+
+<style>
+  .news {
+    padding-block: clamp(3.5rem, 7vw, 5.5rem);
+  }
+
+  .news__inner {
+    display: grid;
+    gap: 2.5rem;
+    align-items: center;
+  }
+
+  .news__title {
+    margin: 1.2rem 0 1rem;
+    max-width: 16ch;
+  }
+
+  .news__desc {
+    font-size: var(--step--1);
+    max-width: 44ch;
+  }
+
+  .news__row {
+    display: flex;
+    border-bottom: 1px solid var(--line-dark);
+  }
+
+  .news__input {
+    flex: 1;
+    min-width: 0;
+    border: 0;
+    background: transparent;
+    color: var(--cream);
+    font-family: var(--font);
+    font-size: var(--step-1);
+    padding: 0.9rem 0;
+  }
+
+  .news__input:focus {
+    outline: none;
+  }
+
+  .news__input::placeholder {
+    color: var(--muted-light);
+    opacity: 0.7;
+  }
+
+  .news__submit {
+    flex-shrink: 0;
+    border: 0;
+    background: transparent;
+    color: var(--cream);
+    font-size: var(--step--2);
+    font-weight: 500;
+    letter-spacing: var(--track);
+    text-transform: uppercase;
+    padding: 0 0 0 1.5rem;
+    transition: color var(--duration) var(--ease);
+  }
+
+  .news__submit:hover {
+    color: var(--accent-premium);
+  }
+
+  .news__error {
+    margin-top: 0.6rem;
+    font-size: var(--step--1);
+    color: var(--accent-premium);
+  }
+
+  .news__check {
+    margin-top: 1.1rem;
+    color: var(--muted-light);
+  }
+
+  .news__check a {
+    color: var(--cream);
+  }
+
+  .news__ok {
+    font-size: var(--step-1);
+    color: var(--cream);
+    max-width: 40ch;
+  }
+
+  @media (min-width: 900px) {
+    .news__inner {
+      grid-template-columns: 1fr 1fr;
+      gap: 5rem;
+    }
+  }
+</style>

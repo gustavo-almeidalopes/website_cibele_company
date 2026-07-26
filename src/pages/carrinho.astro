@@ -1,0 +1,583 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { shop, formatPrice } from '../data/catalog';
+---
+
+<BaseLayout
+  active="carrinho"
+  title="Cesta — Cibele Plastic"
+  description="Revise os itens da sua cesta, aplique cupons e finalize a compra das suas embalagens em bioplástico."
+>
+  <section class="cart page-top section-sm">
+    <div class="container-wide">
+      <nav aria-label="Trilha de navegação">
+        <ol class="crumbs">
+          <li><a href="/">Início</a></li>
+          <li><span aria-current="page">Cesta</span></li>
+        </ol>
+      </nav>
+
+      <header class="cart__head">
+        <h1 class="h-xl">Sua cesta</h1>
+        <p class="text-muted cart__count" data-cart-page-count></p>
+      </header>
+
+      <div class="cart__layout" data-cart-layout hidden>
+        <!-- Itens -->
+        <div class="cart__items">
+          <div class="cart__thead ui-sm text-muted">
+            <span>Produto</span>
+            <span>Quantidade</span>
+            <span>Total</span>
+          </div>
+          <div data-cart-lines></div>
+
+          <div class="cart__actions">
+            <a class="link-arrow" href="/embalagens">
+              <span>Continuar comprando</span>
+              <span class="arrow" aria-hidden="true">↗</span>
+            </a>
+            <button class="cart__clear" type="button" data-cart-clear>Esvaziar cesta</button>
+          </div>
+        </div>
+
+        <!-- Resumo -->
+        <aside class="cart__aside" aria-label="Resumo do pedido">
+          <div class="cart__box">
+            <h2 class="ui cart__box-title">Resumo</h2>
+
+            <form class="coupon" data-coupon-form>
+              <label class="visually-hidden" for="coupon">Código do cupom</label>
+              <!-- `size="1"` zera a largura intrínseca do campo; sem isso o
+                   resumo não encolhe e estica a página em telas estreitas. -->
+              <input
+                class="coupon__input"
+                id="coupon"
+                type="text"
+                name="codigo"
+                size="1"
+                placeholder="Cupom de desconto"
+                autocomplete="off"
+              />
+              <button class="coupon__btn" type="submit">Aplicar</button>
+            </form>
+            <p class="coupon__msg" data-coupon-msg hidden></p>
+            <div class="coupon__active" data-coupon-active hidden>
+              <span data-coupon-code></span>
+              <button type="button" data-coupon-remove aria-label="Remover cupom">Remover</button>
+            </div>
+
+            <div class="cart__totals">
+              <div class="summary__row">
+                <span>Subtotal</span>
+                <strong data-sum-subtotal>—</strong>
+              </div>
+              <div class="summary__row" data-sum-discount-row hidden>
+                <span>Desconto</span>
+                <strong data-sum-discount>—</strong>
+              </div>
+              <div class="summary__row">
+                <span>Frete estimado</span>
+                <strong data-sum-shipping>—</strong>
+              </div>
+              <div class="summary__total">
+                <span>Total</span>
+                <span data-sum-total>—</span>
+              </div>
+              <p class="cart__installment text-muted" data-sum-installment></p>
+            </div>
+
+            <a class="btn btn--primary btn--block cart__cta" href="/checkout">Finalizar compra</a>
+
+            <p class="cart__note text-muted">
+              Frete grátis acima de {formatPrice(shop.freteGratisAcima)}. Parcelamos em até {shop.parcelas}×
+              sem juros. Impostos inclusos.
+            </p>
+
+            <ul class="cart__pay">
+              <li>Pix</li>
+              <li>Cartão</li>
+              <li>Boleto</li>
+              <li>Faturado</li>
+            </ul>
+          </div>
+        </aside>
+      </div>
+
+      <!-- Cesta vazia -->
+      <div class="empty" data-cart-empty hidden>
+        <span class="empty__icon">
+          <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true">
+            <path
+              d="M5.5 7.5h13l-1.1 12a1.6 1.6 0 0 1-1.6 1.5H8.2a1.6 1.6 0 0 1-1.6-1.5Z"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.3"
+              stroke-linejoin="round"></path>
+            <path d="M9 9.5V7a3 3 0 0 1 6 0v2.5" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"></path>
+          </svg>
+        </span>
+        <h2 class="h-md">Sua cesta está vazia</h2>
+        <p class="text-muted" style="max-width: 40ch;">
+          Ainda não há embalagens por aqui. Comece pelas coleções ou veja o catálogo completo.
+        </p>
+        <div class="empty__actions">
+          <a class="btn btn--primary" href="/embalagens">Ver catálogo</a>
+          <a class="btn btn--secondary" href="/favoritos">Meus favoritos</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<script>
+  import {
+    applyCoupon,
+    cartItems,
+    clearCart,
+    formatPrice,
+    getCoupon,
+    onStoreChange,
+    parcelar,
+    removeCoupon,
+    removeFromCart,
+    setQty,
+    totals,
+  } from '../scripts/store';
+
+  const layout = document.querySelector<HTMLElement>('[data-cart-layout]');
+  const vazio = document.querySelector<HTMLElement>('[data-cart-empty]');
+  const linhas = document.querySelector<HTMLElement>('[data-cart-lines]');
+  const contagem = document.querySelector<HTMLElement>('[data-cart-page-count]');
+
+  const texto = (seletor: string, valor: string) => {
+    const el = document.querySelector<HTMLElement>(seletor);
+    if (el) el.textContent = valor;
+  };
+
+  function render() {
+    const itens = cartItems();
+    const t = totals();
+
+    if (layout) layout.hidden = itens.length === 0;
+    if (vazio) vazio.hidden = itens.length > 0;
+    if (contagem)
+      contagem.textContent = itens.length
+        ? `${t.itens} ${t.itens === 1 ? 'item' : 'itens'}`
+        : '';
+
+    if (itens.length === 0) return;
+
+    if (linhas) {
+      linhas.innerHTML = itens
+        .map(
+          (item) => `
+        <article class="cline">
+          <a class="cline__media" href="/produto/${item.slug}">
+            <img src="${item.imagem}" alt="${item.nome}" loading="lazy" decoding="async" />
+          </a>
+          <div class="cline__body">
+            <a class="cline__name" href="/produto/${item.slug}">${item.nome}</a>
+            <p class="cline__meta">${item.variante} · ${item.colecao}</p>
+            <p class="cline__unit">${formatPrice(item.preco)} por ${item.variante.toLowerCase()}</p>
+            <button class="cline__remove" type="button" data-remove="${item.sku}">Remover</button>
+          </div>
+          <div class="cline__qty">
+            <div class="qty">
+              <button class="qty__btn" type="button" data-dec="${item.sku}" aria-label="Diminuir quantidade de ${item.nome}">−</button>
+              <span class="qty__value">${item.qty}</span>
+              <button class="qty__btn" type="button" data-inc="${item.sku}" aria-label="Aumentar quantidade de ${item.nome}" ${
+                item.qty >= item.estoque ? 'disabled' : ''
+              }>+</button>
+            </div>
+            ${item.qty >= item.estoque ? '<span class="cline__stock">Estoque máximo</span>' : ''}
+          </div>
+          <div class="cline__total">${formatPrice(item.total)}</div>
+        </article>`,
+        )
+        .join('');
+    }
+
+    texto('[data-sum-subtotal]', formatPrice(t.subtotal));
+    texto('[data-sum-shipping]', t.frete === 0 ? 'Grátis' : formatPrice(t.frete));
+    texto('[data-sum-total]', formatPrice(t.total));
+    texto('[data-sum-installment]', parcelar(t.total));
+
+    const linhaDesconto = document.querySelector<HTMLElement>('[data-sum-discount-row]');
+    if (linhaDesconto) {
+      linhaDesconto.hidden = t.desconto === 0;
+      texto('[data-sum-discount]', `− ${formatPrice(t.desconto)}`);
+    }
+
+    const ativo = document.querySelector<HTMLElement>('[data-coupon-active]');
+    const codigo = getCoupon();
+    if (ativo) {
+      ativo.hidden = !t.cupom;
+      texto('[data-coupon-code]', codigo ? `Cupom ${codigo} aplicado` : '');
+    }
+  }
+
+  // Quantidade, remoção e limpeza
+  document.addEventListener('click', (event) => {
+    const alvo = event.target as HTMLElement;
+    const inc = alvo.closest<HTMLElement>('[data-inc]');
+    const dec = alvo.closest<HTMLElement>('[data-dec]');
+    const rem = alvo.closest<HTMLElement>('[data-remove]');
+
+    if (inc || dec) {
+      const sku = (inc?.dataset.inc ?? dec?.dataset.dec) as string;
+      const item = cartItems().find((i) => i.sku === sku);
+      if (item) setQty(sku, item.qty + (inc ? 1 : -1));
+      return;
+    }
+
+    if (rem) {
+      removeFromCart(rem.dataset.remove ?? '');
+      return;
+    }
+
+    if (alvo.closest('[data-cart-clear]')) {
+      clearCart();
+      return;
+    }
+
+    if (alvo.closest('[data-coupon-remove]')) {
+      removeCoupon();
+      const msg = document.querySelector<HTMLElement>('[data-coupon-msg]');
+      if (msg) msg.hidden = true;
+    }
+  });
+
+  // Cupom
+  const formCupom = document.querySelector<HTMLFormElement>('[data-coupon-form]');
+  formCupom?.addEventListener('submit', (event) => {
+    event.preventDefault();
+    const campo = formCupom.querySelector<HTMLInputElement>('input[name="codigo"]');
+    const msg = document.querySelector<HTMLElement>('[data-coupon-msg]');
+    if (!campo || !msg) return;
+
+    const resultado = applyCoupon(campo.value);
+    msg.hidden = false;
+    msg.textContent = resultado.mensagem;
+    msg.classList.toggle('is-error', !resultado.ok);
+    if (resultado.ok) campo.value = '';
+  });
+
+  onStoreChange(render);
+  render();
+</script>
+
+<style>
+  .cart__head {
+    display: flex;
+    align-items: baseline;
+    gap: 1rem;
+    margin: clamp(1.25rem, 3vw, 2rem) 0 2rem;
+  }
+
+  .cart__count {
+    font-size: var(--step--1);
+  }
+
+  .cart__layout {
+    display: grid;
+    gap: 3rem;
+    align-items: start;
+  }
+
+  .cart__layout[hidden] {
+    display: none;
+  }
+
+  .cart__thead {
+    display: none;
+    padding-bottom: 0.9rem;
+    border-bottom: 1px solid var(--bone);
+  }
+
+  .cart__actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    margin-top: 2rem;
+  }
+
+  .cart__clear {
+    border: 0;
+    background: transparent;
+    padding: 0;
+    font-size: 0.6875rem;
+    letter-spacing: var(--track);
+    text-transform: uppercase;
+    color: var(--muted);
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+
+  .cart__clear:hover {
+    color: var(--color-error);
+  }
+
+  /* Linha de item */
+  .cart :global(.cline) {
+    display: grid;
+    grid-template-columns: 100px 1fr;
+    grid-template-areas:
+      'media body'
+      'qty total';
+    gap: 1rem 1.25rem;
+    padding: 1.5rem 0;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .cart :global(.cline__media) {
+    grid-area: media;
+    aspect-ratio: 4 / 5;
+    background: var(--ink-2);
+    overflow: hidden;
+  }
+
+  .cart :global(.cline__media img) {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    padding: 10%;
+    mix-blend-mode: multiply;
+  }
+
+  .cart :global(.cline__body) {
+    grid-area: body;
+    display: grid;
+    align-content: start;
+    gap: 0.3rem;
+  }
+
+  .cart :global(.cline__name) {
+    font-size: var(--step-0);
+    font-weight: 500;
+  }
+
+  .cart :global(.cline__meta) {
+    font-size: 0.6875rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .cart :global(.cline__unit) {
+    font-size: var(--step--1);
+    color: var(--muted);
+  }
+
+  .cart :global(.cline__remove) {
+    justify-self: start;
+    margin-top: 0.3rem;
+    border: 0;
+    background: transparent;
+    padding: 0;
+    font-size: 0.6875rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .cart :global(.cline__remove:hover) {
+    color: var(--color-error);
+  }
+
+  .cart :global(.cline__qty) {
+    grid-area: qty;
+    display: grid;
+    gap: 0.4rem;
+    align-content: start;
+  }
+
+  .cart :global(.cline__stock) {
+    font-size: 0.625rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .cart :global(.cline__total) {
+    grid-area: total;
+    text-align: right;
+    font-size: var(--step-0);
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Resumo */
+  .cart__box {
+    border: 1px solid var(--line);
+    padding: clamp(1.4rem, 3vw, 2rem);
+    background: var(--ink-2);
+  }
+
+  .cart__box-title {
+    margin-bottom: 1.2rem;
+  }
+
+  .coupon {
+    display: flex;
+    border: 1px solid var(--line-strong);
+    background: var(--cream);
+  }
+
+  .coupon__input {
+    flex: 1;
+    min-width: 0;
+    border: 0;
+    background: transparent;
+    padding: 0.85rem 0.9rem;
+    font-family: var(--font);
+    font-size: var(--step--1);
+    color: var(--bone);
+  }
+
+  .coupon__input:focus {
+    outline: none;
+  }
+
+  .coupon__btn {
+    border: 0;
+    border-left: 1px solid var(--line-strong);
+    background: transparent;
+    padding-inline: 1.1rem;
+    font-size: 0.6875rem;
+    font-weight: 500;
+    letter-spacing: var(--track);
+    text-transform: uppercase;
+    color: var(--bone);
+    transition: background-color var(--duration) var(--ease), color var(--duration) var(--ease);
+  }
+
+  .coupon__btn:hover {
+    background: var(--forest);
+    color: var(--cream);
+  }
+
+  .coupon__msg {
+    margin-top: 0.6rem;
+    font-size: var(--step--1);
+    color: var(--color-success);
+  }
+
+  .coupon__msg.is-error {
+    color: var(--color-error);
+  }
+
+  .coupon__active {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-top: 0.7rem;
+    padding: 0.6rem 0.8rem;
+    border: 1px dashed var(--forest);
+    font-size: var(--step--1);
+  }
+
+  .coupon__active button {
+    border: 0;
+    background: transparent;
+    padding: 0;
+    font-size: 0.625rem;
+    letter-spacing: var(--track);
+    text-transform: uppercase;
+    color: var(--muted);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .cart__totals {
+    margin-top: 1.6rem;
+  }
+
+  .cart__installment {
+    margin-top: 0.5rem;
+    font-size: 0.6875rem;
+    text-align: right;
+  }
+
+  .cart__cta {
+    margin-top: 1.4rem;
+  }
+
+  .cart__note {
+    margin-top: 1rem;
+    font-size: 0.6875rem;
+    line-height: 1.6;
+  }
+
+  .cart__pay {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin: 1.1rem 0 0;
+    padding: 0;
+  }
+
+  .cart__pay li {
+    padding: 0.35rem 0.6rem;
+    border: 1px solid var(--line-strong);
+    font-size: 0.625rem;
+    letter-spacing: var(--track);
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .empty__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.8rem;
+    justify-content: center;
+  }
+
+  @media (min-width: 720px) {
+    .cart :global(.cline) {
+      grid-template-columns: 110px 1fr 140px 120px;
+      grid-template-areas: 'media body qty total';
+      align-items: start;
+    }
+
+    .cart :global(.cline__qty) {
+      justify-items: center;
+    }
+
+    .cart__thead {
+      display: grid;
+      grid-template-columns: 110px 1fr 140px 120px;
+      gap: 1.25rem;
+    }
+
+    .cart__thead span:nth-child(1) {
+      grid-column: 1 / 3;
+    }
+
+    .cart__thead span:nth-child(2) {
+      text-align: center;
+    }
+
+    .cart__thead span:nth-child(3) {
+      text-align: right;
+    }
+  }
+
+  @media (min-width: 1000px) {
+    .cart__layout {
+      grid-template-columns: 1fr 380px;
+      gap: 4rem;
+    }
+
+    .cart__aside {
+      position: sticky;
+      top: calc(var(--header-h) + 2rem);
+    }
+  }
+</style>

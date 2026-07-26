@@ -1,0 +1,270 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ProductCard from '../../components/ProductCard.astro';
+import Newsletter from '../../components/Newsletter.astro';
+import {
+  collections,
+  getProductsByCollection,
+  precoBase,
+  formatPrice,
+  type Collection,
+} from '../../data/catalog';
+
+export function getStaticPaths() {
+  return collections.map((collection) => ({
+    params: { slug: collection.slug },
+    props: { collection },
+  }));
+}
+
+interface Props {
+  collection: Collection;
+}
+
+const { collection } = Astro.props;
+
+const itens = getProductsByCollection(collection.slug);
+const precos = itens.map(precoBase);
+const outras = collections.filter((c) => c.slug !== collection.slug);
+---
+
+<BaseLayout
+  active="colecoes"
+  title={`${collection.titulo} — Cibele Plastic`}
+  description={collection.descricao}
+>
+  <!-- Abertura da coleção -->
+  <section class="chero" data-hero>
+    <div class="chero__media">
+      <img src={collection.capa} alt={collection.titulo} loading="eager" decoding="async" width="900" height="900" />
+    </div>
+
+    <div class="chero__body">
+      <nav aria-label="Trilha de navegação">
+        <ol class="crumbs">
+          <li><a href="/">Início</a></li>
+          <li><a href="/embalagens">Catálogo</a></li>
+          <li><span aria-current="page">{collection.titulo}</span></li>
+        </ol>
+      </nav>
+
+      <p class="chero__index" data-hero-item>{collection.indice} / 03</p>
+      <h1 class="display chero__title">
+        <span class="line-mask"><span class="line-inner">{collection.headline}</span></span>
+      </h1>
+      <p class="chero__desc" data-hero-item>{collection.descricao}</p>
+
+      <dl class="chero__facts" data-hero-item>
+        <div>
+          <dt class="ui-sm">Itens</dt>
+          <dd>{String(itens.length).padStart(2, '0')}</dd>
+        </div>
+        <div>
+          <dt class="ui-sm">A partir de</dt>
+          <dd>{formatPrice(Math.min(...precos))}</dd>
+        </div>
+        <div>
+          <dt class="ui-sm">Uso</dt>
+          <dd>{collection.destaque}</dd>
+        </div>
+      </dl>
+    </div>
+  </section>
+
+  <!-- Vitrine da coleção -->
+  <section class="csec">
+    <div class="container-wide">
+      <div class="pgrid" data-cols="3" data-reveal-group>
+        {itens.map((product, i) => <ProductCard product={product} index={i} eager={i < 3} />)}
+      </div>
+    </div>
+  </section>
+
+  <!-- Outras coleções -->
+  <section class="section-sm others">
+    <div class="container-wide">
+      <h2 class="ui-sm text-muted others__label">Continuar explorando</h2>
+      <div class="others__grid">
+        {
+          outras.map((col) => (
+            <a class="otile" href={col.path} data-reveal="up">
+              <span class="otile__media">
+                <img src={col.capa} alt="" loading="lazy" decoding="async" width="600" height="750" />
+              </span>
+              <span class="otile__body">
+                <span class="otile__index ui-sm">{col.indice}</span>
+                <span class="otile__title">{col.titulo}</span>
+                <span class="otile__desc">{col.resumo}</span>
+              </span>
+            </a>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <Newsletter />
+</BaseLayout>
+
+<style>
+  .chero {
+    display: grid;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .chero__media {
+    background: var(--ink-2);
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+    order: -1;
+  }
+
+  .chero__media img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    padding: 8%;
+    mix-blend-mode: multiply;
+  }
+
+  .chero__body {
+    display: grid;
+    align-content: center;
+    gap: 1.1rem;
+    padding: clamp(2rem, 5vw, 4rem) var(--gutter);
+  }
+
+  .chero__index {
+    font-size: 0.6875rem;
+    letter-spacing: var(--track-wide);
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .chero__title {
+    font-size: clamp(2.4rem, 6vw, 4rem);
+  }
+
+  .chero__desc {
+    font-size: var(--step-1);
+    line-height: 1.6;
+    color: var(--muted);
+    max-width: 46ch;
+  }
+
+  .chero__facts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2.5rem;
+    margin: 0.6rem 0 0;
+  }
+
+  .chero__facts dt {
+    color: var(--muted);
+    margin-bottom: 0.35rem;
+  }
+
+  .chero__facts dd {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: 1.1rem;
+    font-weight: 500;
+  }
+
+  @media (min-width: 900px) {
+    .chero {
+      grid-template-columns: 1fr 1fr;
+      align-items: stretch;
+    }
+    .chero__media {
+      order: 0;
+      aspect-ratio: auto;
+      min-height: 68vh;
+    }
+    .chero__body {
+      padding-inline: clamp(2rem, 5vw, 5rem);
+    }
+  }
+
+  .csec {
+    padding-block: clamp(2.5rem, 5vw, 4.5rem);
+  }
+
+  /* Outras coleções */
+  .others {
+    border-top: 1px solid var(--line);
+  }
+
+  .others__label {
+    margin-bottom: 1.5rem;
+  }
+
+  .others__grid {
+    display: grid;
+    gap: var(--gutter-col);
+    grid-template-columns: 1fr;
+  }
+
+  .otile {
+    display: grid;
+    grid-template-columns: 120px 1fr;
+    gap: 1.5rem;
+    align-items: center;
+    padding: 1rem;
+    border: 1px solid var(--line);
+    transition: border-color var(--duration) var(--ease), background-color var(--duration) var(--ease);
+  }
+
+  .otile:hover {
+    border-color: var(--bone);
+    background: var(--ink-2);
+  }
+
+  .otile__media {
+    display: block;
+    aspect-ratio: 1;
+    background: var(--ink-2);
+    overflow: hidden;
+  }
+
+  .otile__media img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    padding: 12%;
+    mix-blend-mode: multiply;
+    transition: transform var(--duration-slow) var(--ease);
+  }
+
+  .otile:hover .otile__media img {
+    transform: scale(1.06);
+  }
+
+  .otile__body {
+    display: grid;
+    gap: 0.3rem;
+  }
+
+  .otile__index {
+    color: var(--muted);
+  }
+
+  .otile__title {
+    font-family: var(--font-display);
+    font-size: 1.35rem;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+  }
+
+  .otile__desc {
+    font-size: var(--step--1);
+    color: var(--muted);
+    max-width: 44ch;
+  }
+
+  @media (min-width: 760px) {
+    .others__grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+</style>

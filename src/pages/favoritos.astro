@@ -7,47 +7,95 @@ import { products } from '../data/catalog';
 <BaseLayout
   active="favoritos"
   title="Favoritos — Cibele Plastic"
-  description="Os produtos que você favoritou no catálogo da Cibele Plastic."
+  description="Os produtos que você salvou na Cibele Plastic, prontos para virar pedido."
 >
-  <div class="container fav">
-    <nav class="breadcrumb" aria-label="Trilha">
-      <a href="/">Início</a>
-      <span class="breadcrumb__sep" aria-hidden="true">/</span>
-      <span class="breadcrumb__current">Favoritos</span>
-    </nav>
+  <section class="fav page-top section-sm">
+    <div class="container-wide">
+      <nav aria-label="Trilha de navegação">
+        <ol class="crumbs">
+          <li><a href="/">Início</a></li>
+          <li><span aria-current="page">Favoritos</span></li>
+        </ol>
+      </nav>
 
-    <h1 class="fav__title">Favoritos</h1>
+      <header class="fav__head">
+        <h1 class="h-xl">Favoritos</h1>
+        <p class="text-muted fav__count" data-fav-count></p>
+      </header>
 
-    <div class="card-grid fav__grid" data-wishlist-grid data-reveal-group>
-      {products.map((product) => <ProductCard product={product} />)}
+      <!-- Todos os produtos são renderizados; o cliente mostra só os salvos. -->
+      <div class="pgrid" data-cols="4" data-fav-grid hidden>
+        {
+          products.map((product, i) => (
+            <div class="fav__cell" data-fav-cell={product.slug} hidden>
+              <ProductCard product={product} index={i} />
+            </div>
+          ))
+        }
+      </div>
+
+      <div class="empty" data-fav-empty hidden>
+        <span class="empty__icon">
+          <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true">
+            <path
+              d="M12 20.5 4.3 13a4.6 4.6 0 0 1 6.5-6.5l1.2 1.2 1.2-1.2A4.6 4.6 0 0 1 19.7 13Z"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.3"
+              stroke-linejoin="round"></path>
+          </svg>
+        </span>
+        <h2 class="h-md">Nenhum favorito ainda</h2>
+        <p class="text-muted" style="max-width: 42ch;">
+          Toque no coração de qualquer produto para guardá-lo aqui. Os favoritos ficam salvos neste
+          navegador.
+        </p>
+        <a class="btn btn--primary" href="/embalagens">Explorar catálogo</a>
+      </div>
     </div>
-
-    <div class="fav__empty" data-wishlist-empty hidden>
-      <p class="lead">Você ainda não favoritou nenhum produto.</p>
-      <a class="btn btn--primary" href="/embalagens">Ver catálogo</a>
-    </div>
-  </div>
+  </section>
 </BaseLayout>
 
+<script>
+  import { getWishlist, onStoreChange } from '../scripts/store';
+
+  const grade = document.querySelector<HTMLElement>('[data-fav-grid]');
+  const vazio = document.querySelector<HTMLElement>('[data-fav-empty]');
+  const contador = document.querySelector<HTMLElement>('[data-fav-count]');
+  const celulas = Array.from(document.querySelectorAll<HTMLElement>('[data-fav-cell]'));
+
+  function render() {
+    const lista = getWishlist();
+
+    celulas.forEach((cell) => {
+      cell.hidden = !lista.includes(cell.dataset.favCell ?? '');
+    });
+
+    if (grade) grade.hidden = lista.length === 0;
+    if (vazio) vazio.hidden = lista.length > 0;
+    if (contador)
+      contador.textContent = lista.length
+        ? `${lista.length} ${lista.length === 1 ? 'item salvo' : 'itens salvos'}`
+        : '';
+  }
+
+  onStoreChange(render);
+  render();
+</script>
+
 <style>
-  .fav {
-    padding-block: clamp(2rem, 5vw, 3rem) var(--space-128);
-    display: grid;
-    gap: 1.6rem;
+  .fav__head {
+    display: flex;
+    align-items: baseline;
+    gap: 1rem;
+    margin: clamp(1.25rem, 3vw, 2rem) 0 2.5rem;
   }
 
-  .fav__title {
-    font-size: var(--step-4);
+  .fav__count {
+    font-size: var(--step--1);
   }
 
-  .fav__empty {
-    display: grid;
-    gap: 1.2rem;
-    justify-items: start;
-    padding-block: 2rem;
-  }
-
-  .fav__empty[hidden] {
+  .fav__cell[hidden] {
     display: none;
   }
 </style>

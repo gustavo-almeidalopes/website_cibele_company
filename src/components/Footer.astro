@@ -4,40 +4,48 @@ const year = new Date().getFullYear();
 // Navegação ampla, no formato de "mapa do site" (estilo Apple).
 const columns = [
   {
-    title: 'Coleções',
+    title: 'Comprar',
     links: [
-      { label: 'Mesa & Servir', href: '/embalagens?colecao=mesa' },
-      { label: 'Copos & Bebidas', href: '/embalagens?colecao=bebidas' },
-      { label: 'Delivery & Viagem', href: '/embalagens?colecao=delivery' },
+      { label: 'Mesa & Servir', href: '/colecoes/mesa' },
+      { label: 'Copos & Bebidas', href: '/colecoes/bebidas' },
+      { label: 'Delivery & Viagem', href: '/colecoes/delivery' },
+      { label: 'Novidades', href: '/embalagens?filtro=novidades' },
       { label: 'Catálogo completo', href: '/embalagens' },
     ],
   },
   {
     title: 'Minha conta',
     links: [
+      { label: 'Entrar ou cadastrar', href: '/conta' },
+      { label: 'Meus pedidos', href: '/conta' },
       { label: 'Favoritos', href: '/favoritos' },
-      { label: 'Sacola', href: '/sacola' },
-      { label: 'Sobre nós', href: '/sobre' },
+      { label: 'Cesta', href: '/carrinho' },
+      { label: 'Buscar produtos', href: '/busca' },
     ],
   },
   {
     title: 'Atendimento',
     links: [
+      { label: 'Envios e prazos', href: '/ajuda#envios' },
+      { label: 'Trocas e devoluções', href: '/ajuda#trocas' },
+      { label: 'Formas de pagamento', href: '/ajuda#pagamento' },
+      { label: 'Orçamento para empresas', href: '/contato' },
       { label: 'Fale conosco', href: '/contato' },
-      { label: 'Solicitar orçamento', href: '/contato' },
-      { label: 'Perguntas frequentes', href: '/contato' },
     ],
   },
   {
-    title: 'Privacidade & Termos',
+    title: 'A empresa',
     links: [
+      { label: 'Sobre a Cibele', href: '/sobre' },
+      { label: 'Sustentabilidade', href: '/sobre' },
       { label: 'Política de Privacidade', href: '/privacidade' },
       { label: 'Política de Cookies', href: '/privacidade#cookies' },
       { label: 'Termos de Uso', href: '/termos' },
-      { label: 'Seus direitos (LGPD)', href: '/privacidade#lgpd' },
     ],
   },
 ];
+
+const pagamentos = ['Pix', 'Visa', 'Mastercard', 'Elo', 'Amex', 'Boleto', 'Faturado'];
 
 const legalLinks = [
   { label: 'Política de Privacidade', href: '/privacidade' },
@@ -53,7 +61,8 @@ const legalLinks = [
       <p class="eyebrow">Vamos conversar</p>
       <a class="footer__mail" href="mailto:contato@cibeleplastic.com">contato@cibeleplastic.com</a>
       <p class="text-muted footer__lead-text">
-        Bioplástico sustentável para embalagens, construção e saúde. Respondemos em até um dia útil.
+        Embalagens em bioplástico para food service, eventos e delivery. Respondemos em até um dia
+        útil.
       </p>
     </div>
 
@@ -73,6 +82,16 @@ const legalLinks = [
         ))
       }
     </nav>
+  </div>
+
+  <!-- Meios de pagamento -->
+  <div class="footer__pay">
+    <div class="container footer__pay-inner">
+      <p class="ui-sm text-muted">Formas de pagamento</p>
+      <ul class="footer__pay-list">
+        {pagamentos.map((meio) => <li>{meio}</li>)}
+      </ul>
+    </div>
   </div>
 
   <!-- Rodapé legal (pós-footer) — dados da empresa e conformidade LGPD -->
@@ -119,13 +138,17 @@ const legalLinks = [
     margin-bottom: 1.2rem;
   }
 
+  /* O endereço é uma palavra única e longa: em telas estreitas ele
+     precisa poder quebrar, senão empurra a página inteira para o lado. */
   .footer__mail {
     display: inline-block;
+    max-width: 100%;
+    overflow-wrap: anywhere;
     font-family: var(--font-display);
-    font-size: clamp(1.6rem, 4.5vw, 2.4rem);
-    font-weight: 700;
-    letter-spacing: -0.02em;
-    line-height: 1.1;
+    font-size: clamp(1.3rem, 6vw, 2.6rem);
+    font-weight: 400;
+    letter-spacing: -0.005em;
+    line-height: 1.15;
     color: var(--bone);
     background: linear-gradient(var(--accent), var(--accent)) no-repeat left bottom / 0 2px;
     transition: background-size var(--duration-slow) var(--ease);
@@ -177,6 +200,37 @@ const legalLinks = [
 
   .footer__col a:hover {
     color: var(--accent-ink);
+  }
+
+  /* Meios de pagamento */
+  .footer__pay {
+    border-top: 1px solid var(--line);
+  }
+
+  .footer__pay-inner {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1rem 1.5rem;
+    padding-block: 1.4rem;
+  }
+
+  .footer__pay-list {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin: 0;
+    padding: 0;
+  }
+
+  .footer__pay-list li {
+    padding: 0.35rem 0.7rem;
+    border: 1px solid var(--line-strong);
+    font-size: 0.625rem;
+    letter-spacing: var(--track);
+    text-transform: uppercase;
+    color: var(--muted);
   }
 
   /* Rodapé legal / LGPD */

@@ -6,148 +6,205 @@ interface Props {
 }
 const { active = '' } = Astro.props;
 
-const isProductActive = active === 'embalagens';
+const isShopActive = ['embalagens', 'colecoes', 'produto'].includes(active);
+
+const avisos = [
+  'Frete grátis acima de R$ 500',
+  'Compostável em 180 dias',
+  'Amostras para novos clientes',
+  'Entrega em todo o Brasil',
+];
 ---
 
-<div class="promo-bar">
-  <p class="promo-bar__inner container">Catálogo 2026 · Bioplástico para food service, eventos e delivery</p>
+<!-- Faixa de avisos — o "ticker" que a loja usa para prometer pouco e cumprir -->
+<div class="ticker" aria-label="Avisos da loja">
+  <div class="ticker__track">
+    {
+      [0, 1].map(() => (
+        <div class="ticker__group" aria-hidden="false">
+          {avisos.map((aviso) => (
+            <span>{aviso}</span>
+          ))}
+        </div>
+      ))
+    }
+  </div>
 </div>
 
 <header class="header" data-header>
-  <div class="header__inner container">
+  <div class="header__inner container-wide">
+    <button
+      class="burger"
+      type="button"
+      data-menu-toggle
+      aria-expanded="false"
+      aria-controls="menu-mobile"
+      aria-label="Abrir menu"
+    >
+      <span></span>
+      <span></span>
+    </button>
+
     <a class="brand" href="/" aria-label="Cibele Plastic — página inicial">
-      <span class="brand__mark" aria-hidden="true"></span>
-      <span class="brand__text">Cibele<span class="brand__accent">Plastic</span></span>
+      <span class="brand__text">Cibele</span>
+      <span class="brand__sub">Plastic</span>
     </a>
 
     <nav class="nav" aria-label="Navegação principal">
+      <a class:list={['nav__link', { 'is-active': active === 'novidades' }]} href="/embalagens?filtro=novidades">
+        Novidades
+      </a>
+
       <div class="nav__item" data-mega-wrap>
         <button
-          class:list={['nav__link', 'nav__trigger', { 'is-active': isProductActive }]}
+          class:list={['nav__link', 'nav__trigger', { 'is-active': isShopActive }]}
           type="button"
           aria-haspopup="true"
           aria-expanded="false"
           aria-controls="mega-produtos"
           data-mega-toggle
         >
-          <span>Coleções</span>
-          <svg class="nav__chevron" viewBox="0 0 10 6" width="10" height="6" aria-hidden="true">
-            <path d="M1 1l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"></path>
-          </svg>
+          Coleções
         </button>
 
         <div class="mega" id="mega-produtos" data-mega-panel hidden>
-          <div class="mega__inner container">
-            <div class="mega__grid">
-              {
-                collections.map((col) => (
-                  <a class="mega__item" href={col.path} data-mega-link>
-                    <span class="mega__index">{col.indice}</span>
-                    <span class="mega__title">{col.titulo}</span>
-                    <span class="mega__desc">{col.resumo}</span>
-                    <span class="mega__cue">Ver coleção <span class="arrow">↗</span></span>
-                  </a>
-                ))
-              }
+          <div class="mega__inner container-wide">
+            <div class="mega__cols">
+              <div class="mega__col">
+                <p class="mega__label ui-sm">Comprar por coleção</p>
+                <ul class="mega__list">
+                  {
+                    collections.map((col) => (
+                      <li>
+                        <a href={col.path} data-mega-link>
+                          {col.titulo}
+                        </a>
+                      </li>
+                    ))
+                  }
+                  <li>
+                    <a href="/embalagens" data-mega-link>Ver tudo</a>
+                  </li>
+                </ul>
+              </div>
+
+              <div class="mega__col">
+                <p class="mega__label ui-sm">Seleções</p>
+                <ul class="mega__list">
+                  <li><a href="/embalagens?filtro=novidades" data-mega-link>Novidades</a></li>
+                  <li><a href="/embalagens?filtro=mais-vendidos" data-mega-link>Mais vendidos</a></li>
+                  <li><a href="/embalagens?ordem=preco-asc" data-mega-link>Menor preço</a></li>
+                  <li><a href="/favoritos" data-mega-link>Meus favoritos</a></li>
+                </ul>
+              </div>
+
+              <div class="mega__col">
+                <p class="mega__label ui-sm">Atendimento</p>
+                <ul class="mega__list">
+                  <li><a href="/ajuda" data-mega-link>Envios e prazos</a></li>
+                  <li><a href="/ajuda#trocas" data-mega-link>Trocas e devoluções</a></li>
+                  <li><a href="/contato" data-mega-link>Orçamento para empresas</a></li>
+                  <li><a href="/sobre" data-mega-link>Sobre a Cibele</a></li>
+                </ul>
+              </div>
+
+              <div class="mega__feature">
+                {
+                  collections.map((col) => (
+                    <a class="mega__card" href={col.path} data-mega-link>
+                      <span class="mega__card-media">
+                        <img src={col.capa} alt="" loading="lazy" decoding="async" width="320" height="400" />
+                      </span>
+                      <span class="mega__card-title">{col.titulo}</span>
+                      <span class="mega__card-cue">{col.destaque}</span>
+                    </a>
+                  ))
+                }
+              </div>
             </div>
-            <a class="mega__all link-arrow" href="/embalagens" data-mega-link>
-              <span>Ver catálogo completo</span>
-              <span class="arrow" aria-hidden="true">↗</span>
-            </a>
           </div>
         </div>
       </div>
 
-      <a class:list={['nav__link', { 'is-active': active === 'sobre' }]} href="/sobre">
-        <span>Sobre</span>
-      </a>
-      <a class:list={['nav__link', { 'is-active': active === 'contato' }]} href="/contato">
-        <span>Contato</span>
-      </a>
+      <a class:list={['nav__link', { 'is-active': active === 'sobre' }]} href="/sobre">Sobre</a>
+      <a class:list={['nav__link', { 'is-active': active === 'ajuda' }]} href="/ajuda">Ajuda</a>
     </nav>
 
-    <div class="header__search" data-search-wrap>
-      <button class="icon-btn" type="button" data-search-toggle aria-expanded="false" aria-controls="header-search-form" aria-label="Buscar produtos">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true">
-          <circle cx="11" cy="11" r="7"></circle>
-          <path d="M21 21l-4.3-4.3"></path>
+    <div class="header__actions">
+      <button class="icon-btn" type="button" data-search-open aria-label="Buscar produtos">
+        <svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true">
+          <circle cx="11" cy="11" r="6.5" fill="none" stroke="currentColor" stroke-width="1.4"></circle>
+          <path d="m16 16 4.5 4.5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"></path>
         </svg>
       </button>
-      <form class="search-panel" id="header-search-form" data-search-panel hidden action="/embalagens" method="get">
-        <input
-          class="search-panel__input"
-          type="search"
-          name="busca"
-          placeholder="Buscar por prato, copo, marmita…"
-          aria-label="Buscar produtos"
-          data-search-input
-        />
-        <button class="search-panel__submit icon-btn" type="submit" aria-label="Buscar">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true">
-            <path d="M5 12h14M13 6l6 6-6 6"></path>
-          </svg>
-        </button>
-      </form>
-    </div>
 
-    <div class="header__actions">
-      <a class="icon-btn icon-btn--wishlist" href="/favoritos" aria-label="Favoritos">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <path d="M12 20.5s-7.5-4.6-10-9.3C.5 8 1.8 4.5 5.2 3.6c2.1-.6 4.2.3 5.4 2 .4.5.5.7 1.4 2 .9-1.3 1-1.5 1.4-2 1.2-1.7 3.3-2.6 5.4-2 3.4.9 4.7 4.4 3.2 7.6-2.5 4.7-10 9.3-10 9.3z"></path>
+      <a class="icon-btn header__hide-sm" href="/conta" aria-label="Minha conta">
+        <svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true">
+          <circle cx="12" cy="8.5" r="3.6" fill="none" stroke="currentColor" stroke-width="1.4"></circle>
+          <path d="M4.8 20a7.2 7.2 0 0 1 14.4 0" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"></path>
         </svg>
-        <span class="icon-btn__badge" data-badge="wishlist">0</span>
       </a>
-      <a class="icon-btn" href="/sacola" aria-label="Sacola">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <path d="M6 8h12l-1 12.5a1 1 0 0 1-1 .9H8a1 1 0 0 1-1-.9L6 8Z"></path>
-          <path d="M9 8V6a3 3 0 0 1 6 0v2"></path>
+
+      <a class="icon-btn icon-btn--count header__hide-sm" href="/favoritos" aria-label="Meus favoritos">
+        <svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true">
+          <path
+            d="M12 20.5 4.3 13a4.6 4.6 0 0 1 6.5-6.5l1.2 1.2 1.2-1.2A4.6 4.6 0 0 1 19.7 13Z"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.4"
+            stroke-linejoin="round"></path>
         </svg>
-        <span class="icon-btn__badge" data-badge="cart">0</span>
+        <span class="count" data-wish-count hidden>0</span>
       </a>
-      <button class="burger" type="button" data-menu-toggle aria-expanded="false" aria-controls="menu-mobile" aria-label="Abrir menu">
-        <span></span>
-        <span></span>
+
+      <button class="icon-btn icon-btn--count" type="button" data-cart-open aria-label="Abrir cesta de compras">
+        <svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true">
+          <path
+            d="M5.5 7.5h13l-1.1 12a1.6 1.6 0 0 1-1.6 1.5H8.2a1.6 1.6 0 0 1-1.6-1.5Z"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.4"
+            stroke-linejoin="round"></path>
+          <path d="M9 9.5V7a3 3 0 0 1 6 0v2.5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"></path>
+        </svg>
+        <span class="count" data-cart-count hidden>0</span>
       </button>
     </div>
   </div>
 </header>
 
+<!-- Menu mobile em tela cheia -->
 <div class="menu" id="menu-mobile" data-menu hidden>
-  <nav class="menu__nav" aria-label="Navegação mobile">
-    <a
-      class:list={['menu__link', { 'is-active': active === 'embalagens' }]}
-      href="/embalagens"
-      data-menu-link
-    >
-      <span class="menu__index">01</span>
-      <span class="menu__label">Embalagens</span>
-    </a>
-    <p class="menu__group-label eyebrow" data-menu-link>Coleções</p>
-    {
-      collections.map((col, index) => (
-        <a class="menu__link menu__link--sub" href={col.path} data-menu-link>
-          <span class="menu__index">0{index + 1}</span>
-          <span class="menu__label">{col.titulo}</span>
-        </a>
-      ))
-    }
+  <div class="menu__scroll">
+    <nav class="menu__nav" aria-label="Navegação mobile">
+      <a class="menu__link" href="/embalagens?filtro=novidades" data-menu-link>Novidades</a>
+      {
+        collections.map((col) => (
+          <a class="menu__link" href={col.path} data-menu-link>
+            {col.titulo}
+          </a>
+        ))
+      }
+      <a class:list={['menu__link', { 'is-active': active === 'embalagens' }]} href="/embalagens" data-menu-link>
+        Ver tudo
+      </a>
+    </nav>
 
-    <a class:list={['menu__link', { 'is-active': active === 'sobre' }]} href="/sobre" data-menu-link>
-      <span class="menu__index">02</span>
-      <span class="menu__label">Sobre</span>
-    </a>
-    <a class:list={['menu__link', { 'is-active': active === 'contato' }]} href="/contato" data-menu-link>
-      <span class="menu__index">03</span>
-      <span class="menu__label">Contato</span>
-    </a>
-    <a class:list={['menu__link', { 'is-active': active === 'favoritos' }]} href="/favoritos" data-menu-link>
-      <span class="menu__index">04</span>
-      <span class="menu__label">Favoritos</span>
-    </a>
-  </nav>
-  <div class="menu__foot" data-menu-link>
-    <p class="eyebrow">Cibele Plastic</p>
-    <p class="text-muted">Bioplástico sustentável para embalagens, construção e saúde.</p>
+    <nav class="menu__sec" aria-label="Conta e atendimento">
+      <a href="/conta" data-menu-link>Minha conta</a>
+      <a href="/favoritos" data-menu-link>Favoritos</a>
+      <a href="/carrinho" data-menu-link>Cesta</a>
+      <a href="/ajuda" data-menu-link>Ajuda</a>
+      <a href="/sobre" data-menu-link>Sobre</a>
+      <a href="/contato" data-menu-link>Contato</a>
+    </nav>
+
+    <div class="menu__foot" data-menu-link>
+      <p class="ui-sm text-muted">Cibele Plastic</p>
+      <p class="text-muted menu__foot-text">
+        Embalagens em bioplástico que voltam à terra em 180 dias.
+      </p>
+    </div>
   </div>
 </div>
 
@@ -156,53 +213,74 @@ const isProductActive = active === 'embalagens';
     position: sticky;
     top: 0;
     z-index: 100;
-    height: var(--header-height);
+    height: var(--header-h);
     display: flex;
     align-items: center;
+    /* Fundo sólido por padrão: `backdrop-filter` num elemento fixo custa
+       caro no celular e engasga a rolagem. O vidro fica só no desktop. */
     background: var(--cream);
-    border-bottom: 1px solid var(--line);
-    transition: box-shadow var(--duration-slow) var(--ease);
+    border-bottom: 1px solid transparent;
+    transition: border-color var(--duration) var(--ease), background-color var(--duration) var(--ease);
+  }
+
+  @media (min-width: 1040px) {
+    .header {
+      background: color-mix(in srgb, var(--cream) 86%, transparent);
+      backdrop-filter: blur(16px);
+    }
   }
 
   .header.is-scrolled {
-    box-shadow: var(--shadow-sm);
+    border-bottom-color: var(--line);
   }
 
+  /* Sem `width: 100%` aqui: a largura e as margens vêm do .container-wide —
+     senão a marca encosta na borda da tela. As três colunas podem encolher
+     (`minmax(0, …)`), o que evita estouro horizontal em telas de 320 px. */
   .header__inner {
-    width: 100%;
-    display: flex;
+    display: grid;
+    grid-template-columns: minmax(0, auto) minmax(0, 1fr) minmax(0, auto);
     align-items: center;
-    gap: 1.2rem;
+    gap: clamp(0.25rem, 2vw, 1rem);
   }
 
+  /* Lockup vertical: a serifa espaçada em cima, a linha de apoio embaixo.
+     Empilhado, o conjunto é estreito o bastante para caber em 320 px. */
   .brand {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.55rem;
-    font-family: var(--font-display);
-    font-weight: 700;
-    font-size: 1.05rem;
-    letter-spacing: -0.01em;
+    display: inline-grid;
+    justify-items: center;
+    gap: 0.15rem;
     color: var(--bone);
-    margin-right: 0.4rem;
+    min-width: 0;
   }
 
-  .brand__mark {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: var(--forest);
+  .brand__text {
+    font-family: var(--font-display);
+    font-size: clamp(1.15rem, 4.5vw, 1.5rem);
+    font-weight: 400;
+    letter-spacing: 0.2em;
+    text-indent: 0.2em; /* compensa o rastro da última letra */
+    line-height: 1;
+    text-transform: uppercase;
   }
 
-  .brand__accent {
-    color: var(--muted);
+  .brand__sub {
+    font-family: var(--font);
+    font-size: 0.5rem;
     font-weight: 500;
+    letter-spacing: 0.42em;
+    text-indent: 0.42em;
+    line-height: 1;
+    text-transform: uppercase;
+    color: var(--muted);
   }
 
+  /* Navegação central */
   .nav {
     display: none;
     align-items: center;
-    gap: 0.1rem;
+    justify-content: center;
+    gap: 0.35rem;
   }
 
   .nav__item {
@@ -213,39 +291,39 @@ const isProductActive = active === 'embalagens';
     position: relative;
     display: inline-flex;
     align-items: center;
-    gap: 0.4rem;
-    min-height: 40px;
-    padding: 0.5rem 0.8rem;
-    font-size: 0.78rem;
-    font-weight: 600;
-    letter-spacing: 0.08em;
+    min-height: 44px;
+    padding: 0.6rem 0.95rem;
+    font-family: inherit;
+    font-size: var(--step--2);
+    font-weight: 500;
+    letter-spacing: var(--track);
     text-transform: uppercase;
-    color: var(--muted);
+    color: var(--bone);
     border: 0;
     background: transparent;
-    font-family: inherit;
     transition: color var(--duration) var(--ease);
   }
 
-  .nav__trigger {
-    cursor: pointer;
-  }
-
-  .nav__chevron {
+  .nav__link::after {
+    content: '';
+    position: absolute;
+    left: 0.95rem;
+    right: 0.95rem;
+    bottom: 1.05rem;
+    height: 1px;
+    background: currentColor;
+    transform: scaleX(0);
+    transform-origin: left;
     transition: transform var(--duration) var(--ease);
   }
 
-  .nav__trigger.is-open .nav__chevron {
-    transform: rotate(180deg);
+  .nav__link:hover::after,
+  .nav__trigger.is-open::after,
+  .nav__link.is-active::after {
+    transform: scaleX(1);
   }
 
-  .nav__link:hover,
-  .nav__trigger.is-open,
-  .nav__link.is-active {
-    color: var(--bone);
-  }
-
-  /* Mega menu — painel de categorias, ancorado ao header. */
+  /* Mega menu */
   .mega {
     position: absolute;
     top: 100%;
@@ -253,7 +331,7 @@ const isProductActive = active === 'embalagens';
     right: 0;
     z-index: 90;
     background: var(--cream);
-    border-bottom: 1px solid var(--line);
+    border-block: 1px solid var(--line);
     box-shadow: var(--shadow-md);
   }
 
@@ -262,188 +340,156 @@ const isProductActive = active === 'embalagens';
   }
 
   .mega__inner {
-    padding-block: clamp(2rem, 4vw, 3rem);
+    padding-block: clamp(2rem, 3.5vw, 3.25rem);
   }
 
-  .mega__grid {
+  .mega__cols {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1px;
-    background: var(--line);
-    border: 1px solid var(--line);
+    grid-template-columns: repeat(3, minmax(0, 0.75fr)) minmax(0, 2fr);
+    gap: 2.5rem;
   }
 
-  .mega__item {
-    position: relative;
-    display: grid;
-    grid-template-rows: auto auto 1fr auto;
-    gap: 0.6rem;
-    padding: 1.8rem 1.6rem;
-    background: var(--cream);
-    transition: background-color var(--duration) var(--ease);
-  }
-
-  .mega__item:hover {
-    background: var(--ink-2);
-  }
-
-  .mega__index {
-    font-size: 0.72rem;
-    font-weight: 700;
-    letter-spacing: 0.1em;
+  .mega__label {
     color: var(--muted);
+    margin-bottom: 1.1rem;
   }
 
-  .mega__title {
-    font-family: var(--font-display);
-    font-size: 1.35rem;
-    font-weight: 700;
-    letter-spacing: -0.01em;
+  .mega__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 0.75rem;
+  }
+
+  .mega__list a {
+    font-size: var(--step--1);
     color: var(--bone);
+    transition: color var(--duration) var(--ease);
   }
 
-  .mega__desc {
-    font-size: 0.86rem;
-    color: var(--muted);
-    line-height: 1.55;
-    max-width: 32ch;
-  }
-
-  .mega__cue {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.4em;
-    margin-top: 0.4rem;
-    font-size: 0.74rem;
-    font-weight: 600;
+  .mega__list a:hover {
     color: var(--accent-ink);
   }
 
-  .mega__cue .arrow {
-    transition: transform var(--duration) var(--ease);
+  .mega__feature {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
   }
 
-  .mega__item:hover .mega__cue .arrow {
-    transform: translate(3px, -3px);
+  .mega__card {
+    display: grid;
+    gap: 0.5rem;
   }
 
-  .mega__all {
-    margin-top: 1.6rem;
+  .mega__card-media {
+    display: block;
+    aspect-ratio: 4 / 5;
+    background: var(--ink-2);
+    overflow: hidden;
   }
 
-  /* Busca */
-  .header__search {
-    position: relative;
-    margin-left: auto;
+  .mega__card-media img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    padding: 14%;
+    mix-blend-mode: multiply;
+    transition: transform var(--duration-slow) var(--ease);
   }
 
-  .search-panel {
-    position: absolute;
-    top: calc(100% + 0.6rem);
-    right: 0;
-    z-index: 90;
-    display: flex;
-    align-items: center;
-    gap: 0.4rem;
-    width: min(88vw, 360px);
-    padding: 0.5rem;
-    background: var(--cream);
-    border: 1px solid var(--line-strong);
-    box-shadow: var(--shadow-md);
-    opacity: 0;
-    transform: translateY(-6px);
-    transition: opacity var(--duration) var(--ease), transform var(--duration) var(--ease);
+  .mega__card:hover .mega__card-media img {
+    transform: scale(1.05);
   }
 
-  .search-panel[hidden] {
-    display: none;
+  .mega__card-title {
+    font-size: var(--step--1);
+    font-weight: 500;
   }
 
-  .search-panel.is-visible {
-    opacity: 1;
-    transform: none;
+  .mega__card-cue {
+    font-size: 0.6875rem;
+    letter-spacing: var(--track);
+    text-transform: uppercase;
+    color: var(--muted);
   }
 
-  .search-panel__input {
-    flex: 1;
-    min-width: 0;
-    min-height: 40px;
-    padding: 0.5rem 0.7rem;
-    border: 0;
-    background: transparent;
-    color: var(--bone);
-    font-family: inherit;
-    font-size: 0.9rem;
-  }
-
-  .search-panel__input:focus-visible {
-    outline: none;
-  }
-
-  .search-panel__submit {
-    flex-shrink: 0;
-  }
-
+  /* Ações à direita */
   .header__actions {
     display: flex;
     align-items: center;
-    gap: 0.2rem;
+    justify-self: end;
+    gap: 0.1rem;
   }
 
+  .icon-btn--count {
+    position: relative;
+  }
+
+  .count {
+    position: absolute;
+    top: 6px;
+    right: 4px;
+    min-width: 16px;
+    height: 16px;
+    padding: 0 4px;
+    display: grid;
+    place-items: center;
+    border-radius: 999px;
+    background: var(--forest);
+    color: var(--cream);
+    font-size: 0.5625rem;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    line-height: 1;
+  }
+
+  .count[hidden] {
+    display: none;
+  }
+
+  /* Burger */
   .burger {
     position: relative;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
+    width: 44px;
+    height: 44px;
+    margin-left: -10px;
     border: 0;
     background: transparent;
     display: grid;
     place-items: center;
-    transition: background-color var(--duration) var(--ease);
-  }
-
-  .burger:hover {
-    background: var(--ink-2);
+    align-content: center;
+    gap: 5px;
   }
 
   .burger span {
     display: block;
-    width: 16px;
-    height: 1.4px;
+    width: 20px;
+    height: 1.2px;
     background: var(--bone);
-    transition: transform var(--duration) var(--ease), opacity var(--duration-fast) var(--ease);
-  }
-
-  .burger span + span {
-    margin-top: 4px;
+    transition: transform var(--duration) var(--ease);
   }
 
   :global(body.menu-open) .burger span:first-child {
-    transform: translateY(2.7px) rotate(45deg);
+    transform: translateY(3.1px) rotate(45deg);
   }
 
   :global(body.menu-open) .burger span:last-child {
-    transform: translateY(-2.7px) rotate(-45deg);
+    transform: translateY(-3.1px) rotate(-45deg);
   }
 
   :global(html.menu-open),
   :global(body.menu-open) {
     overflow: hidden;
-    height: 100%;
   }
 
-  /* Menu overlay mobile — fundo claro, tipografia editorial grande */
+  /* Menu mobile */
   .menu {
     position: fixed;
-    inset: 0;
+    inset: var(--header-h) 0 0;
     z-index: 95;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    gap: 2.2rem;
-    padding: 6rem var(--gutter) 3rem;
     background: var(--cream);
-    color: var(--bone);
     overflow-y: auto;
   }
 
@@ -451,68 +497,61 @@ const isProductActive = active === 'embalagens';
     display: none;
   }
 
-  .menu__nav {
-    display: flex;
-    flex-direction: column;
+  .menu__scroll {
+    padding: 2rem var(--gutter) 3rem;
+    display: grid;
+    gap: 2.5rem;
   }
 
-  .menu__group-label {
-    margin-top: 0.8rem;
-    margin-bottom: 0.4rem;
+  .menu__nav {
+    display: grid;
   }
 
   .menu__link {
     display: flex;
-    align-items: baseline;
-    gap: 1rem;
-    min-height: 44px;
-    padding: 0.6rem 0;
+    align-items: center;
+    min-height: 56px;
+    padding: 0.5rem 0;
     border-bottom: 1px solid var(--line);
     font-family: var(--font-display);
-    font-size: clamp(1.8rem, 10vw, 3rem);
-    font-weight: 700;
+    font-size: 1.5rem;
+    font-weight: 400;
     letter-spacing: -0.02em;
     color: var(--bone);
-    opacity: 0.7;
-    transition: opacity var(--duration) var(--ease), padding-left var(--duration) var(--ease);
-  }
-
-  .menu__link--sub {
-    font-size: clamp(1.3rem, 6vw, 1.8rem);
-    padding-left: 0.6rem;
+    transition: padding-left var(--duration) var(--ease);
   }
 
   .menu__link:hover,
   .menu__link.is-active {
-    opacity: 1;
-    padding-left: 0.6rem;
+    padding-left: 0.5rem;
   }
 
-  .menu__link--sub:hover,
-  .menu__link--sub.is-active {
-    padding-left: 1.1rem;
+  .menu__sec {
+    display: grid;
+    gap: 1rem;
   }
 
-  .menu__index {
-    font-size: 0.85rem;
-    font-weight: 600;
+  .menu__sec a {
+    font-size: var(--step--2);
+    font-weight: 500;
+    letter-spacing: var(--track);
+    text-transform: uppercase;
     color: var(--muted);
   }
 
-  .menu__foot {
+  .menu__sec a:hover {
+    color: var(--bone);
+  }
+
+  .menu__foot-text {
+    margin-top: 0.5rem;
     max-width: 30ch;
+    font-size: var(--step--1);
   }
 
-  .icon-btn--wishlist {
-    display: none;
-  }
-
-  @media (min-width: 940px) {
+  @media (min-width: 1040px) {
     .nav {
       display: flex;
-    }
-    .icon-btn--wishlist {
-      display: inline-flex;
     }
     .burger {
       display: none;
@@ -520,11 +559,17 @@ const isProductActive = active === 'embalagens';
     .menu {
       display: none !important;
     }
+    .header__inner {
+      grid-template-columns: 220px 1fr 220px;
+    }
   }
 
-  @media (max-width: 939.98px) {
+  @media (max-width: 1039.98px) {
     .mega {
       display: none !important;
+    }
+    .header__hide-sm {
+      display: none;
     }
   }
 </style>

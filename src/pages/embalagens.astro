@@ -1,132 +1,393 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import ProductCard from '../components/ProductCard.astro';
-import { collections, products } from '../data/catalog';
+import Newsletter from '../components/Newsletter.astro';
+import { collections, products, precoBase, formatPrice } from '../data/catalog';
 
-const prices = products.map((p) => p.preco);
-const minPrice = Math.min(...prices);
-const maxPrice = Math.max(...prices);
+const precos = products.map(precoBase);
+const faixa = `${formatPrice(Math.min(...precos))} – ${formatPrice(Math.max(...precos))}`;
 ---
 
 <BaseLayout
   active="embalagens"
-  title="Embalagens sustentáveis — Cibele Plastic"
-  description="Catálogo de embalagens em bioplástico da Cibele Plastic: mesa, bebidas e delivery. O desempenho do plástico convencional, sem a herança fóssil."
+  title="Catálogo de embalagens — Cibele Plastic"
+  description="Todas as embalagens em bioplástico da Cibele Plastic: mesa, bebidas e delivery. Filtre por coleção, ordene por preço e compre em poucos cliques."
 >
-  <div class="container chero">
-    <nav class="breadcrumb" aria-label="Trilha">
-      <a href="/">Início</a>
-      <span class="breadcrumb__sep" aria-hidden="true">/</span>
-      <span class="breadcrumb__current">Embalagens</span>
-    </nav>
+  <!-- Cabeçalho da vitrine -->
+  <section class="shop-head page-top">
+    <div class="container-wide">
+      <nav aria-label="Trilha de navegação">
+        <ol class="crumbs">
+          <li><a href="/">Início</a></li>
+          <li><span aria-current="page">Catálogo</span></li>
+        </ol>
+      </nav>
 
-    <h1 class="chero__title">Embalagens</h1>
-    <p class="lead chero__desc">
-      Uma linha completa de embalagens descartáveis feitas de fontes renováveis — para food
-      service, eventos, cafeterias e delivery.
-    </p>
-  </div>
-
-  <div class="container plp" data-plp>
-    <div class="plp__toolbar">
-      <p class="plp__count" data-plp-count>{products.length} produtos</p>
-      <div class="plp__sort">
-        <label for="ordenar">Ordenar por</label>
-        <select id="ordenar" data-sort-select>
-          <option value="relevancia">Relevância</option>
-          <option value="menor-preco">Menor preço</option>
-          <option value="maior-preco">Maior preço</option>
-          <option value="nome">Nome (A-Z)</option>
-        </select>
+      <div class="shop-head__grid">
+        <h1 class="h-xl shop-head__title" data-reveal="fade">Todas as <span class="em">embalagens</span></h1>
+        <p class="shop-head__desc text-muted" data-reveal="fade">
+          {products.length} referências em bioplástico, de {faixa}. Compostáveis, com desempenho de
+          plástico convencional e prontas para envio.
+        </p>
       </div>
-    </div>
-
-    <div class="plp__body">
-      <aside class="filters">
-        <div class="filters__group">
-          <p class="filters__title">Coleção</p>
-          {
-            collections.map((col) => (
-              <label class="filters__option">
-                <input type="checkbox" value={col.slug} data-filter-collection />
-                {col.titulo}
-              </label>
-            ))
-          }
-        </div>
-
-        <div class="filters__group">
-          <p class="filters__title">Preço</p>
-          <div class="filters__price">
-            <input
-              type="number"
-              inputmode="decimal"
-              placeholder={`Mín. ${minPrice.toFixed(0)}`}
-              min={minPrice}
-              max={maxPrice}
-              data-filter-price-min
-              aria-label="Preço mínimo, em reais"
-            />
-            <span aria-hidden="true">–</span>
-            <input
-              type="number"
-              inputmode="decimal"
-              placeholder={`Máx. ${maxPrice.toFixed(0)}`}
-              min={minPrice}
-              max={maxPrice}
-              data-filter-price-max
-              aria-label="Preço máximo, em reais"
-            />
-          </div>
-        </div>
-
-        <button class="filters__clear" type="button" data-filter-clear>Limpar filtros</button>
-      </aside>
-
-      <div>
-        <div class="plp__grid" data-plp-grid data-reveal-group>
-          {products.map((product) => <ProductCard product={product} />)}
-        </div>
-        <p class="plp__empty" data-plp-empty>Nenhum produto encontrado com esses filtros.</p>
-      </div>
-    </div>
-  </div>
-
-  <section class="section-lg paper cta2">
-    <div class="container cta2__inner">
-      <p class="eyebrow" data-reveal="fade">Para empresas</p>
-      <h2 class="h-xl cta2__title" data-lines>
-        <span class="line-mask"><span class="line-inner">Um orçamento sob</span></span>
-        <span class="line-mask"><span class="line-inner">medida para o seu <span class="text-accent">negócio</span>.</span></span>
-      </h2>
-      <a class="btn btn--primary" href="/contato" data-reveal="fade">
-        <span>Solicitar orçamento</span>
-        <svg class="arrow" viewBox="0 0 24 24" width="15" height="15" aria-hidden="true">
-          <path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
-        </svg>
-      </a>
     </div>
   </section>
+
+  <!-- Barra de filtros (sticky) -->
+  <div class="toolbar" data-toolbar>
+    <div class="container-wide toolbar__inner">
+      <div class="toolbar__filters" role="group" aria-label="Filtrar por coleção">
+        <button class="chip is-active" type="button" data-filter="todos">Tudo</button>
+        {
+          collections.map((col) => (
+            <button class="chip" type="button" data-filter={col.slug}>
+              {col.titulo}
+            </button>
+          ))
+        }
+        <button class="chip" type="button" data-filter="novidades">Novidades</button>
+        <button class="chip" type="button" data-filter="mais-vendidos">Mais vendidos</button>
+      </div>
+
+      <div class="toolbar__right">
+        <p class="toolbar__count ui-sm text-muted" data-count-label>{products.length} itens</p>
+
+        <label class="toolbar__sort">
+          <span class="visually-hidden">Ordenar por</span>
+          <select data-sort aria-label="Ordenar por">
+            <option value="destaque">Ordenar: destaque</option>
+            <option value="preco-asc">Menor preço</option>
+            <option value="preco-desc">Maior preço</option>
+            <option value="nome">Nome (A–Z)</option>
+          </select>
+        </label>
+
+        <div class="toolbar__cols" role="group" aria-label="Densidade da grade">
+          <button class="colbtn" type="button" data-cols="2" aria-label="Ver em 2 colunas">
+            <svg viewBox="0 0 16 16" width="15" height="15" aria-hidden="true">
+              <rect x="1" y="1" width="6" height="14" fill="currentColor"></rect>
+              <rect x="9" y="1" width="6" height="14" fill="currentColor"></rect>
+            </svg>
+          </button>
+          <button class="colbtn is-active" type="button" data-cols="3" aria-label="Ver em 3 colunas">
+            <svg viewBox="0 0 16 16" width="15" height="15" aria-hidden="true">
+              <rect x="0.5" y="1" width="4" height="14" fill="currentColor"></rect>
+              <rect x="6" y="1" width="4" height="14" fill="currentColor"></rect>
+              <rect x="11.5" y="1" width="4" height="14" fill="currentColor"></rect>
+            </svg>
+          </button>
+          <button class="colbtn" type="button" data-cols="4" aria-label="Ver em 4 colunas">
+            <svg viewBox="0 0 16 16" width="15" height="15" aria-hidden="true">
+              <rect x="0.5" y="1" width="3" height="14" fill="currentColor"></rect>
+              <rect x="4.8" y="1" width="3" height="14" fill="currentColor"></rect>
+              <rect x="9.1" y="1" width="3" height="14" fill="currentColor"></rect>
+              <rect x="13.4" y="1" width="3" height="14" fill="currentColor"></rect>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Vitrine -->
+  <section class="shop">
+    <div class="container-wide">
+      <div class="pgrid" data-cols="3" data-grid data-reveal-group>
+        {
+          products.map((product, i) => (
+            <div
+              class="shop__cell"
+              data-cell
+              data-colecao={product.colecao}
+              data-badge={product.badge ?? ''}
+              data-preco={precoBase(product)}
+              data-nome={product.nome}
+              data-ordem={i}
+            >
+              <ProductCard product={product} index={i} eager={i < 4} />
+            </div>
+          ))
+        }
+      </div>
+
+      <p class="shop__empty" data-empty hidden>
+        Nenhum item corresponde a esse filtro.
+        <button class="link-underline" type="button" data-filter="todos">Ver tudo</button>
+      </p>
+    </div>
+  </section>
+
+  <Newsletter />
 </BaseLayout>
 
+<script>
+  const grid = document.querySelector<HTMLElement>('[data-grid]');
+  const cells = Array.from(document.querySelectorAll<HTMLElement>('[data-cell]'));
+  const chips = Array.from(document.querySelectorAll<HTMLElement>('[data-filter]'));
+  const sort = document.querySelector<HTMLSelectElement>('[data-sort]');
+  const colBtns = Array.from(document.querySelectorAll<HTMLElement>('[data-cols]'));
+  const contador = document.querySelector<HTMLElement>('[data-count-label]');
+  const vazio = document.querySelector<HTMLElement>('[data-empty]');
+
+  if (grid && cells.length) {
+    let filtroAtual = 'todos';
+
+    const combina = (cell: HTMLElement, filtro: string) => {
+      if (filtro === 'todos') return true;
+      if (filtro === 'novidades') return cell.dataset.badge === 'novo';
+      if (filtro === 'mais-vendidos') return cell.dataset.badge === 'best';
+      return cell.dataset.colecao === filtro;
+    };
+
+    const aplicar = () => {
+      let visiveis = 0;
+      for (const cell of cells) {
+        const mostrar = combina(cell, filtroAtual);
+        cell.hidden = !mostrar;
+        if (mostrar) visiveis += 1;
+      }
+
+      const criterio = sort?.value ?? 'destaque';
+      const ordenadas = [...cells].sort((a, b) => {
+        const pa = Number(a.dataset.preco ?? '0');
+        const pb = Number(b.dataset.preco ?? '0');
+        if (criterio === 'preco-asc') return pa - pb;
+        if (criterio === 'preco-desc') return pb - pa;
+        if (criterio === 'nome') return (a.dataset.nome ?? '').localeCompare(b.dataset.nome ?? '', 'pt-BR');
+        return Number(a.dataset.ordem ?? '0') - Number(b.dataset.ordem ?? '0');
+      });
+      ordenadas.forEach((cell, i) => (cell.style.order = String(i)));
+
+      if (contador) contador.textContent = `${visiveis} ${visiveis === 1 ? 'item' : 'itens'}`;
+      if (vazio) vazio.hidden = visiveis > 0;
+
+      // O filtro ativo vive na URL — o link é compartilhável e o botão
+      // voltar do navegador continua fazendo sentido.
+      const url = new URL(window.location.href);
+      if (filtroAtual === 'todos') url.searchParams.delete('filtro');
+      else url.searchParams.set('filtro', filtroAtual);
+      if (criterio === 'destaque') url.searchParams.delete('ordem');
+      else url.searchParams.set('ordem', criterio);
+      window.history.replaceState({}, '', url);
+    };
+
+    const marcarChip = (filtro: string) => {
+      chips.forEach((chip) => chip.classList.toggle('is-active', chip.dataset.filter === filtro));
+    };
+
+    chips.forEach((chip) => {
+      chip.addEventListener('click', () => {
+        filtroAtual = chip.dataset.filter ?? 'todos';
+        marcarChip(filtroAtual);
+        aplicar();
+      });
+    });
+
+    sort?.addEventListener('change', aplicar);
+
+    colBtns.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        colBtns.forEach((b) => b.classList.toggle('is-active', b === btn));
+        grid.dataset.cols = btn.dataset.cols ?? '3';
+        try {
+          localStorage.setItem('cibele:cols', grid.dataset.cols);
+        } catch {
+          /* sem persistência */
+        }
+      });
+    });
+
+    // Estado inicial vindo da URL (links do menu) e da preferência salva
+    const params = new URLSearchParams(window.location.search);
+    const filtroURL = params.get('filtro');
+    if (filtroURL && chips.some((c) => c.dataset.filter === filtroURL)) {
+      filtroAtual = filtroURL;
+      marcarChip(filtroAtual);
+    }
+    const ordemURL = params.get('ordem');
+    if (sort && ordemURL && [...sort.options].some((o) => o.value === ordemURL)) sort.value = ordemURL;
+
+    try {
+      const cols = localStorage.getItem('cibele:cols');
+      if (cols) {
+        grid.dataset.cols = cols;
+        colBtns.forEach((b) => b.classList.toggle('is-active', b.dataset.cols === cols));
+      }
+    } catch {
+      /* sem persistência */
+    }
+
+    aplicar();
+  }
+</script>
+
 <style>
-  .chero {
-    padding-block: clamp(2rem, 5vw, 3rem) 1.6rem;
+  .shop-head {
+    padding-bottom: clamp(1.5rem, 3vw, 2.5rem);
+  }
+
+  .shop-head__grid {
     display: grid;
     gap: 1rem;
+    align-items: end;
+    margin-top: clamp(1.25rem, 3vw, 2rem);
   }
 
-  .chero__title {
-    font-size: var(--step-4);
-    line-height: 1.05;
+  .shop-head__title {
+    text-transform: none;
   }
 
-  .chero__desc {
-    max-width: 60ch;
+  .shop-head__desc {
+    font-size: var(--step--1);
+    max-width: 46ch;
+  }
+
+  @media (min-width: 900px) {
+    .shop-head__grid {
+      grid-template-columns: 1fr auto;
+      gap: 3rem;
+    }
+    .shop-head__desc {
+      text-align: right;
+    }
+  }
+
+  /* Barra de ferramentas */
+  .toolbar {
+    position: sticky;
+    top: var(--header-h);
+    z-index: 60;
+    background: var(--cream);
+    border-block: 1px solid var(--line);
+  }
+
+  @media (min-width: 900px) {
+    .toolbar {
+      background: color-mix(in srgb, var(--cream) 90%, transparent);
+      backdrop-filter: blur(12px);
+    }
+  }
+
+  .toolbar__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem 1.5rem;
+    flex-wrap: wrap;
+    padding-block: 0.7rem;
+  }
+
+  .toolbar__filters {
+    display: flex;
+    gap: 0.4rem;
+    overflow-x: auto;
+    scrollbar-width: none;
+    margin-inline: calc(var(--gutter) * -1);
+    padding-inline: var(--gutter);
+  }
+
+  .toolbar__filters::-webkit-scrollbar {
+    display: none;
+  }
+
+  .chip {
+    flex-shrink: 0;
+    min-height: 38px;
+    padding: 0.5rem 1rem;
+    border: 1px solid transparent;
+    background: transparent;
+    font-size: 0.6875rem;
+    font-weight: 500;
+    letter-spacing: var(--track);
+    text-transform: uppercase;
     color: var(--muted);
+    white-space: nowrap;
+    transition: color var(--duration) var(--ease), border-color var(--duration) var(--ease),
+      background-color var(--duration) var(--ease);
   }
 
-  .plp {
-    padding-block: 1rem var(--space-128);
+  .chip:hover {
+    color: var(--bone);
+  }
+
+  .chip.is-active {
+    background: var(--bone);
+    border-color: var(--bone);
+    color: var(--cream);
+  }
+
+  .toolbar__right {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-left: auto;
+  }
+
+  .toolbar__count {
+    white-space: nowrap;
+  }
+
+  .toolbar__sort select {
+    border: 0;
+    background: transparent;
+    font-family: var(--font);
+    font-size: 0.6875rem;
+    font-weight: 500;
+    letter-spacing: var(--track);
+    text-transform: uppercase;
+    color: var(--bone);
+    padding: 0.5rem 0;
+    cursor: pointer;
+  }
+
+  .toolbar__cols {
+    display: none;
+    gap: 0.15rem;
+  }
+
+  .colbtn {
+    width: 34px;
+    height: 34px;
+    display: grid;
+    place-items: center;
+    border: 0;
+    background: transparent;
+    color: var(--muted-dark);
+    transition: color var(--duration) var(--ease);
+  }
+
+  .colbtn:hover,
+  .colbtn.is-active {
+    color: var(--bone);
+  }
+
+  @media (min-width: 900px) {
+    .toolbar__cols {
+      display: flex;
+    }
+  }
+
+  /* Vitrine */
+  .shop {
+    padding-block: clamp(2rem, 4vw, 3.5rem) clamp(3rem, 7vw, 6rem);
+  }
+
+  .shop__cell[hidden] {
+    display: none;
+  }
+
+  .shop__empty {
+    padding: 4rem 0;
+    text-align: center;
+    color: var(--muted);
+    font-size: var(--step--1);
+  }
+
+  .shop__empty button {
+    border: 0;
+    background: transparent;
+    color: var(--bone);
+    font: inherit;
+    padding: 0;
   }
 </style>
